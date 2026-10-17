@@ -142,7 +142,11 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 .candado .error{color:var(--crit);min-height:1.4em;margin:0}
 
 .video-act{margin:28px 0 0;border-radius:14px;overflow:hidden;border:1px solid var(--filete);background:#0e1218}
-.video-act video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#0e1218}
+.video-act video,.video-act iframe{display:block;width:100%;height:auto;aspect-ratio:16/9;border:0;background:#0e1218}
+.videos-foro{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:18px}
+.video-foro{margin:0}.video-foro .video-act{margin:0}
+.video-foro figcaption{display:flex;flex-direction:column;gap:2px;margin:10px 2px 0;font-size:14px;color:var(--atenuado)}
+.video-foro figcaption b{color:var(--texto);font:600 16px "Source Serif 4",Georgia,serif}
 .foro-tarjeta{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:16px 18px;margin:0 0 14px}
 .foro-tarjeta.mio{border-color:var(--acc)}
 .foro-meta{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin:0 0 8px;font-size:13px;color:var(--atenuado)}

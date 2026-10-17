@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Inscripción y prueba diagnóstica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#161b22;--panel:#1f2630;--texto:#e9edf1;--atenuado:#9aa6b2;--filete:#2e3742;
+--acc:#e0915e;--acc2:#8fb8c9;--suave:#3a2a24;--pos:#7fc4a0;--alerta:#e2c15a;--crit:#e58a8a}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#f3f5f7;--panel:#fff;
+--texto:#1d2329;--atenuado:#5c6670;--filete:#d5dbe2;--acc:#a2532a;--acc2:#3d6f86;--suave:#f5e3d8;
+--pos:#2f6b4f;--alerta:#8a6a12;--crit:#9b2f2f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--texto);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
+a{color:var(--acc2)}
+.envoltura{max-width:62rem;margin:0 auto;padding:0 16px}
+header{padding:48px 0 28px;border-bottom:1px solid var(--filete)}
+.antetitulo{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--acc2)}
+h1{font:600 clamp(28px,5vw,44px)/1.12 "Source Serif 4",Georgia,serif;margin:10px 0 12px;color:var(--texto)}
+h1 em{font-style:normal;color:var(--acc)}
+.docente{color:var(--atenuado);margin:0}
+.aviso{margin:24px 0 0;padding:14px 16px;border-left:3px solid var(--acc);background:var(--panel);border-radius:0 8px 8px 0}
+.aviso strong{color:var(--acc)}
+nav.indice{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0}
+nav.indice a{font-size:14px;text-decoration:none;color:var(--texto);border:1px solid var(--filete);border-radius:999px;padding:6px 12px}
+nav.indice a:hover{border-color:var(--acc)}
+section{padding:36px 0 8px}
+h2{font:600 26px/1.2 "Source Serif 4",Georgia,serif;margin:0 0 6px}
+.bajada{color:var(--atenuado);margin:0 0 18px}
+.jornada{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:18px;margin:0 0 18px}
+.jornada-cab{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px;margin:0 0 12px}
+.jornada h3{font:600 20px/1.2 "Source Serif 4",Georgia,serif;margin:0}
+.fecha{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--atenuado)}
+.fecha.fija{color:var(--acc)}
+.sesiones{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.sesiones a,.sesiones .sin{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:8px;
+border:1px solid var(--filete);text-decoration:none;color:var(--texto);min-height:48px}
+.sesiones a:hover{border-color:var(--acc);background:var(--suave)}
+.num{font:600 13px "IBM Plex Mono",monospace;color:var(--acc);min-width:2.4em}
+.sesiones .ir{margin-left:auto;color:var(--acc2);font-size:14px;white-space:nowrap}
+.sesiones .sin{color:var(--atenuado);border-style:dashed}
+.actividades{margin:14px 0 0;padding:12px 0 0;border-top:1px dashed var(--filete)}
+.actividades h4{margin:0 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--atenuado);font-weight:600}
+.act{text-decoration:none;color:var(--texto);border-radius:6px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:6px 0}
+.act .nombre{flex:1 1 16rem}
+.peso{font:600 13px "IBM Plex Mono",monospace}
+.nivel{font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid currentColor}
+.n-pro{color:var(--crit)}.n-lim{color:var(--alerta)}.n-obl{color:var(--acc2)}.n-lib{color:var(--pos)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--filete);border-radius:12px;overflow:hidden}
+td,th{padding:12px 14px;border-bottom:1px solid var(--filete);text-align:left}
+td:last-child,th:last-child{text-align:right;font-family:"IBM Plex Mono",monospace}
+tr:last-child td{border-bottom:0;font-weight:600}
+.nota{color:var(--atenuado);font-size:14px}
+details{background:var(--panel);border:1px solid var(--filete);border-radius:10px;margin:0 0 10px}
+summary{cursor:pointer;padding:14px 16px;font-weight:600}
+details ul{margin:0;padding:0 16px 14px 34px}
+details li{margin:0 0 8px;font-size:15px}
+details h5{margin:6px 16px 8px;font-size:13px;color:var(--atenuado);text-transform:uppercase;letter-spacing:.08em}
+.boton{display:inline-block;padding:12px 18px;border-radius:8px;background:var(--acc);color:#161b22;text-decoration:none;font-weight:600}
+a.act:hover .nombre{color:var(--acc)}
+.cerrojo p{margin:0 0 10px;color:var(--atenuado)}
+.cerrojo form{display:flex;gap:8px;flex-wrap:wrap}
+.cerrojo input{flex:1 1 12rem;font:16px "IBM Plex Mono",monospace;padding:10px 12px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.cerrojo .error{color:var(--crit);min-height:1.4em;margin:8px 0 0}
+.jornada.cerrada h3:after{content:" (con llave)";font:400 14px "IBM Plex Sans",sans-serif;color:var(--atenuado)}
+.puerta{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin:16px 0 0;padding:16px;border:1px solid var(--acc);border-radius:12px;background:var(--suave)}
+.puerta>div:first-child{flex:1 1 20rem}
+.puerta-acciones{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.cerrojo p a{font-weight:600}
+footer{padding:36px 0 48px;color:var(--atenuado);font-size:14px;border-top:1px solid var(--filete);margin-top:36px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.chip{font-size:13px;border:1px solid var(--filete);border-radius:999px;padding:4px 10px;color:var(--texto)}
+.volver{display:inline-block;margin:0 0 14px;font-size:14px;text-decoration:none}
+.bloque{padding:28px 0 0}
+.bloque h2{font-size:22px}
+ol.pasos{margin:0;padding-left:22px}
+ol.pasos li{margin:0 0 10px}
+.criterio{background:var(--panel);border:1px solid var(--filete);border-radius:10px;margin:0 0 12px;overflow:hidden}
+.criterio-cab{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--filete);font-weight:600}
+.criterio-cab span:last-child{font-family:"IBM Plex Mono",monospace;color:var(--acc)}
+.nivel-fila{display:grid;grid-template-columns:7.5rem 1fr;gap:10px;padding:10px 14px;border-bottom:1px solid var(--filete);font-size:15px}
+.nivel-fila:last-child{border-bottom:0}
+.nivel-fila b{font-weight:600}
+.nivel-fila small{display:block;font-family:"IBM Plex Mono",monospace;color:var(--atenuado)}
+@media (max-width:480px){.nivel-fila{grid-template-columns:1fr;gap:2px}}
+.ia-caja{background:var(--panel);border:1px solid var(--filete);border-radius:10px;padding:14px 16px}
+.ia-caja ul{margin:8px 0 0;padding-left:20px}
+.pendiente{margin:18px 0 0;padding:12px 14px;border-left:3px solid var(--alerta);background:var(--panel);border-radius:0 8px 8px 0}
+.lista-v{list-style:none;padding:0;margin:0}
+.lista-v li{padding:8px 0 8px 30px;position:relative;border-bottom:1px dashed var(--filete)}
+.lista-v li:before{content:"";position:absolute;left:4px;top:12px;width:14px;height:14px;border:2px solid var(--acc2);border-radius:3px}
+.entrega{margin:28px 0 0;padding:18px;background:var(--panel);border:1px solid var(--acc);border-radius:12px}
+.entrega p{margin:10px 0 0;color:var(--atenuado);font-size:14px}
+.pregunta{background:var(--panel);border:1px solid var(--filete);border-radius:10px;padding:14px 16px;margin:0 0 12px}
+.pregunta p{margin:0 0 10px}
+.pregunta label{display:flex;gap:10px;align-items:flex-start;padding:8px;border-radius:6px;cursor:pointer;min-height:44px}
+.pregunta label:hover{background:var(--suave)}
+.pregunta input{margin-top:4px}
+.pregunta .expl{display:none;margin:10px 0 0;padding:10px 12px;border-radius:6px;font-size:15px}
+.pregunta.bien .expl{display:block;border-left:3px solid var(--pos)}
+.pregunta.mal .expl{display:block;border-left:3px solid var(--crit)}
+button.boton{border:0;font:inherit;font-weight:600;cursor:pointer}
+#resultado{display:none;margin:18px 0 0}
+#resumen{width:100%;min-height:90px;margin:10px 0;font:14px "IBM Plex Mono",monospace;background:var(--bg);color:var(--texto);border:1px solid var(--filete);border-radius:8px;padding:10px}
+#aviso{color:var(--alerta);min-height:1.4em}
+.formulario{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:12px}
+.campo{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--atenuado)}
+.campo input,.campo select{font:16px "IBM Plex Sans",sans-serif;padding:10px 12px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.consiente{display:flex;gap:10px;align-items:flex-start;margin:16px 0 0;font-size:15px}
+.consiente input{margin-top:4px}
+.pregunta.ver .expl{display:block;border-left:3px solid var(--acc2)}
+.candado .campo{margin:10px 0}
+#barra-ctrl{position:sticky;top:0;z-index:5;display:flex;gap:12px;justify-content:space-between;align-items:center;padding:10px 14px;margin:0 0 14px;background:var(--panel);border:1px solid var(--filete);border-radius:10px;font-size:14px}
+#reloj{font:600 20px "IBM Plex Mono",monospace;color:var(--acc)}
+#reloj.urgente{color:var(--crit)}
+#salidas-txt{color:var(--alerta)}
+#velo{position:fixed;inset:0;z-index:20;background:rgba(10,12,16,.92);display:flex;align-items:center;justify-content:center;padding:16px}
+#velo[hidden]{display:none}
+.velo-caja{max-width:28rem;background:var(--panel);border:1px solid var(--crit);border-radius:14px;padding:22px}
+.error-txt{color:var(--crit);min-height:1.4em}
+.candado{max-width:30rem;margin:12vh auto 0;padding:24px;background:var(--panel);border:1px solid var(--filete);border-radius:14px}
+.candado input{width:100%;font:16px "IBM Plex Mono",monospace;padding:12px;margin:12px 0;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.candado .error{color:var(--crit);min-height:1.4em;margin:0}
+</style>
+</head><body>
+<header><div class="envoltura">
+<a class="volver" href="../../">Volver al aula</a>
+<div class="antetitulo">Economía y Finanzas de los Servicios de Salud</div>
+<h1>Inscripción y prueba diagnóstica</h1>
+<div class="chips"><span class="chip">Antes de la jornada 1</span><span class="chip">Formativa, sin nota</span><span class="chip">Individual</span><span class="chip">IA: Prohibido</span></div>
+<p class="aviso"><strong>Entrega.</strong> Antes de la jornada 1.</p>
+
+</div></header>
+<main class="envoltura">
+<section class="bloque"><h2>Para qué</h2><p>Es la puerta del aula: con ella se inscribe en el curso y se abre la jornada 1. La prueba mide lo que usted trae al curso y no lleva nota. Con sus respuestas ajusto las clases desde la primera jornada, así que contéstela en serio y sin ayuda.</p></section>
+<section class="bloque"><h2>Qué hace</h2><ol class="pasos"><li>Llene sus datos. Use la misma cédula y el mismo correo en todo el curso: con ellos se registra su avance.</li><li>Conteste las 10 preguntas de una sola vez, sin consultar material.</li><li>Pulse Enviar y entrar al aula. La jornada 1 se abre en ese momento y verá la explicación de cada pregunta.</li></ol></section>
+<section class="bloque"><h2>Qué entrega</h2><p>Su inscripción y sus respuestas, que quedan registradas al enviar.</p></section>
+<section class="bloque" id="inscripcion"><h2>1. Sus datos</h2>
+<p class="bajada">Todos los datos son obligatorios, salvo los que dicen opcional. Use la misma cédula y el mismo correo en todo el curso.</p>
+<div class="formulario"><label class="campo"><span>Nombre completo</span><input id="c-nombre" type="text" required autocomplete="off"></label><label class="campo"><span>Cédula</span><input id="c-cedula" type="text" required autocomplete="off"></label><label class="campo"><span>Correo electrónico</span><input id="c-correo" type="email" required autocomplete="off"></label><label class="campo"><span>Teléfono celular</span><input id="c-telefono" type="text" required autocomplete="off"></label><label class="campo"><span>Profesión</span><input id="c-profesion" type="text" required autocomplete="off"></label><label class="campo"><span>Institución donde trabaja</span><select id="c-institucion" required><option value="">Elija una opción</option><option>MINSA</option><option>CSS</option><option>Privada</option><option>Otra</option></select></label><label class="campo"><span>Cargo actual</span><input id="c-cargo" type="text" required autocomplete="off"></label><label class="campo"><span>Años de experiencia en servicios de salud</span><input id="c-experiencia" type="number" min="0" max="60" required autocomplete="off"></label><label class="campo"><span>Provincia donde trabaja</span><select id="c-provincia" required><option value="">Elija una opción</option><option>Bocas del Toro</option><option>Coclé</option><option>Colón</option><option>Chiriquí</option><option>Darién</option><option>Herrera</option><option>Los Santos</option><option>Panamá</option><option>Panamá Oeste</option><option>Veraguas</option><option>Comarca Guna Yala</option><option>Comarca Emberá Wounaan</option><option>Comarca Ngäbe Buglé</option></select></label><label class="campo"><span>Instalación o lugar de trabajo</span><input id="c-lugar" type="text" required autocomplete="off"></label><label class="campo"><span>Compañeros con quienes propone formar equipo (opcional)</span><input id="c-equipo" type="text" autocomplete="off"></label><label class="campo"><span>Territorio que propone para el trabajo final (opcional)</span><input id="c-territorio" type="text" autocomplete="off"></label></div>
+<h3 style="margin:22px 0 6px">Su contraseña para el aula</h3>
+<p class="bajada">Con su cédula y esta contraseña entrará al aula desde cualquier equipo y empezará cada control. Al menos 6 caracteres. No use la de su correo ni la de su banco.</p>
+<div class="formulario"><label class="campo"><span>Contraseña</span><input id="c-clave" type="password" autocomplete="new-password" required></label>
+<label class="campo"><span>Repita la contraseña</span><input id="c-clave2" type="password" autocomplete="new-password" required></label></div>
+<label class="consiente"><input type="checkbox" id="consiente"> <span>Autorizo que estos datos se usen solo para la gestión académica de este curso. No se publican ni se comparten con terceros.</span></label>
+</section>
+<section class="bloque" id="prueba"><h2>2. Las 10 preguntas</h2>
+<p class="bajada">Contéstelas sin consultar material. No llevan nota.</p>
+<div class="pregunta" id="q0"><p><b>1.</b> Un paciente paga de su propio dinero, en una farmacia privada, un medicamento que no encontró en la instalación pública. En las cuentas de salud, ese pago es:</p><label><input type="radio" name="p0" value="0"><span>A. Gasto de capital</span></label><label><input type="radio" name="p0" value="1"><span>B. Gasto de bolsillo</span></label><label><input type="radio" name="p0" value="2"><span>C. Prima de un seguro privado</span></label><label><input type="radio" name="p0" value="3"><span>D. Gasto público en salud</span></label><div class="expl">Es gasto de bolsillo: el hogar paga directamente en el momento de la atención, sin que medie un seguro ni el Estado.</div></div><div class="pregunta" id="q1"><p><b>2.</b> La dirección regional usa el presupuesto de un año para comprar un tomógrafo. El costo de oportunidad de esa decisión es:</p><label><input type="radio" name="p1" value="0"><span>A. El precio del tomógrafo</span></label><label><input type="radio" name="p1" value="1"><span>B. Su depreciación</span></label><label><input type="radio" name="p1" value="2"><span>C. Su mantenimiento anual</span></label><label><input type="radio" name="p1" value="3"><span>D. El beneficio de la mejor alternativa a la que se renunció con ese dinero</span></label><div class="expl">El costo de oportunidad no es lo que se paga: es lo que se deja de obtener con el mejor uso alternativo del mismo recurso.</div></div><div class="pregunta" id="q2"><p><b>3.</b> Un sistema financiado sobre todo con impuestos generales, con cobertura universal y prestación mayormente pública, corresponde al modelo:</p><label><input type="radio" name="p2" value="0"><span>A. Beveridge, de servicio nacional de salud</span></label><label><input type="radio" name="p2" value="1"><span>B. De seguro privado voluntario</span></label><label><input type="radio" name="p2" value="2"><span>C. Bismarck, de seguro social</span></label><label><input type="radio" name="p2" value="3"><span>D. De mercado o liberal</span></label><div class="expl">Beveridge financia con impuestos y cubre a todos los residentes. Bismarck financia con cotizaciones ligadas al empleo.</div></div><div class="pregunta" id="q3"><p><b>4.</b> En Panamá, el MINSA y la CSS tienen cada uno su red, su financiamiento y su población. Ese rasgo del sistema se llama:</p><label><input type="radio" name="p3" value="0"><span>A. Integración vertical</span></label><label><input type="radio" name="p3" value="1"><span>B. Segmentación</span></label><label><input type="radio" name="p3" value="2"><span>C. Competencia gestionada</span></label><label><input type="radio" name="p3" value="3"><span>D. Descentralización fiscal</span></label><div class="expl">Segmentación: subsistemas con financiamiento, afiliación y redes propias para poblaciones distintas.</div></div><div class="pregunta" id="q4"><p><b>5.</b> El médico sabe más que el paciente sobre el tratamiento que necesita, y además es quien lo presta. Ese fallo del mercado da lugar a:</p><label><input type="radio" name="p4" value="0"><span>A. Demanda inducida por el proveedor</span></label><label><input type="radio" name="p4" value="1"><span>B. Selección adversa</span></label><label><input type="radio" name="p4" value="2"><span>C. Riesgo moral del asegurado</span></label><label><input type="radio" name="p4" value="3"><span>D. Una externalidad positiva</span></label><div class="expl">La relación de agencia es imperfecta: quien informa la necesidad es el mismo que vende el servicio, y puede inducir demanda.</div></div><div class="pregunta" id="q5"><p><b>6.</b> Un antihipertensivo bajó la presión en el ensayo clínico, pero en la consulta de un policentro el control de los pacientes es mucho menor. Lo que se midió en la consulta es la:</p><label><input type="radio" name="p5" value="0"><span>A. Equidad</span></label><label><input type="radio" name="p5" value="1"><span>B. Eficiencia</span></label><label><input type="radio" name="p5" value="2"><span>C. Eficacia</span></label><label><input type="radio" name="p5" value="3"><span>D. Efectividad</span></label><div class="expl">Eficacia es el resultado en condiciones ideales; efectividad, en condiciones reales. Eficiencia relaciona el resultado con el costo.</div></div><div class="pregunta" id="q6"><p><b>7.</b> En un laboratorio clínico, ¿cuál de estos costos varía con el número de pruebas?</p><label><input type="radio" name="p6" value="0"><span>A. El alquiler del local</span></label><label><input type="radio" name="p6" value="1"><span>B. La depreciación del analizador</span></label><label><input type="radio" name="p6" value="2"><span>C. Los reactivos</span></label><label><input type="radio" name="p6" value="3"><span>D. El salario del tecnólogo de planta</span></label><div class="expl">Los reactivos se consumen en cada prueba. Salario de planta, alquiler y depreciación se pagan igual con más o menos pruebas.</div></div><div class="pregunta" id="q7"><p><b>8.</b> Un año de vida ajustado por calidad (AVAC) combina:</p><label><input type="radio" name="p7" value="0"><span>A. Costo y años de vida ganados</span></label><label><input type="radio" name="p7" value="1"><span>B. Mortalidad y morbilidad registradas</span></label><label><input type="radio" name="p7" value="2"><span>C. Años de vida ganados y calidad de vida relacionada con la salud</span></label><label><input type="radio" name="p7" value="3"><span>D. Años de vida perdidos por discapacidad</span></label><div class="expl">El AVAC pondera cada año de vida por su calidad. Los años perdidos por discapacidad pertenecen a otra medida, el AVAD.</div></div><div class="pregunta" id="q8"><p><b>9.</b> Que dos personas con la misma necesidad de salud reciban la misma atención, sin importar su ingreso, es el principio de:</p><label><input type="radio" name="p8" value="0"><span>A. Equidad vertical</span></label><label><input type="radio" name="p8" value="1"><span>B. Equidad horizontal</span></label><label><input type="radio" name="p8" value="2"><span>C. Igualdad de gasto por persona</span></label><label><input type="radio" name="p8" value="3"><span>D. Eficiencia asignativa</span></label><div class="expl">Equidad horizontal: igual trato a igual necesidad. La vertical pide trato distinto a necesidades distintas.</div></div><div class="pregunta" id="q9"><p><b>10.</b> El Decreto Ejecutivo 420 de 2018 establece en Panamá:</p><label><input type="radio" name="p9" value="0"><span>A. La reforma de la Ley Orgánica de la CSS</span></label><label><input type="radio" name="p9" value="1"><span>B. El modelo de atención de salud</span></label><label><input type="radio" name="p9" value="2"><span>C. El presupuesto anual del MINSA</span></label><label><input type="radio" name="p9" value="3"><span>D. El registro sanitario de medicamentos</span></label><div class="expl">El Decreto Ejecutivo 420 establece el modelo de atención de salud. La reforma de la Ley Orgánica de la CSS es la Ley 462 de 2025.</div></div>
+<p id="aviso" role="alert"></p>
+<button class="boton" id="enviar">Enviar y entrar al aula</button>
+<div id="resultado" role="status"><h2 id="puntaje"></h2><p id="mensaje"></p>
+<a class="boton" href="../../">Entrar al aula</a></div>
+</section>
+<script>
+
+function normLlave(s){return s.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'-');}
+function b64(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+async function abrirCon(d,llave){
+  try{
+    var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(normLlave(llave)),'PBKDF2',false,['deriveKey']);
+    var k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(d.s),iterations:d.it,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+    var t=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(d.iv)},k,b64(d.c));
+    return new TextDecoder().decode(t);
+  }catch(e){return null;}
+}
+function llaveGuardada(j){try{return localStorage.getItem('econ-llave-j'+j)||sessionStorage.getItem('econ-llave-j'+j);}catch(e){return null;}}
+function guardarLlave(j,v){try{localStorage.setItem('econ-llave-j'+j,v);}catch(e){} try{sessionStorage.setItem('econ-llave-j'+j,v);}catch(e){}}
+function guardarLlaves(o){for(var j in o){if(o[j])guardarLlave(j,o[j]);}}
+
+var SERVIDOR="https://script.google.com/macros/s/AKfycbzuix939G9-1sksrINsXjb7yLYz_1aA74ffiPl_FUILKNoZaRDEUkHpp9_DHXpuAW6F/exec";
+function servidor(d){
+  if(window.__servidorPrueba) return Promise.resolve(window.__servidorPrueba(d));
+  if(!SERVIDOR) return Promise.resolve({ok:false,error:'La inscripción todavía no está habilitada.'});
+  var pedir=function(){return fetch(SERVIDOR,{method:'POST',body:JSON.stringify(d)}).then(function(r){return r.json();});};
+  var falla={ok:false,error:'No hubo conexión con el servidor del aula. Revise su internet e intente de nuevo.'};
+  // Reintenta una vez si la red falla; no en la inscripción, que no se debe registrar dos veces.
+  return pedir().catch(function(){
+    if(d.accion==='inscribir') return falla;
+    return new Promise(function(r){setTimeout(r,3000);}).then(pedir).catch(function(){return falla;});
+  });
+}
+// El servidor de Google duerme si nadie lo usa: se le despierta apenas se abre la página.
+if(SERVIDOR&&!window.__servidorPrueba){try{fetch(SERVIDOR).catch(function(){});}catch(e){}}
+function idGuardada(){try{return JSON.parse(localStorage.getItem('econ-id')||'null');}catch(e){return null;}}
+function guardarId(o){try{localStorage.setItem('econ-id',JSON.stringify(o));}catch(e){}}
+function respuestas(n){var r=[],f=[];for(var i=0;i<n;i++){var s=document.querySelector('input[name=p'+i+']:checked');if(!s)f.push(i+1);r.push(s?+s.value:-1);}return {r:r,falta:f};}
+
+(function(){
+var CAMPOS=["nombre", "cedula", "correo", "telefono", "profesion", "institucion", "cargo", "experiencia", "provincia", "lugar", "equipo", "territorio"], N=10;
+var b=document.getElementById('enviar'), aviso=document.getElementById('aviso');
+b.onclick=async function(){
+  aviso.textContent='';
+  var p={}, falta=[];
+  CAMPOS.forEach(function(k){var e=document.getElementById('c-'+k); p[k]=e.value.trim(); if(e.required&&!p[k]) falta.push(e.closest('label').querySelector('span').textContent);});
+  if(falta.length){aviso.textContent='Le faltan datos: '+falta.join(', ')+'.';document.getElementById('inscripcion').scrollIntoView();return;}
+  var clave=document.getElementById('c-clave').value, clave2=document.getElementById('c-clave2').value;
+  if(clave.length<6){aviso.textContent='La contraseña debe tener al menos 6 caracteres.';return;}
+  if(clave!==clave2){aviso.textContent='Las dos contraseñas no coinciden.';return;}
+  if(!document.getElementById('consiente').checked){aviso.textContent='Marque la autorización de uso de sus datos.';return;}
+  var r=respuestas(N);
+  if(r.falta.length){aviso.textContent='Le faltan las preguntas '+r.falta.join(', ')+'.';return;}
+  b.disabled=true; b.textContent='Enviando...';
+  var x=await servidor({accion:'inscribir',participante:p,clave:clave,consiente:true,respuestas:r.r});
+  if(!x.ok){aviso.textContent=x.error||'No se pudo inscribir.'; b.disabled=false; b.textContent='Enviar y entrar al aula'; return;}
+  guardarLlaves(x.llaves||{}); guardarId({cedula:p.cedula});
+  document.querySelectorAll('.pregunta').forEach(function(q){q.classList.add('ver');q.querySelectorAll('input').forEach(function(i){i.disabled=true;});});
+  b.style.display='none';
+  document.getElementById('puntaje').textContent='Inscripción lista: '+x.aciertos+' de '+x.total;
+  document.getElementById('mensaje').textContent='La jornada 1 ya está abierta para usted. Debajo de cada pregunta está su explicación.';
+  document.getElementById('resultado').style.display='block';
+  document.getElementById('resultado').scrollIntoView({behavior:'smooth'});
+};
+})();
+</script>
+
+<section class="bloque"><h2>Uso de IA: Prohibido</h2><div class="ia-caja"><p>No se usa IA en ninguna forma. Lo que se mide aquí es lo que usted sabe hacer solo.</p>
+<p><b>No puede</b></p><ul><li>Consultar material, compañeros o IA mientras contesta.</li></ul>
+<p><a href="../../politica-ia/">Política de IA del curso y declaración de uso</a></p></div></section>
+<section class="bloque"><h2>Antes de entregar</h2><ul class="lista-v"><li>Revisé que mi cédula y mi correo estén bien escritos.</li><li>Contesté las 10 preguntas sin ayuda.</li></ul></section>
+
+</main>
+<footer><div class="envoltura">Economía y Finanzas de los Servicios de Salud, UDELAS. Dr. Manuel S. Nazas R., docente del curso.</div></footer>
+</body></html>

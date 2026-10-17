@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Economía y Finanzas de los Servicios de Salud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#161b22;--panel:#1f2630;--texto:#e9edf1;--atenuado:#9aa6b2;--filete:#2e3742;
+--acc:#e0915e;--acc2:#8fb8c9;--suave:#3a2a24;--pos:#7fc4a0;--alerta:#e2c15a;--crit:#e58a8a}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#f3f5f7;--panel:#fff;
+--texto:#1d2329;--atenuado:#5c6670;--filete:#d5dbe2;--acc:#a2532a;--acc2:#3d6f86;--suave:#f5e3d8;
+--pos:#2f6b4f;--alerta:#8a6a12;--crit:#9b2f2f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--texto);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
+a{color:var(--acc2)}
+.envoltura{max-width:62rem;margin:0 auto;padding:0 16px}
+header{padding:48px 0 28px;border-bottom:1px solid var(--filete)}
+.antetitulo{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--acc2)}
+h1{font:600 clamp(28px,5vw,44px)/1.12 "Source Serif 4",Georgia,serif;margin:10px 0 12px;color:var(--texto)}
+h1 em{font-style:normal;color:var(--acc)}
+.docente{color:var(--atenuado);margin:0}
+.aviso{margin:24px 0 0;padding:14px 16px;border-left:3px solid var(--acc);background:var(--panel);border-radius:0 8px 8px 0}
+.aviso strong{color:var(--acc)}
+nav.indice{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0}
+nav.indice a{font-size:14px;text-decoration:none;color:var(--texto);border:1px solid var(--filete);border-radius:999px;padding:6px 12px}
+nav.indice a:hover{border-color:var(--acc)}
+section{padding:36px 0 8px}
+h2{font:600 26px/1.2 "Source Serif 4",Georgia,serif;margin:0 0 6px}
+.bajada{color:var(--atenuado);margin:0 0 18px}
+.jornada{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:18px;margin:0 0 18px}
+.jornada-cab{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px;margin:0 0 12px}
+.jornada h3{font:600 20px/1.2 "Source Serif 4",Georgia,serif;margin:0}
+.fecha{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--atenuado)}
+.fecha.fija{color:var(--acc)}
+.sesiones{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.sesiones a,.sesiones .sin{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:8px;
+border:1px solid var(--filete);text-decoration:none;color:var(--texto);min-height:48px}
+.sesiones a:hover{border-color:var(--acc);background:var(--suave)}
+.num{font:600 13px "IBM Plex Mono",monospace;color:var(--acc);min-width:2.4em}
+.sesiones .ir{margin-left:auto;color:var(--acc2);font-size:14px;white-space:nowrap}
+.sesiones .sin{color:var(--atenuado);border-style:dashed}
+.actividades{margin:14px 0 0;padding:12px 0 0;border-top:1px dashed var(--filete)}
+.actividades h4{margin:0 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--atenuado);font-weight:600}
+.act{text-decoration:none;color:var(--texto);border-radius:6px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:6px 0}
+.act .nombre{flex:1 1 16rem}
+.peso{font:600 13px "IBM Plex Mono",monospace}
+.nivel{font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid currentColor}
+.n-pro{color:var(--crit)}.n-lim{color:var(--alerta)}.n-obl{color:var(--acc2)}.n-lib{color:var(--pos)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--filete);border-radius:12px;overflow:hidden}
+td,th{padding:12px 14px;border-bottom:1px solid var(--filete);text-align:left}
+td:last-child,th:last-child{text-align:right;font-family:"IBM Plex Mono",monospace}
+tr:last-child td{border-bottom:0;font-weight:600}
+.nota{color:var(--atenuado);font-size:14px}
+details{background:var(--panel);border:1px solid var(--filete);border-radius:10px;margin:0 0 10px}
+summary{cursor:pointer;padding:14px 16px;font-weight:600}
+details ul{margin:0;padding:0 16px 14px 34px}
+details li{margin:0 0 8px;font-size:15px}
+details h5{margin:6px 16px 8px;font-size:13px;color:var(--atenuado);text-transform:uppercase;letter-spacing:.08em}
+.boton{display:inline-block;padding:12px 18px;border-radius:8px;background:var(--acc);color:#161b22;text-decoration:none;font-weight:600}
+a.act:hover .nombre{color:var(--acc)}
+.cerrojo p{margin:0 0 10px;color:var(--atenuado)}
+.cerrojo form{display:flex;gap:8px;flex-wrap:wrap}
+.cerrojo input{flex:1 1 12rem;font:16px "IBM Plex Mono",monospace;padding:10px 12px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.cerrojo .error{color:var(--crit);min-height:1.4em;margin:8px 0 0}
+.jornada.cerrada h3:after{content:" (con llave)";font:400 14px "IBM Plex Sans",sans-serif;color:var(--atenuado)}
+.puerta{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin:16px 0 0;padding:16px;border:1px solid var(--acc);border-radius:12px;background:var(--suave)}
+.puerta>div:first-child{flex:1 1 20rem}
+.puerta-acciones{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.cerrojo p a{font-weight:600}
+footer{padding:36px 0 48px;color:var(--atenuado);font-size:14px;border-top:1px solid var(--filete);margin-top:36px}
+</style>
+</head><body>
+<header><div class="envoltura">
+<div class="antetitulo">UDELAS, Especialización en Gerencia de Servicios de Salud</div>
+<h1>Economía y Finanzas de los <em>Servicios de Salud</em></h1>
+<p class="docente">Dr. Manuel S. Nazas R., docente del curso. Correo: <a href="mailto:manuel.nazas.733@udelas.ac.pa">manuel.nazas.733@udelas.ac.pa</a></p>
+<p class="aviso"><strong>Cómo funciona el aula.</strong> Aquí está todo el material del curso: las presentaciones de cada sesión, las actividades, la evaluación y las lecturas. Los trabajos se entregan en Google Classroom; el código de la clase se anuncia por el grupo del curso.</p>
+<div class="puerta"><div><strong>Empiece aquí.</strong> Inscríbase con la prueba diagnóstica: al enviarla se abre la jornada 1. Cada jornada siguiente se abre al aprobar el control de lectura de la anterior.</div>
+<div class="puerta-acciones"><a class="boton" href="actividades/diagnostica/">Inscripción y diagnóstica</a><a href="acceso/">Ya me inscribí: entrar con mi contraseña</a></div></div>
+<nav class="indice"><a href="#jornadas">Jornadas y sesiones</a><a href="#evaluacion">Evaluación</a><a href="#ia">Uso de IA</a><a href="#lecturas">Lecturas</a></nav>
+</div></header>
+<main class="envoltura">
+<section id="jornadas"><h2>Jornadas y sesiones</h2>
+<p class="bajada">Cada presentación se abre en el navegador. Avance con las flechas del teclado o con los botones de la barra superior.</p>
+<div class="jornada cerrada" data-j="1" data-c="{&quot;s&quot;: &quot;dgeQWMgq8059RMN5UxgDRA==&quot;, &quot;iv&quot;: &quot;AHrmvKB1C3dr+ued&quot;, &quot;it&quot;: 200000, &quot;c&quot;: &quot;I5rEK7vv+IutNxpEeeUYp/HxaczQUmTK7zNVR6N1AACwFxJZ5GkawMjCDVaSXwu2Q0BJE4LdNxHkL7Axetjbwv+XEfauHgZAGzsMCddaLwSHPZfv+40ohGxxi4C8HsJy3r3iDnc71lNT6bsU7NkwzDRr8B+rFWPOzM4Dcp/fMzS4nYveUtJL1HSCqVUTOZJywX3hcy+4bwnBPkF09SJyF0dFVhf6spfl12gG23l3X7cWnq7idz7+ZNkOhv6VrCx4Jgc1qB9vzMBOrYxDOmtUs43fN1Kgww8Sr5LzIbSWXhPd1suS9EPVbOKstMuHA9i7v01KM5aXLkDsKQ+Lsoorzn3DjtM+VIvMx+Q9Jj4L92JxMTlFk3OS1a6CmEp8K1ilQRRWd5euv3AQ7GksHFxLPirsejzhT1Nz7KHBwRbjwJnWio8ENa3skCvUCbsLUwyp3nWk63KhGn2/ETNNCrBrE2DL8uNmeg5VTjmcJ6VzKY6CVhQhhhmm+yaZXiweoRpUvsaOFwUE7jvg3O1W1Sk6HVwdKwYejI+iRwV0AmN2V9NJjEqQ7ALS044wDsWwhrmP/xZirn+UJpwL4lRW4djzuPp2ErQ3IZdRrDNqNo8R08krxZQDuX/Y81TsCsYWdk82DugyvkhyC2kHzR/Zsw+R9ntcT3/DHNK5WmO8Lo7/pc3mNI4/1n/YHnzIgYaMwRKi4Kuwr2udeB8+/p/W2FCn2jJAlvGoL7pGXoGWLa0b7LbK6wLP52LyBkODQUI1JUavUl7+cCESBuLj93jmW27/xpufOiY5bNhJYdkgSHKM8OWb35Fra5wjKklLL4OR9AhOOHDjNqBpeSoCdEcy4hGuBRgn2ZVSsC6lAL+P1GRjhTCleCz2GE1EGhih8JmdPxXYPSyER6l4V0gdwZ+zl6hn8lMDtdO6bpuUR/bn3+ZnoZU2L3eKvsVGj4EbquBy5YqfTtMJ+ZZueSDTF4LTMGKMBm/eSkXWwhMthJM9LZvvdruOM0H7Xmx9ti+bTbI3r5r0GvdPANIKhXEqjLi8Askb2zX+JKcwhN8tUOqYT9FG4iHXXDN5m5+WZUFwTaiVp4a6cq27YKsm95wP/L15a1AFto8ImzAxjpNyPX3Dl5gLBkhLstSzEVQHBBhu3KVmcsoKYHXB3Ql7oiqqdV9XV22KCJyUWgIbuf5K9GJJaQSSNtOr4q9bBmnzceZ6x9apfiQWQxvGbn/cgVNGjCGYoLHynEr8Yq9p8JL5pavn3uU3esUIKOPV+JRMCeIr9EkMLwA65Fu9JwVrz1jcuxJRCWqMqx90mhYKKDcfyG99i2gPqtHl0M6JKdh3gU38v0prXNNy21Es8iPyZWVcl3MquRQ9dIOQa5tk6bOHPNNKJALzuVXm15RI0TN7Gn9vYNKZbujn8PnOvKGFdfZAGMrBh7T24wWcfC6gARfIYYav0RhynMYF4hcNmThOEplFPmwj3UzskaHtxDBzZmXe9JxrZpoJDJtYiqN+iohLfUhgghzx9pV6W82thi8Ud6am+UHhRbzBCmXwl/NnL7Tt3vfVOd0uzcWCZpw3D2aZPrTmboQRO1ksH1eLPB7CGCOp4c2LURK4f4HiwKM1mF7EmwNTgQCYuqk3H+mOnnZMsc0NJ9QqbIyDQ/aYpKQi8VMZUYEkVGtAEWIMWrCl2UdY65cGQFJL5IgoXD0aRlrTnPSbOYfehIpsqaAyP22vgszb+rwxhBceeErCk4aHtvi7mXkZxlsuX5GxHWEQJwX8vCQT7xkpxGzpsmzuBqtM0WmJTNFXaZyEQAbi/hsAJdKJKKqw72diU3NRpDW3&quot;}"><div class="jornada-cab"><h3>Jornada 1</h3><span class="fecha">Fecha por confirmar</span></div>
+<div class="cerrojo"><p>Se abre al inscribirse con la prueba diagnóstica. Sesiones: S00 a S03.</p>
+<p><a href="actividades/diagnostica/">Hacer la diagnóstica</a>, o escriba la llave si ya la tiene.</p>
+<form><input autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Llave de la jornada 1" aria-label="Llave de la jornada 1"><button class="boton" type="submit">Abrir</button></form>
+<p class="error"></p></div><div class="interior"></div></div><div class="jornada cerrada" data-j="2" data-c="{&quot;s&quot;: &quot;Lw8E5RvGMf/uKU5cy72Qmg==&quot;, &quot;iv&quot;: &quot;LsiROn4GyN1QzOdd&quot;, &quot;it&quot;: 200000, &quot;c&quot;: &quot;bfoyBI5TYJ/A5ut7B9zY0nSQWtTyC5nZcuoWePy+e+9klpAm/G2V6kvEouy9YAKviPxerhQ11ya/oTSLVzEZScD8pdZjtsBEhI9Qar9obabnWfttrAVot3NoTiitVI2XsYCy8BXLryu6X2njqDYqEoCxlD+a8VgV7QkVTFRTbMZj27qzIn7xT0j74+9O4i8gnfptTVJBCZAUk+7C1UlnFdIf/WqiZQ1/ajjvZbVnRnN1ZQzTfryQ5u+d2ly38lHqYrMlVa9B9EIR+IdUHukIAPBPN2oaw7NTRKQEGoWXkGY4sMhgR8sNgssM9+V0db/H5/73iFYodgnTWqDPFAkcN7WAvIij8WABiebqCD2isML1fP7HQmNSJ28hul/xN/cNl9c2ELk/Np05g5zXUv/h6VnKbmtWH3ynDOjtYZSAeIFZmNIdfjxYZmRIGbc6gMQYoeheF6xzNEEDs3N4QsXNdq+v6cbZO/OY3sJHLVmR+y+gzZtguI+8v64YdovhDEj8gnOMgxmIu8Nibpbyj3splb20YmRu9AIvvyow3MIBu51DkK/ZWzsgtQop3V8dVYd9LI0E81UHEhqBnzerVOeEbOuLxLApcc9mZaicdlulNofTyPMGD7s7VqShY5b1y4x8E2K1XMMs4X3xUJ7vDrid6xb7euqwtPhtayDucd0yXGR45eOO13a3v9FQg5H6FYGaWbYAsLe4Wh5sqpxjOYKRMIII70pAsznph6W9HZwqbgjhyrif6I04Ur9U7T3VALZxgRpPmEEsX0MMaGgMl8V8dQy/BTW5SQbg64FdyPlqiRpRnEoSSFXat6bPQ4bSrGO2ceLGcLh61BliAAJUKHqy4OKG1mhcxKXg5JK1iz7McmzZJIcgXPED1GMRMVA2d7hIBg6KV8sBRjj50jf/fzJ6T1te5pH78FlbbUxlao19BQw03eCRtWjr+aWsFyFwH8SUx7ZTWpPSvkKwQG1dHcdGuFZao9dsTxFAaayRim4sTp0N9RAJG6iiKBWB7G5cU2DuS+Rdv6UlG1HIvYJKSmfZQX9KNIcN1qN7YZ5o0IhKS8D0u7zatw04wRcBGnz5DbNzBaLof6kXEwW/zR9dVVLlmOD3mX2+9/6WfHJtgVkYhFPrcqtuC5GgkE3mtR80Reu435PuLcsURNCQvQkUwa/QzbKgeGXfu4e+2lsKW6XcMZzhHkGc08qU9ORYaP3lE7JuS7c8Tok2F0PTrz0A0pShvhIzxm0MIxXFFU6TspwzTiiPEyIiAef4O/Fi8A+/z/LlH/qn/ArWz/ey7NGGB/p9ooKa/zSvQ9bHGy/FWuAr/NHw6oi+TcbLbmmu0STZBscsIScx5ffIcJr4AcSM/d6OgXvY3TKNiB2BMGUeeOE5Dl47Hp+w6Rax6HL9rA4WqQfxDRzhsgy98B2/UKCK+wDeuf6SqbcYNcEFhPwtYE6hssDPmyNz7exbztxL9qLkNWynUgsKt+3coHlEKkM88AwU/+YgshQNLJGuX3OtDxa/lvZhqfpTFvgHJ8iSQovaxCtvOAjMbUUqc1HOUyORMb+9t5Oj3E1nnm1XTj3BNEI31UocXDqAQRdAdR3S2xAOYbrvVV70BmEYI9IC9Z32/eDCqNem1gmwtrPZ6nXyaPi03JzhGE8safs3EATBuX95B8Uu4IIMcYumeUZjqwkMYtTKpzfVQgNG9mKcXgocxO8q0Fgy1PojcaCgyGTc70s7re/FmiBBw7TuUqfh1Vx4u/2CmudPiWvyhFTsg++A&quot;}"><div class="jornada-cab"><h3>Jornada 2</h3><span class="fecha">Fecha por confirmar</span></div>
+<div class="cerrojo"><p>Se abre al aprobar con 70 % el control de lectura de la jornada 1. Sesiones: S04 a S07.</p>
+<p><a href="actividades/control-jornada-1/">Ir al control de la jornada 1</a>, o escriba la llave si ya la tiene.</p>
+<form><input autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Llave de la jornada 2" aria-label="Llave de la jornada 2"><button class="boton" type="submit">Abrir</button></form>
+<p class="error"></p></div><div class="interior"></div></div><div class="jornada cerrada" data-j="3" data-c="{&quot;s&quot;: &quot;NufM5TqKuFYKs2e3N3QHcg==&quot;, &quot;iv&quot;: &quot;/7G9wTUrN0qKyJAz&quot;, &quot;it&quot;: 200000, &quot;c&quot;: &quot;QU6OMfa1Njpvleqty5t4CdL1sYkucWJJN9sgXRevz8jqkqtGSdusbzLzQKgQTW+KIdC/hiauh59N4Ory2izYhGmaQB/EduoR0GU7m6sjfwpQ84CiznPdHNkYe7SxBsfC25c9xNrtQ+iF0EN/jg0ujAV5rJS8LMF45s6YMg0GyBZVgQqQjGTX2e03S2s5J2ULxVhtaNTiKounnWrDkK864SV07Ox8CSOfBrR4ukHFVXylUAJpnK6iz2SL6OauUnC5wMAh9sVttEJH2zGMsjdKpqDZM9bYoCy2fFNPgX8/Jswc71hw5vFGHxzQJHgsXrZT7btDsh0G2Yim9Ny5cifIZ4Wgs0qBfsKydJ5y5AUXIJUkq5nse2cocuc4jZD6hJu1amafW9IdT5CDLlJN135B4igldCrzjoUg4HwNazRrR5M5GPEfgS3SV+hzHpwf0fNQuUQFAl/rSY+ElyeQT/AyztreI7ZzoGCzC86UgMpinERBUMZCBpxA/30Anh8k61N+pE3hWBWP+b6fKglviT3UL+iZ7xX/ZXKRW+v1kfa42FsJ8f4OexuMNu7VoIlWRs+YB3YZQL6wdlUG1G84scXINUE+uruFD5rLjGRIKGOEOVssHePQfFEKKU96ZVR3xkhFKWHi9tBKlET7KMf1xRjcpTR9wZyjA0qv6hWf2Q97/Rvm71ts/JbQ6JTlFPGbqVHshv7BEYDuRwiYEn1p85T1v6lJk+qByBnuqg371D2KSkaGqVfA/lsCFFbRFeREoL5yciCCnd0Lh/TDFCBCzUBKtUVZ3HGqGPKvis8aqWINIRdGGVqwHv11TBzaUvOtZzah1CJuGhHmKtfTdDIKGYRSblUR7aKvsjUIiZYPgHybUzxV960HAYP/xOMpFBYj94k3gowD0LnD8jll9muyPneICAeCOy4OmTSR0nSNKjMrr8Xs3HDLlZA4GTa8dYxae2BESYrluPu/GxuVlOufk9Lms+IS2B8c7WXY/FPK5lm7WlyiokswK5vHqMCMSs3XPBtRRhIdabyCjUq9VXLi2V5J1XmN3lJazpgabahe7jQsb2EXqb6tmhiReMh0qaex18KWg1KyG92cSYXCsrvIJZeToNSAqJ4F4dRfjTzZNis1x2dQx3ErJWRGemLA40RW35Txg1VIqB8a1kf8rvSBA49t9jtMccdrlS3iZkuKlQha9jlOmHzzqKXEmWtXaDoXYrQyQfLun0b+JP74hisyxvEoUFUBtPb/j3hXduTFqhJs7zcSUsI2Ijn7SsyyTcZ++klHHyqEnlgaBTUlCCh3u/sPwvNfYqhr5BMFijBRElFanMulrlBfmLQEpvtF02a0n9wC35+JCzltx7TfEAoXN3kLky4J4GZ1ExYD0sut1Cp+cJNhulGrmUnLA41DF6DxbYXPHEymQuQ3h3lwcP1y35LurySQCXM8/6hcUp4mVD0WXqxVkxuBm/t3eALFtRw7uITLOr/Zj5H5YEKDp5MEGwCkp15XRhx9V2b89OfhTfYwgRCAs+5mmkdPnOhTxEw6E3eIEC+gynls4AhzjrOBrN+W5BPTwjPKa1LuWzJoPvEjBrEq8tkZdEF6ToP098Pdnu1zVf6n8w2g7x38BFBcSGZl2SL56MJzJXwDo5FAhHpXbGgYW9L63AKmARBm4eKIaC0AAnVgMubVW7ucWOQwB5wuIu35kIbzi21699+6uQPUfjD0iwM/RrwVgAwjAMVErxp+2ilS2bX6SeJ0CJqq3XL0MT28k5C2s4fDgsJ91Gm2e8ytKBM4McSg+AJW7n8wX+v/alJ6TPlB1vq2Rnznvaak0YWmdk6paK6S/vFCURQC17Ql&quot;}"><div class="jornada-cab"><h3>Jornada 3</h3><span class="fecha">Fecha por confirmar</span></div>
+<div class="cerrojo"><p>Se abre al aprobar con 70 % el control de lectura de la jornada 2. Sesiones: S08 a S11.</p>
+<p><a href="actividades/control-jornada-2/">Ir al control de la jornada 2</a>, o escriba la llave si ya la tiene.</p>
+<form><input autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Llave de la jornada 3" aria-label="Llave de la jornada 3"><button class="boton" type="submit">Abrir</button></form>
+<p class="error"></p></div><div class="interior"></div></div><div class="jornada cerrada" data-j="4" data-c="{&quot;s&quot;: &quot;UKqbI2v0qWWAGW8ncnSvow==&quot;, &quot;iv&quot;: &quot;llfqLXXmC9jOddPl&quot;, &quot;it&quot;: 200000, &quot;c&quot;: &quot;ZFi5XTLfHifaKF9L6d/2IPpSLml0r+kwolnhNvXaaCMMapUe1b5NjCTgQTymNqdCip5aNlYzqZjcn+yG4ryqlRLmmWp5lWtbWL8rYv8gkXJhNq0s1aCN5ai+fZuttqI9lR9yNWvSMeJdGX6o2NInMHs6UcnILJYsRC69gsyzK5+nuEUKlrosIhJ8PHC4gA2HLdUgy6Jb7aCmPkhbJ+j5jGMu3ZwXYULUh8DGO2bpID/pmHmcm7KjxuzTvUjYX/LnGaevb7ndHKyFbkFBNOolwjEUnkj+o1b3dMIQYXIs7464NFITkP4MGwT4HCYBGNERqW0M+ANWJom0FLLkSyfTMW5Cu1ctiNFJ7kx5MgKeCMwnzht33YZcPh5UCw/1thDa5K4oWyvYrLQPuTO/0F9fiJ7dk1hyzsLe2IBMGT248RqvRXlJsvQZHfnGgjTzPiDalJdIvcmp0yfyEeTXt6B3WEfVZw4wO0rJw51i9DiaB8bprFyzry3WqUKlhHfnm3JB1DB73ax21CkZA5mk51P3ratN9lwyRJt1C6nrlO5YDqU4SCwBvf+xMIJdNVptDkaSo6ZQjZVn2uDKGcBbAPej2rYDqddLDrThNQmaSxntbYm7BSdPI/q9nSdsV6/g+oeQZnVp0sg/8GwmHSJlHmdWxb7ifq8iNcQgFxU3xcJBM0diuaJdd+/Wr+NqRMb+f353mOIQ6d1q1LRoZe0+IO+T8JBTI1C2axMQkP7LvhUTcg1uITH/MC/iWbLwiZtZAD2EEjXswgQWgQHZQTqlbWKkPNqIcCygyaWxAmXbNHyfJqHkEZC8b4ctK+Uxnouvbf+vUY5UqiRQ0mVzS1JkPTt4INPtEKfaEiNa8yIUYmnQXKcJiGuRvMmR9QogPvgOThTphwdqswA2ny0NSaUeSEm9KHP1wfe1+qxFxgPYXM6u8l+FtSFx+A6vMCHQskJODpVjXGvahM5hMT+QOcoSdU5EHtyRjcd9eRGQgvHl7VhXyH88Vh8xHGTSqm5IH7gQDSRwa58H2oXw5+1lOOX+wi5W9GdGndn0BrvVOnBUeLk=&quot;}"><div class="jornada-cab"><h3>Jornada 4</h3><span class="fecha">Fecha por confirmar</span></div>
+<div class="cerrojo"><p>Se abre al aprobar con 70 % el control de lectura de la jornada 3. Sesiones: S12 a S14.</p>
+<p><a href="actividades/control-jornada-3/">Ir al control de la jornada 3</a>, o escriba la llave si ya la tiene.</p>
+<form><input autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Llave de la jornada 4" aria-label="Llave de la jornada 4"><button class="boton" type="submit">Abrir</button></form>
+<p class="error"></p></div><div class="interior"></div></div>
+</section>
+<section id="evaluacion"><h2>Evaluación</h2>
+<p class="bajada">La prueba diagnóstica es formativa y no lleva nota.</p>
+<table><tbody><tr><td>Foro de salud universal</td><td>10 %</td></tr><tr><td>Club de revistas</td><td>20 %</td></tr><tr><td>Talleres de costeo y del Decreto Ejecutivo 420</td><td>30 %</td></tr><tr><td>Trabajo final RISS con sustentación</td><td>40 %</td></tr><tr><td>Total</td><td>100 %</td></tr></tbody></table>
+<p class="nota">Esquema sujeto a los lineamientos de evaluación de la UDELAS. Cada consigna trae su rúbrica.</p>
+</section>
+<section id="ia"><h2>Uso de la inteligencia artificial</h2>
+<p class="bajada">Cada actividad dice si la IA está permitida, limitada, exigida o prohibida, y por qué. Toda entrega lleva su declaración de uso de IA.</p>
+<a class="boton" href="politica-ia/">Leer la política del curso</a>
+</section>
+<section id="lecturas"><h2>Lecturas</h2>
+<p class="bajada">Bibliografía del programa por módulo. Los enlaces llevan a la fuente original.</p>
+<details><summary>Módulo 1. El sector salud y la economía</summary><ul><li>Ley 462 de 2025, que modifica la Ley Orgánica de la Caja de Seguro Social. Gaceta Oficial Digital, 30238.</li><li>Decreto Ejecutivo 420 de 2018, que establece el modelo de atención de salud de Panamá. Gaceta Oficial Digital, 28676-A.</li><li>MINSA, Dirección de Planificación de Salud (2022). Análisis de la situación del financiamiento de salud en Panamá 2021. MINSA, OPS/OMS, ICGES.</li><li>Secci, F., Urquijo, L., Hernández, W. y Cafagna, G. (2024). Atención primaria de salud en Panamá: oportunidades para mejorar la calidad, equidad e integración de los servicios. Banco Mundial.</li><li>MINSA, CSS y OPS (2021). Guía de indicadores: monitoreo, evaluación de costos y ejecución presupuestaria Panamá. OPS/OMS Panamá.</li><li>OPS (2019). Salud universal en el siglo XXI: 40 años de Alma-Ata. Informe de la Comisión de Alto Nivel. <a href="https://iris.paho.org/handle/10665.2/50960" target="_blank" rel="noopener">Abrir</a></li><li>OPS (2025). Financiamiento de los sistemas de salud en América Latina y el Caribe: principales tendencias al 2023. <a href="https://iris.paho.org/handle/10665.2/69389" target="_blank" rel="noopener">Abrir</a></li><li>WHO (2024). Global spending on health: Emerging from the pandemic. <a href="https://iris.who.int/handle/10665/379750" target="_blank" rel="noopener">Abrir</a></li><li>WHO y World Bank (2025). Tracking universal health coverage: 2025 global monitoring report. <a href="https://iris.who.int/handle/10665/384883" target="_blank" rel="noopener">Abrir</a></li></ul><h5>Lectura complementaria</h5><ul><li>OPS (2018). Espacio fiscal para la salud en América Latina y el Caribe. <a href="https://iris.paho.org/handle/10665.2/34947" target="_blank" rel="noopener">Abrir</a></li><li>Flores, Y. N., Roberton, T., Toledano, M. T., et al. (2025). The role of demographic and epidemiologic transitions on growing health expenditures in Latin America and the Caribbean. The Lancet Regional Health, Americas, 44, 101070. <a href="https://doi.org/10.1016/j.lana.2025.101070" target="_blank" rel="noopener">Abrir</a></li><li>OMS (2010). Informe sobre la salud en el mundo: la financiación de los sistemas de salud, el camino hacia la cobertura universal. <a href="https://iris.who.int/handle/10665/44373" target="_blank" rel="noopener">Abrir</a></li></ul></details><details><summary>Módulo 2. El mercado de la asistencia sanitaria</summary><ul><li>Folland, S., Goodman, A. C., Stano, M. y Danagoulian, S. (2024). The economics of health and health care (9.ª ed.). Routledge.</li><li>Arrow, K. J. (2001). Uncertainty and the welfare economics of medical care. Journal of Health Politics, Policy and Law, 26(5), 851-883. <a href="https://doi.org/10.1215/03616878-26-5-851" target="_blank" rel="noopener">Abrir</a></li><li>Decreto Ejecutivo 420 de 2018, que establece el modelo de atención de salud de Panamá. Gaceta Oficial Digital, 28676-A.</li><li>OPS (2025). Redes integradas de servicios de salud: actualización del marco conceptual y operacional para la Región de las Américas. <a href="https://iris.paho.org/handle/10665.2/69281" target="_blank" rel="noopener">Abrir</a></li></ul><h5>Lectura complementaria</h5><ul><li>McPake, B., Normand, C., Smith, S. y Nolan, A. (2020). Health economics: An international perspective (4.ª ed.). Routledge.</li></ul></details><details><summary>Módulo 3. Gestión de la calidad asistencial</summary><ul><li>Slawomirski, L., Auraaen, A. y Klazinga, N. (2017). The economics of patient safety (OECD Health Working Papers, 96). <a href="https://doi.org/10.1787/5a9858cd-en" target="_blank" rel="noopener">Abrir</a></li><li>Slawomirski, L. y Klazinga, N. (2022). The economics of patient safety: From analysis to action (OECD Health Working Papers, 145). <a href="https://doi.org/10.1787/761f2da8-en" target="_blank" rel="noopener">Abrir</a></li><li>OMS, OCDE y Banco Mundial (2020). Prestación de servicios de salud de calidad: un imperativo global para la cobertura sanitaria universal. <a href="https://iris.who.int/handle/10665/340027" target="_blank" rel="noopener">Abrir</a></li><li>OMS (2022). Plan de acción mundial para la seguridad del paciente 2021-2030. <a href="https://iris.who.int/handle/10665/366407" target="_blank" rel="noopener">Abrir</a></li></ul><h5>Lectura complementaria</h5><ul><li>Izquierdo, A., Pessino, C. y Vuletin, G. (Eds.) (2018). Mejor gasto para mejores vidas: cómo América Latina y el Caribe puede hacer más con menos. BID. <a href="https://doi.org/10.18235/0001217-es" target="_blank" rel="noopener">Abrir</a></li></ul></details><details><summary>Módulo 4. Aplicación del análisis económico y financiero en la gestión sanitaria</summary><ul><li>Drummond, M. F., Sculpher, M. J., Claxton, K., Stoddart, G. L. y Torrance, G. W. (2015). Methods for the economic evaluation of health care programmes (4.ª ed.). Oxford University Press.</li><li>Husereau, D., Drummond, M., Augustovski, F., et al. (2022). Consolidated Health Economic Evaluation Reporting Standards 2022 (CHEERS 2022) statement. BMJ, 376, e067975. <a href="https://doi.org/10.1136/bmj-2021-067975" target="_blank" rel="noopener">Abrir</a></li><li>Instituto de Evaluación Tecnológica en Salud (2014). Manual para la elaboración de evaluaciones económicas en salud. IETS.</li><li>OPS (2026). Evaluación de tecnologías sanitarias en hospitales para América Latina y el Caribe. <a href="https://doi.org/10.37774/9789275330241" target="_blank" rel="noopener">Abrir</a></li><li>Özaltın, A. y Cashin, C. (Eds.) (2014). Costing of health services for provider payment. Joint Learning Network for Universal Health Coverage.</li><li>Keel, G., Savage, C., Rafiq, M. y Mazzocato, P. (2017). Time-driven activity-based costing in health care: A systematic review of the literature. Health Policy, 121(7), 755-763. <a href="https://doi.org/10.1016/j.healthpol.2017.04.013" target="_blank" rel="noopener">Abrir</a></li><li>Špacírová, Z., Epstein, D., García-Mochón, L., et al. (2020). A general framework for classifying costing methods for economic evaluation of health care. The European Journal of Health Economics, 21(4), 529-542. <a href="https://doi.org/10.1007/s10198-019-01157-9" target="_blank" rel="noopener">Abrir</a></li></ul><h5>Lectura complementaria</h5><ul><li>O&#x27;Rourke, B., Oortwijn, W. y Schuller, T. (2020). The new definition of health technology assessment: A milestone in international collaboration. International Journal of Technology Assessment in Health Care, 36(3), 187-190. <a href="https://doi.org/10.1017/S0266462320000215" target="_blank" rel="noopener">Abrir</a></li><li>Kaplan, R. S. y Porter, M. E. (2011). How to solve the cost crisis in health care. Harvard Business Review, 89(9), 46-61.</li></ul></details>
+</section>
+</main>
+<script>
+
+function normLlave(s){return s.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'-');}
+function b64(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+async function abrirCon(d,llave){
+  try{
+    var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(normLlave(llave)),'PBKDF2',false,['deriveKey']);
+    var k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(d.s),iterations:d.it,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+    var t=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(d.iv)},k,b64(d.c));
+    return new TextDecoder().decode(t);
+  }catch(e){return null;}
+}
+function llaveGuardada(j){try{return localStorage.getItem('econ-llave-j'+j)||sessionStorage.getItem('econ-llave-j'+j);}catch(e){return null;}}
+function guardarLlave(j,v){try{localStorage.setItem('econ-llave-j'+j,v);}catch(e){} try{sessionStorage.setItem('econ-llave-j'+j,v);}catch(e){}}
+function guardarLlaves(o){for(var j in o){if(o[j])guardarLlave(j,o[j]);}}
+
+document.querySelectorAll('.jornada.cerrada').forEach(function(b){
+  var J=+b.dataset.j, D=JSON.parse(b.dataset.c), err=b.querySelector('.error');
+  async function abrir(v,callado){
+    var t=await abrirCon(D,v);
+    if(t===null){ if(!callado) err.textContent='Esa llave no abre esta jornada. Revísela.'; return; }
+    guardarLlave(J,v); b.querySelector('.cerrojo').remove(); b.querySelector('.interior').innerHTML=t; b.classList.remove('cerrada');
+  }
+  var g=llaveGuardada(J); if(g) abrir(g,true);
+  b.querySelector('form').onsubmit=function(e){e.preventDefault(); err.textContent=''; abrir(b.querySelector('input').value,false);};
+});
+</script>
+<footer><div class="envoltura">Economía y Finanzas de los Servicios de Salud, UDELAS. Dr. Manuel S. Nazas R., docente del curso.</div></footer>
+</body></html>

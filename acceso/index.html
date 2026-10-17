@@ -137,6 +137,12 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 #velo[hidden]{display:none}
 .velo-caja{max-width:28rem;background:var(--panel);border:1px solid var(--crit);border-radius:14px;padding:22px}
 .error-txt{color:var(--crit);min-height:1.4em}
+.hito{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:18px;margin:0 0 16px;scroll-margin-top:16px}
+.hito:target{border-color:var(--acc)}
+.hito-cab{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;margin:0 0 6px}
+.hito h3{font:600 19px/1.25 "Source Serif 4",Georgia,serif;margin:0}
+.hito-fechas{color:var(--atenuado);font-size:15px}
+.lectura-lista li{padding-left:30px}
 .candado{max-width:30rem;margin:12vh auto 0;padding:24px;background:var(--panel);border:1px solid var(--filete);border-radius:14px}
 .candado input{width:100%;font:16px "IBM Plex Mono",monospace;padding:12px;margin:12px 0;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
 .candado .error{color:var(--crit);min-height:1.4em;margin:0}
@@ -290,13 +296,15 @@ function simuladorDocente(d){
   var cerrar=function(it,resp,motivo){
     var k=C.ctrl[it.j], n=aciertos(resp,k), ok=n/k.length>=C.umbral, p=previos(it.j);
     it.estado='cerrado: '+motivo; it.resp=resp; p.push({aciertos:n,aprobado:ok,motivo:motivo}); E.int[it.j]=p; guardar();
-    var r={ok:true,cerrado:true,motivo:motivo,aprobado:ok,aciertos:n,total:k.length,restantes:C.intentos-p.length};
-    if(ok) r.llaves=M.llaves; return r;
+    // Tercer intento sin aprobar: la jornada se abre igual (ficha T5), como en el servidor.
+    var abre=!ok&&p.length>=C.intentos;
+    var r={ok:true,cerrado:true,motivo:motivo,aprobado:ok,aciertos:n,total:k.length,restantes:Math.max(0,C.intentos-p.length),abierta:abre};
+    if(ok||abre) r.llaves=M.llaves; return r;
   };
   var cerrado=function(it){
-    var p=previos(it.j), f=p[p.length-1]||{aciertos:0,aprobado:false};
-    var r={ok:true,cerrado:true,motivo:it.estado.replace('cerrado: ',''),aprobado:f.aprobado,aciertos:f.aciertos,total:C.ctrl[it.j].length,restantes:C.intentos-p.length};
-    if(f.aprobado) r.llaves=M.llaves; return r;
+    var p=previos(it.j), f=p[p.length-1]||{aciertos:0,aprobado:false}, abre=!f.aprobado&&p.length>=C.intentos;
+    var r={ok:true,cerrado:true,motivo:it.estado.replace('cerrado: ',''),aprobado:f.aprobado,aciertos:f.aciertos,total:C.ctrl[it.j].length,restantes:Math.max(0,C.intentos-p.length),abierta:abre};
+    if(f.aprobado||abre) r.llaves=M.llaves; return r;
   };
   var a=d.accion, it=d.id?E.ab[d.id]:null;
   if(a==='inscribir'){
@@ -311,7 +319,7 @@ function simuladorDocente(d){
     if(ab&&restan(ab)<-GRACIA){cerrar(ab,ab.resp||[],'tiempo vencido sin envío'); ab=null;}
     var p=previos(j);
     if(p.some(function(f){return f.aprobado;})) return {ok:true,aprobado:true,repetido:true,llaves:M.llaves};
-    if(!ab&&p.length>=C.intentos) return {ok:false,agotado:true,error:'Ya usó sus '+C.intentos+' intentos. Escriba al docente.'};
+    if(!ab&&p.length>=C.intentos){var u=p[p.length-1]||{aciertos:0}; return {ok:true,agotado:true,abierta:true,aprobado:false,cerrado:true,aciertos:u.aciertos,total:C.ctrl[j].length,restantes:0,llaves:M.llaves};}
     if(ab) return {ok:true,id:ab.id,segundos:Math.max(0,restan(ab)),salidas:ab.salidas,respuestas:ab.resp||[],reanudado:true};
     var nuevo={id:'ensayo-'+Date.now(),j:j,inicio:Date.now(),salidas:0,resp:[],estado:'abierto'};
     E.ab[nuevo.id]=nuevo; guardar();

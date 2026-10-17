@@ -2,7 +2,7 @@
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Calificar el foro</title>
+<title>Calificar el foro 1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
 <style>
@@ -137,6 +137,12 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 #velo[hidden]{display:none}
 .velo-caja{max-width:28rem;background:var(--panel);border:1px solid var(--crit);border-radius:14px;padding:22px}
 .error-txt{color:var(--crit);min-height:1.4em}
+.hito{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:18px;margin:0 0 16px;scroll-margin-top:16px}
+.hito:target{border-color:var(--acc)}
+.hito-cab{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;margin:0 0 6px}
+.hito h3{font:600 19px/1.25 "Source Serif 4",Georgia,serif;margin:0}
+.hito-fechas{color:var(--atenuado);font-size:15px}
+.lectura-lista li{padding-left:30px}
 .candado{max-width:30rem;margin:12vh auto 0;padding:24px;background:var(--panel);border:1px solid var(--filete);border-radius:14px}
 .candado input{width:100%;font:16px "IBM Plex Mono",monospace;padding:12px;margin:12px 0;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
 .candado .error{color:var(--crit);min-height:1.4em;margin:0}
@@ -197,8 +203,9 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 <header><div class="envoltura">
 <a class="volver" href="../../">Volver al aula</a>
 <div class="antetitulo">Economía y Finanzas de los Servicios de Salud, modo docente</div>
-<h1>Calificar el foro</h1>
-<p class="aviso"><strong>¿Es posible una salud universal en Panamá?</strong> Marque un nivel en cada criterio y escriba la realimentación. El puntaje se calcula solo y queda en la hoja Calificación del foro.</p>
+<h1>Calificar el foro 1</h1>
+<p class="aviso"><strong>¿Es posible una salud universal en Panamá?</strong> Marque un nivel en cada criterio y escriba la realimentación. El puntaje se calcula solo con la escala del curso (Excelente 100 %, Bueno 85 %, Suficiente 72 %, Insuficiente 50 %, No presentado 0 %) y queda en la hoja Calificación del foro.</p>
+<p class="nota"><a href="../foro-2/">Ir al calificador del foro 2</a></p>
 </div></header>
 <main class="envoltura">
 <section class="bloque" id="d-entrar"><div class="formulario"><label class="campo"><span>Clave docente</span><input id="d-clave" type="password" autocomplete="off"></label></div>
@@ -294,13 +301,15 @@ function simuladorDocente(d){
   var cerrar=function(it,resp,motivo){
     var k=C.ctrl[it.j], n=aciertos(resp,k), ok=n/k.length>=C.umbral, p=previos(it.j);
     it.estado='cerrado: '+motivo; it.resp=resp; p.push({aciertos:n,aprobado:ok,motivo:motivo}); E.int[it.j]=p; guardar();
-    var r={ok:true,cerrado:true,motivo:motivo,aprobado:ok,aciertos:n,total:k.length,restantes:C.intentos-p.length};
-    if(ok) r.llaves=M.llaves; return r;
+    // Tercer intento sin aprobar: la jornada se abre igual (ficha T5), como en el servidor.
+    var abre=!ok&&p.length>=C.intentos;
+    var r={ok:true,cerrado:true,motivo:motivo,aprobado:ok,aciertos:n,total:k.length,restantes:Math.max(0,C.intentos-p.length),abierta:abre};
+    if(ok||abre) r.llaves=M.llaves; return r;
   };
   var cerrado=function(it){
-    var p=previos(it.j), f=p[p.length-1]||{aciertos:0,aprobado:false};
-    var r={ok:true,cerrado:true,motivo:it.estado.replace('cerrado: ',''),aprobado:f.aprobado,aciertos:f.aciertos,total:C.ctrl[it.j].length,restantes:C.intentos-p.length};
-    if(f.aprobado) r.llaves=M.llaves; return r;
+    var p=previos(it.j), f=p[p.length-1]||{aciertos:0,aprobado:false}, abre=!f.aprobado&&p.length>=C.intentos;
+    var r={ok:true,cerrado:true,motivo:it.estado.replace('cerrado: ',''),aprobado:f.aprobado,aciertos:f.aciertos,total:C.ctrl[it.j].length,restantes:Math.max(0,C.intentos-p.length),abierta:abre};
+    if(f.aprobado||abre) r.llaves=M.llaves; return r;
   };
   var a=d.accion, it=d.id?E.ab[d.id]:null;
   if(a==='inscribir'){
@@ -315,7 +324,7 @@ function simuladorDocente(d){
     if(ab&&restan(ab)<-GRACIA){cerrar(ab,ab.resp||[],'tiempo vencido sin envío'); ab=null;}
     var p=previos(j);
     if(p.some(function(f){return f.aprobado;})) return {ok:true,aprobado:true,repetido:true,llaves:M.llaves};
-    if(!ab&&p.length>=C.intentos) return {ok:false,agotado:true,error:'Ya usó sus '+C.intentos+' intentos. Escriba al docente.'};
+    if(!ab&&p.length>=C.intentos){var u=p[p.length-1]||{aciertos:0}; return {ok:true,agotado:true,abierta:true,aprobado:false,cerrado:true,aciertos:u.aciertos,total:C.ctrl[j].length,restantes:0,llaves:M.llaves};}
     if(ab) return {ok:true,id:ab.id,segundos:Math.max(0,restan(ab)),salidas:ab.salidas,respuestas:ab.resp||[],reanudado:true};
     var nuevo={id:'ensayo-'+Date.now(),j:j,inicio:Date.now(),salidas:0,resp:[],estado:'abierto'};
     E.ab[nuevo.id]=nuevo; guardar();
@@ -356,11 +365,11 @@ function guardarId(o){if(modoDocente()) return; try{localStorage.setItem('econ-i
 function respuestas(n){var r=[],f=[];for(var i=0;i<n;i++){var s=document.querySelector('input[name=p'+i+']:checked');if(!s)f.push(i+1);r.push(s?+s.value:-1);}return {r:r,falta:f};}
 
 (function(){
-var CFG={"rubrica": [{"nombre": "Respuesta con evidencia", "puntos": 35, "niveles": ["Toma postura y la sostiene con evidencia pertinente y actual de los tres ejes.", "Toma postura con evidencia de los tres ejes, pero una es débil o poco actual.", "Cubre solo dos ejes, o la evidencia no sostiene la postura.", "Opina sin evidencia o no responde la pregunta."]}, {"nombre": "Análisis propio", "puntos": 20, "niveles": ["Relaciona los ejes entre sí y saca una conclusión que no está en las fuentes.", "Analiza cada eje, pero los relaciona poco.", "Describe lo que dicen las fuentes, sin analizarlo.", "Copia o parafrasea sin aporte propio."]}, {"nombre": "Réplicas", "puntos": 25, "niveles": ["Dos réplicas o más, cada una con un dato, una fuente o una objeción nueva y fundamentada.", "Dos réplicas, una de ellas con aporte nuevo.", "Una réplica con aporte, o dos réplicas que solo coinciden.", "Sin réplicas o réplicas de cortesía."]}, {"nombre": "Fuentes y APA 7", "puntos": 10, "niveles": ["Fuentes primarias o institucionales, citadas y referenciadas sin errores.", "Fuentes adecuadas con errores menores de formato.", "Fuentes de calidad desigual o citas incompletas.", "Sin fuentes o sin referencias."]}, {"nombre": "Redacción", "puntos": 10, "niveles": ["Clara, concisa y sin errores, dentro de la extensión pedida.", "Clara, con pocos errores.", "Se entiende, con errores frecuentes o fuera de la extensión.", "Difícil de seguir."]}], "niveles": [["Excelente", 1.0], ["Bueno", 0.75], ["Suficiente", 0.5], ["Insuficiente", 0.25], ["Sin evidencia", 0.0]], "peso": 10}, $=function(x){return document.getElementById(x);}, D=null, clave='';
+var CFG={"rubrica": [{"nombre": "Respuesta con evidencia", "puntos": 35, "niveles": ["Toma postura y la sostiene con evidencia pertinente y actual de los tres ejes.", "Toma postura con evidencia de los tres ejes, pero una es débil o poco actual.", "Cubre solo dos ejes, o la evidencia no sostiene la postura.", "Opina sin evidencia o no responde la pregunta.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Análisis propio", "puntos": 20, "niveles": ["Relaciona los ejes entre sí y saca una conclusión que no está en las fuentes.", "Analiza cada eje, pero los relaciona poco.", "Describe lo que dicen las fuentes, sin analizarlo.", "Copia o parafrasea sin aporte propio.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Réplicas", "puntos": 25, "niveles": ["Dos réplicas o más, cada una con un dato, una fuente o una objeción nueva y fundamentada.", "Dos réplicas, una de ellas con aporte nuevo.", "Una réplica con aporte, o dos réplicas que solo coinciden.", "Sin réplicas o réplicas de cortesía.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Fuentes y APA 7", "puntos": 10, "niveles": ["Fuentes primarias o institucionales, citadas y referenciadas sin errores.", "Fuentes adecuadas con errores menores de formato.", "Fuentes de calidad desigual o citas incompletas.", "Sin fuentes o sin referencias.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Redacción", "puntos": 10, "niveles": ["Clara, concisa y sin errores, dentro de la extensión pedida.", "Clara, con pocos errores.", "Se entiende, con errores frecuentes o fuera de la extensión.", "Difícil de seguir.", "No lo entregó, o no hay evidencia de este criterio."]}], "niveles": [["Excelente", 1.0], ["Bueno", 0.85], ["Suficiente", 0.72], ["Insuficiente", 0.5], ["No presentado", 0.0]], "peso": 10, "foro": 1, "archivo": "notas_foro_salud_universal.csv"}, $=function(x){return document.getElementById(x);}, D=null, clave='';
 function el(tag,cls,txt){var e=document.createElement(tag); if(cls) e.className=cls; if(txt!==undefined) e.textContent=txt; return e;}
 try{clave=sessionStorage.getItem('econ-clave-docente-foro')||'';}catch(e){}
 async function cargar(){
-  var x=await servidor({accion:'foro_docente',claveDocente:clave});
+  var x=await servidor({accion:'foro_docente',foro:CFG.foro,claveDocente:clave});
   if(!x.ok){$('d-aviso').textContent=x.error||'No se pudo entrar.'; $('d-entrar').hidden=false; $('d-zona').hidden=true; return;}
   try{sessionStorage.setItem('econ-clave-docente-foro',clave);}catch(e){}
   D=x; $('d-entrar').hidden=true; $('d-zona').hidden=false; pintar();
@@ -384,7 +393,7 @@ function detalle(p,det){
   p.mensajes.forEach(function(m){
     var t=el('article','foro-tarjeta'+(m.oculto?' foro-oculto':'')), meta=el('p','foro-meta');
     meta.append(el('b','',m.tipo==='aporte'?'Aporte':'Réplica a '+autorDe(m.padre)), el('span','',m.palabras+' palabras'), el('span','',new Date(m.fecha).toLocaleString('es-PA')));
-    var oc=el('button','boton sec chico',m.oculto?'Mostrar':'Ocultar'); oc.onclick=async function(){oc.disabled=true; var x=await servidor({accion:'foro_ocultar',claveDocente:clave,id:m.id,ocultar:!m.oculto}); if(x.ok){m.oculto=!m.oculto; oc.textContent=m.oculto?'Mostrar':'Ocultar'; t.classList.toggle('foro-oculto',m.oculto);} oc.disabled=false;};
+    var oc=el('button','boton sec chico',m.oculto?'Mostrar':'Ocultar'); oc.onclick=async function(){oc.disabled=true; var x=await servidor({accion:'foro_ocultar',foro:CFG.foro,claveDocente:clave,id:m.id,ocultar:!m.oculto}); if(x.ok){m.oculto=!m.oculto; oc.textContent=m.oculto?'Mostrar':'Ocultar'; t.classList.toggle('foro-oculto',m.oculto);} oc.disabled=false;};
     meta.append(oc); t.append(meta, el('p','foro-texto',m.texto)); det.append(t);
   });
   var previos=(p.calificacion&&p.calificacion.niveles)||'';
@@ -393,7 +402,7 @@ function detalle(p,det){
     var g=el('div','nivel-opciones');
     CFG.niveles.forEach(function(n,k){
       var l=el('label'), r=el('input'); r.type='radio'; r.name='n-'+p.cedula+'-'+i; r.value=k; if(previos.charAt(i)===String(k)) r.checked=true;
-      var pts=Math.round(c.puntos*n[1]*10)/10; l.append(r, el('b','',n[0]), el('small','',pts+' pts'));
+      var pts=Math.round(c.puntos*n[1]*100)/100; l.append(r, el('b','',n[0]), el('small','',pts+' pts'));
       if(c.niveles[k]) l.title=c.niveles[k];
       g.append(l);
     });
@@ -405,7 +414,7 @@ function detalle(p,det){
   g.onclick=async function(){
     var niv=CFG.rubrica.map(function(_,i){var r=det.querySelector('input[name="n-'+p.cedula+'-'+i+'"]:checked'); return r?+r.value:-1;});
     if(niv.some(function(x){return x<0;})){msg.textContent='Marque un nivel en cada criterio.';return;}
-    g.disabled=true; var x=await servidor({accion:'foro_calificar',claveDocente:clave,cedula:p.cedula,niveles:niv,comentario:com.value}); g.disabled=false;
+    g.disabled=true; var x=await servidor({accion:'foro_calificar',foro:CFG.foro,claveDocente:clave,cedula:p.cedula,niveles:niv,comentario:com.value}); g.disabled=false;
     if(!x.ok){msg.textContent=x.error||'No se pudo guardar.';return;}
     p.calificacion={total:x.total,nota:x.nota,comentario:com.value,niveles:niv.join('')};
     msg.textContent='Guardado: '+x.total+' de 100, nota del foro '+x.nota+' de '+CFG.peso+'.'; pintar();
@@ -413,14 +422,14 @@ function detalle(p,det){
   det.append(com, g, msg);
 }
 function filas(){
-  var f=[['Cédula','Nombre','Correo','Puntaje de 100','Nota del foro (de '+CFG.peso+')','Realimentación']];
+  var f=[['Cédula','Nombre','Correo','Puntaje de 100','Nota del foro '+CFG.foro+' (de '+CFG.peso+')','Realimentación']];
   D.participantes.forEach(function(p){var c=p.calificacion; f.push([p.cedula,p.nombre,p.correo,c?c.total:'',c?c.nota:'',c?c.comentario:'']);});
   return f;
 }
 function csv(f){return f.map(function(r){return r.map(function(v){v=String(v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',');}).join('\r\n');}
 $('d-csv').onclick=function(){
   var b=new Blob(['\ufeff'+csv(filas())],{type:'text/csv;charset=utf-8'}), a=document.createElement('a');
-  a.href=URL.createObjectURL(b); a.download='notas_foro_salud_universal.csv'; document.body.append(a); a.click(); a.remove();
+  a.href=URL.createObjectURL(b); a.download=CFG.archivo; document.body.append(a); a.click(); a.remove();
 };
 $('d-copiar').onclick=function(){
   var t=$('d-portapapeles'); t.value=filas().map(function(r){return r.join('\t');}).join('\n'); t.focus(); t.select(); var ok=false;

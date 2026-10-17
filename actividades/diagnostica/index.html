@@ -8,9 +8,6 @@
 <style>
 :root{--bg:#161b22;--panel:#1f2630;--texto:#e9edf1;--atenuado:#9aa6b2;--filete:#2e3742;
 --acc:#e0915e;--acc2:#8fb8c9;--suave:#3a2a24;--pos:#7fc4a0;--alerta:#e2c15a;--crit:#e58a8a}
-@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#f3f5f7;--panel:#fff;
---texto:#1d2329;--atenuado:#5c6670;--filete:#d5dbe2;--acc:#a2532a;--acc2:#3d6f86;--suave:#f5e3d8;
---pos:#2f6b4f;--alerta:#8a6a12;--crit:#9b2f2f}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--texto);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
 a{color:var(--acc2)}
@@ -63,7 +60,6 @@ a.act:hover .nombre{color:var(--acc)}
 .cerrojo form{display:flex;gap:8px;flex-wrap:wrap}
 .cerrojo input{flex:1 1 12rem;font:16px "IBM Plex Mono",monospace;padding:10px 12px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
 .cerrojo .error{color:var(--crit);min-height:1.4em;margin:8px 0 0}
-.jornada.cerrada h3:after{content:" (con llave)";font:400 14px "IBM Plex Sans",sans-serif;color:var(--atenuado)}
 .puerta{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin:16px 0 0;padding:16px;border:1px solid var(--acc);border-radius:12px;background:var(--suave)}
 .puerta>div:first-child{flex:1 1 20rem}
 .puerta-acciones{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}

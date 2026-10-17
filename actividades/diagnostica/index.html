@@ -99,6 +99,7 @@ ol.pasos li{margin:0 0 10px}
 .pregunta.mal .expl{display:block;border-left:3px solid var(--crit)}
 button.boton{border:0;font:inherit;font-weight:600;cursor:pointer}
 #resultado{display:none;margin:18px 0 0}
+section#resultado:not([hidden]){display:block} /* el resultado del control; sin esto quedaba oculto */
 #resumen{width:100%;min-height:90px;margin:10px 0;font:14px "IBM Plex Mono",monospace;background:var(--bg);color:var(--texto);border:1px solid var(--filete);border-radius:8px;padding:10px}
 #aviso{color:var(--alerta);min-height:1.4em}
 .formulario{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:12px}
@@ -120,7 +121,7 @@ button.boton{border:0;font:inherit;font-weight:600;cursor:pointer}
 .candado input{width:100%;font:16px "IBM Plex Mono",monospace;padding:12px;margin:12px 0;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
 .candado .error{color:var(--crit);min-height:1.4em;margin:0}
 </style>
-</head><body>
+</head><body data-diagnostica>
 <header><div class="envoltura">
 <a class="volver" href="../../">Volver al aula</a>
 <div class="antetitulo">Economía y Finanzas de los Servicios de Salud</div>
@@ -162,11 +163,120 @@ async function abrirCon(d,llave){
     return new TextDecoder().decode(t);
   }catch(e){return null;}
 }
-function llaveGuardada(j){try{return localStorage.getItem('econ-llave-j'+j)||sessionStorage.getItem('econ-llave-j'+j);}catch(e){return null;}}
-function guardarLlave(j,v){try{localStorage.setItem('econ-llave-j'+j,v);}catch(e){} try{sessionStorage.setItem('econ-llave-j'+j,v);}catch(e){}}
+function llaveGuardada(j){var M=modoDocente(); if(M&&M.llaves&&M.llaves[j]) return M.llaves[j]; try{return localStorage.getItem('econ-llave-j'+j)||sessionStorage.getItem('econ-llave-j'+j);}catch(e){return null;}}
+/* En modo docente no se guarda nada del estudiante: las llaves salen del paquete docente. */
+function guardarLlave(j,v){if(modoDocente()) return; try{localStorage.setItem('econ-llave-j'+j,v);}catch(e){} try{sessionStorage.setItem('econ-llave-j'+j,v);}catch(e){}}
 function guardarLlaves(o){for(var j in o){if(o[j])guardarLlave(j,o[j]);}}
+/* Modo docente: el paquete descifrado con la clave docente (llaves y configuración de los
+   controles) queda 8 horas en este navegador o hasta que el docente sale. */
+var HORAS_DOCENTE=8;
+function modoDocente(){
+  try{var M=JSON.parse(localStorage.getItem('econ-docente')||'null'); if(M&&M.hasta>Date.now()) return M; if(M) localStorage.removeItem('econ-docente');}catch(e){}
+  return null;
+}
+function entrarDocente(M){M.hasta=Date.now()+HORAS_DOCENTE*3600000; try{localStorage.setItem('econ-docente',JSON.stringify(M)); return true;}catch(e){return false;}}
+function salirDocente(){try{localStorage.removeItem('econ-docente');localStorage.removeItem('econ-docente-ensayo');}catch(e){}}
+function barraDocente(){
+  var M=modoDocente(); if(!M||document.getElementById('barra-docente')) return;
+  var C=M.cfg||{}, J=document.body.dataset.control, diag=document.body.hasAttribute('data-diagnostica');
+  var clave=J?(C.ctrl||{})[J]:diag?C.diag:null;
+  var b=document.createElement('div'); b.id='barra-docente'; b.setAttribute('role','region'); b.setAttribute('aria-label','Modo docente');
+  b.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px 14px;background:var(--panel,#1b2027);color:var(--texto,#e9edf1);border:1px solid var(--acc,#d9a441);border-radius:12px;font:14px/1.4 "IBM Plex Sans",sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35)';
+  var txt='<span>Todo abierto. Nada se envía al servidor ni a la hoja de calificaciones.</span>';
+  if(J&&clave){
+    var E={}; try{E=JSON.parse(localStorage.getItem('econ-docente-ensayo')||'{}');}catch(e){}
+    var usados=((E.int||{})[J]||[]).length, n=clave.length, min=Math.ceil(C.umbral*n-1e-9);
+    txt+='<span>Control de la jornada '+J+': '+n+' preguntas, aprueba con '+min+' aciertos ('+Math.round(C.umbral*100)+' %), '+C.intentos+' intentos de '+C.minutos+' minutos; la segunda salida de la ventana lo envía. Ensayos usados: '+usados+' de '+C.intentos+'.</span>';
+  } else if(diag&&clave){
+    txt+='<span>La inscripción es un ensayo: no crea ninguna fila.</span>';
+  }
+  var boton=function(id,t){return '<button type="button" id="'+id+'" style="background:transparent;border:1px solid var(--filete,#555);color:inherit;border-radius:8px;padding:6px 10px;font:inherit;cursor:pointer;min-height:36px">'+t+'</button>';};
+  /* En el teléfono la barra empieza plegada: solo el rótulo, que la despliega. */
+  b.innerHTML='<button type="button" id="bd-plegar" aria-expanded="true" style="background:none;border:0;padding:4px 0;font:600 14px \'IBM Plex Sans\',sans-serif;color:var(--acc,#d9a441);cursor:pointer;min-height:36px">Modo docente</button>'
+    +'<span id="bd-detalle" style="display:contents">'+txt+'<span style="display:flex;flex-wrap:wrap;gap:8px;margin-left:auto">'+(clave?boton('bd-clave','Ver respuestas correctas'):'')+(J?boton('bd-reiniciar','Reiniciar ensayos'):'')+boton('bd-salir','Salir del modo docente')+'</span></span>';
+  document.body.appendChild(b);
+  var det=document.getElementById('bd-detalle'), pl=document.getElementById('bd-plegar');
+  var plegar=function(si){det.style.display=si?'none':'contents'; pl.setAttribute('aria-expanded',si?'false':'true'); pl.textContent=si?'Modo docente (abrir)':'Modo docente'; b.style.left=si?'auto':'12px'; document.body.style.paddingBottom=(b.offsetHeight+28)+'px';};
+  pl.onclick=function(){plegar(det.style.display!=='none');};
+  plegar(innerWidth<600);
+  var ced=document.getElementById('c-cedula'), cla=document.getElementById('c-clave');
+  if(J&&ced) ced.value='DOCENTE'; if(J&&cla) cla.value='ensayo';
+  var bc=document.getElementById('bd-clave');
+  if(bc) bc.onclick=function(){
+    var ver=bc.dataset.ver!=='1'; bc.dataset.ver=ver?'1':''; bc.textContent=ver?'Ocultar respuestas':'Ver respuestas correctas';
+    clave.forEach(function(k,i){
+      var r=document.querySelector('input[name=p'+i+'][value="'+k+'"]'), l=r&&r.closest('label'); if(!l) return;
+      l.style.outline=ver?'2px solid var(--pos,#5fb37a)':''; var s=l.querySelector('.bd-ok');
+      if(ver&&!s){s=document.createElement('b');s.className='bd-ok';s.textContent='Correcta';s.style.cssText='margin-left:auto;color:var(--pos,#5fb37a);font-size:13px';l.appendChild(s);}
+      if(!ver&&s) s.remove();
+    });
+  };
+  var br=document.getElementById('bd-reiniciar');
+  if(br) br.onclick=function(){try{localStorage.removeItem('econ-docente-ensayo');}catch(e){} location.reload();};
+  document.getElementById('bd-salir').onclick=function(){
+    salirDocente(); var raiz=document.querySelector('a.volver,a[href$="../"]'); location.href=raiz?raiz.getAttribute('href'):location.href;
+  };
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',barraDocente); else setTimeout(barraDocente,0);
 
 var SERVIDOR="https://script.google.com/macros/s/AKfycbzuix939G9-1sksrINsXjb7yLYz_1aA74ffiPl_FUILKNoZaRDEUkHpp9_DHXpuAW6F/exec";
+/* En modo docente las solicitudes no salen del navegador: las contesta simuladorDocente(), que
+   repite las reglas del servidor (tiempo, salidas, intentos, umbral) con la clave del paquete
+   docente y guarda los ensayos solo en este equipo. Nada llega al Apps Script ni a la hoja. */
+if(!window.__servidorPrueba&&modoDocente()) window.__servidorPrueba=simuladorDocente;
+function simuladorDocente(d){
+  var M=modoDocente()||{}, C=M.cfg||{}, GRACIA=90, E={};
+  try{E=JSON.parse(localStorage.getItem('econ-docente-ensayo')||'{}');}catch(e){}
+  E.int=E.int||{}; E.ab=E.ab||{};
+  var guardar=function(){try{localStorage.setItem('econ-docente-ensayo',JSON.stringify(E));}catch(e){}};
+  var aciertos=function(r,k){var n=0;for(var i=0;i<k.length;i++)if(Number(r[i])===k[i])n++;return n;};
+  var previos=function(j){return E.int[j]||[];};
+  var restan=function(it){return Math.round(C.minutos*60-(Date.now()-it.inicio)/1000);};
+  var cerrar=function(it,resp,motivo){
+    var k=C.ctrl[it.j], n=aciertos(resp,k), ok=n/k.length>=C.umbral, p=previos(it.j);
+    it.estado='cerrado: '+motivo; it.resp=resp; p.push({aciertos:n,aprobado:ok,motivo:motivo}); E.int[it.j]=p; guardar();
+    var r={ok:true,cerrado:true,motivo:motivo,aprobado:ok,aciertos:n,total:k.length,restantes:C.intentos-p.length};
+    if(ok) r.llaves=M.llaves; return r;
+  };
+  var cerrado=function(it){
+    var p=previos(it.j), f=p[p.length-1]||{aciertos:0,aprobado:false};
+    var r={ok:true,cerrado:true,motivo:it.estado.replace('cerrado: ',''),aprobado:f.aprobado,aciertos:f.aciertos,total:C.ctrl[it.j].length,restantes:C.intentos-p.length};
+    if(f.aprobado) r.llaves=M.llaves; return r;
+  };
+  var a=d.accion, it=d.id?E.ab[d.id]:null;
+  if(a==='inscribir'){
+    var r=d.respuestas||[];
+    if(r.length!==C.diag.length||r.some(function(x){return x<0;})) return {ok:false,error:'Conteste las '+C.diag.length+' preguntas.'};
+    return {ok:true,aciertos:aciertos(r,C.diag),total:C.diag.length,llaves:M.llaves};
+  }
+  if(a==='entrar'||a==='recuperar') return {ok:true,nueva:false,llaves:M.llaves};
+  if(a==='iniciar'){
+    var j=Number(d.jornada); if(!C.ctrl[j]) return {ok:false,error:'Control desconocido.'};
+    var ab=null; for(var id in E.ab) if(E.ab[id].j===j&&E.ab[id].estado==='abierto') ab=E.ab[id];
+    if(ab&&restan(ab)<-GRACIA){cerrar(ab,ab.resp||[],'tiempo vencido sin envío'); ab=null;}
+    var p=previos(j);
+    if(p.some(function(f){return f.aprobado;})) return {ok:true,aprobado:true,repetido:true,llaves:M.llaves};
+    if(!ab&&p.length>=C.intentos) return {ok:false,agotado:true,error:'Ya usó sus '+C.intentos+' intentos. Escriba al docente.'};
+    if(ab) return {ok:true,id:ab.id,segundos:Math.max(0,restan(ab)),salidas:ab.salidas,respuestas:ab.resp||[],reanudado:true};
+    var nuevo={id:'ensayo-'+Date.now(),j:j,inicio:Date.now(),salidas:0,resp:[],estado:'abierto'};
+    E.ab[nuevo.id]=nuevo; guardar();
+    return {ok:true,id:nuevo.id,segundos:C.minutos*60,salidas:0,intento:p.length+1};
+  }
+  if(!it) return {ok:a==='vuelta'||a==='guardar',error:'Intento desconocido.'};
+  if(a==='vuelta') return {ok:true};
+  if(a==='guardar'){ if(it.estado==='abierto'){it.resp=d.respuestas||[]; guardar();} return {ok:true}; }
+  if(it.estado!=='abierto') return cerrado(it);
+  if(a==='estado') return {ok:true,abierto:true,salidas:it.salidas};
+  if(a==='salida'){
+    it.salidas++; if(Array.isArray(d.respuestas)) it.resp=d.respuestas; guardar();
+    return it.salidas>=2?cerrar(it,it.resp,'segunda salida de la ventana'):{ok:true,salidas:it.salidas};
+  }
+  if(a==='control'){
+    if(restan(it)<-GRACIA) return cerrar(it,it.resp||[],'tiempo vencido sin envío');
+    return cerrar(it,d.respuestas||[],d.cierre?'cerró o recargó la página':d.tiempo?'fin del tiempo':'enviado');
+  }
+  return {ok:false,error:'Acción desconocida.'};
+}
 function servidor(d){
   if(window.__servidorPrueba) return Promise.resolve(window.__servidorPrueba(d));
   if(!SERVIDOR) return Promise.resolve({ok:false,error:'La inscripción todavía no está habilitada.'});
@@ -181,7 +291,7 @@ function servidor(d){
 // El servidor de Google duerme si nadie lo usa: se le despierta apenas se abre la página.
 if(SERVIDOR&&!window.__servidorPrueba){try{fetch(SERVIDOR).catch(function(){});}catch(e){}}
 function idGuardada(){try{return JSON.parse(localStorage.getItem('econ-id')||'null');}catch(e){return null;}}
-function guardarId(o){try{localStorage.setItem('econ-id',JSON.stringify(o));}catch(e){}}
+function guardarId(o){if(modoDocente()) return; try{localStorage.setItem('econ-id',JSON.stringify(o));}catch(e){}}
 function respuestas(n){var r=[],f=[];for(var i=0;i<n;i++){var s=document.querySelector('input[name=p'+i+']:checked');if(!s)f.push(i+1);r.push(s?+s.value:-1);}return {r:r,falta:f};}
 
 (function(){

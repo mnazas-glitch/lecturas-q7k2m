@@ -238,6 +238,13 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 </section>
 <script>
 
+/* Controles de lectura en ventana emergente, aparte del aula (17-oct-2026). */
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a[data-ventana]'); if(!a||e.ctrlKey||e.metaKey||e.shiftKey) return;
+  var an=Math.min(1100,screen.availWidth-40), al=Math.min(900,screen.availHeight-60);
+  var w=window.open(a.href,'control-aula','popup=yes,width='+an+',height='+al+',left='+Math.max(0,(screen.availWidth-an)/2)+',top=20');
+  if(w){e.preventDefault(); try{w.focus();}catch(x){}}
+});
 function normLlave(s){return s.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'-');}
 function b64(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
 async function abrirCon(d,llave){

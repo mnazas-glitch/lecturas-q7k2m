@@ -73,7 +73,21 @@ footer{padding:36px 0 48px;color:var(--atenuado);font-size:14px;border-top:1px s
 .bloque h2{font-size:22px}
 ol.pasos{margin:0;padding-left:22px}
 ol.pasos li{margin:0 0 10px}
-.criterio{background:var(--panel);border:1px solid var(--filete);border-radius:10px;margin:0 0 12px;overflow:hidden}
+.pestana{border:1px solid var(--filete);border-radius:12px;background:var(--panel);margin:0 0 12px;transition:border-color .2s}
+.pestana:hover,.pestana[open]{border-color:var(--acc)}
+.pestana summary{list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:16px 18px;min-height:56px;cursor:pointer}
+.pestana summary::-webkit-details-marker{display:none}
+.pestana-titulo{font:600 18px "Source Serif 4",Georgia,serif}
+.pestana-dato{font:600 13px "IBM Plex Mono",monospace;color:var(--atenuado)}
+.pestana-flecha{margin-left:auto;width:12px;height:12px;border-right:2px solid var(--acc);border-bottom:2px solid var(--acc);transform:rotate(45deg);transition:transform .25s cubic-bezier(.2,.7,.2,1)}
+.pestana[open] .pestana-flecha{transform:rotate(-135deg)}
+.pestana-cuerpo{padding:0 18px 18px;animation:desplegar .25s ease-out}
+@keyframes desplegar{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.rubrica-resumen{list-style:none;margin:0 0 16px;padding:12px 0 0;border-top:1px solid var(--filete);display:grid;gap:6px}
+.rubrica-resumen li{display:flex;justify-content:space-between;gap:12px;font-size:15px}
+.rubrica-resumen b{font:600 14px "IBM Plex Mono",monospace;color:var(--acc)}
+@media (prefers-reduced-motion:reduce){.pestana-cuerpo{animation:none}.pestana-flecha{transition:none}}
+.criterio{background:var(--bg);border:1px solid var(--filete);border-radius:10px;margin:0 0 12px;overflow:hidden}
 .criterio-cab{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--filete);font-weight:600}
 .criterio-cab span:last-child{font-family:"IBM Plex Mono",monospace;color:var(--acc)}
 .nivel-fila{display:grid;grid-template-columns:7.5rem 1fr;gap:10px;padding:10px 14px;border-bottom:1px solid var(--filete);font-size:15px}

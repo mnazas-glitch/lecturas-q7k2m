@@ -356,7 +356,7 @@ function simuladorDocente(d){
 }
 function servidor(d){
   // El foro va siempre al servidor real, también en modo docente: allí se califica de verdad.
-  var simulado=window.__servidorPrueba&&!(window.__servidorPrueba===simuladorDocente&&/^foro_/.test(d.accion));
+  var simulado=window.__servidorPrueba&&!(window.__servidorPrueba===simuladorDocente&&/^(foro_|docente_)/.test(d.accion));
   if(simulado) return Promise.resolve(window.__servidorPrueba(d));
   if(!SERVIDOR) return Promise.resolve({ok:false,error:'La inscripción todavía no está habilitada.'});
   var pedir=function(){return fetch(SERVIDOR,{method:'POST',body:JSON.stringify(d)}).then(function(r){return r.json();});};

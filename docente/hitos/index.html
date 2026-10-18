@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Tableros de los grupos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#161b22;--panel:#1f2630;--texto:#e9edf1;--atenuado:#9aa6b2;--filete:#2e3742;
+--acc:#e0915e;--acc2:#8fb8c9;--suave:#3a2a24;--pos:#7fc4a0;--alerta:#e2c15a;--crit:#e58a8a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--texto);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
+a{color:var(--acc2)}
+.envoltura{max-width:62rem;margin:0 auto;padding:0 16px}
+header{padding:48px 0 28px;border-bottom:1px solid var(--filete)}
+.antetitulo{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--acc2)}
+h1{font:600 clamp(28px,5vw,44px)/1.12 "Source Serif 4",Georgia,serif;margin:10px 0 12px;color:var(--texto)}
+h1 em{font-style:normal;color:var(--acc)}
+.docente{color:var(--atenuado);margin:0}
+.aviso{margin:24px 0 0;padding:14px 16px;border-left:3px solid var(--acc);background:var(--panel);border-radius:0 8px 8px 0}
+.aviso strong{color:var(--acc)}
+nav.indice{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0}
+nav.indice a{font-size:14px;text-decoration:none;color:var(--texto);border:1px solid var(--filete);border-radius:999px;padding:6px 12px}
+nav.indice a:hover{border-color:var(--acc)}
+section{padding:36px 0 8px}
+h2{font:600 26px/1.2 "Source Serif 4",Georgia,serif;margin:0 0 6px}
+.bajada{color:var(--atenuado);margin:0 0 18px}
+.jornada{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:18px;margin:0 0 18px}
+.jornada-cab{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px;margin:0 0 12px}
+.jornada h3{font:600 20px/1.2 "Source Serif 4",Georgia,serif;margin:0}
+.fecha{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--atenuado)}
+.fecha.fija{color:var(--acc)}
+.sesiones{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.sesiones a,.sesiones .sin{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:8px;
+border:1px solid var(--filete);text-decoration:none;color:var(--texto);min-height:48px}
+.sesiones a:hover{border-color:var(--acc);background:var(--suave)}
+.num{font:600 13px "IBM Plex Mono",monospace;color:var(--acc);min-width:2.4em}
+.sesiones .ir{margin-left:auto;color:var(--acc2);font-size:14px;white-space:nowrap}
+.sesiones .sin{color:var(--atenuado);border-style:dashed}
+.actividades{margin:14px 0 0;padding:12px 0 0;border-top:1px dashed var(--filete)}
+.actividades h4{margin:0 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--atenuado);font-weight:600}
+.act{text-decoration:none;color:var(--texto);border-radius:6px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:6px 0}
+.act .nombre{flex:1 1 16rem}
+.peso{font:600 13px "IBM Plex Mono",monospace}
+.nivel{font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid currentColor}
+.n-pro{color:var(--crit)}.n-lim{color:var(--alerta)}.n-obl{color:var(--acc2)}.n-lib{color:var(--pos)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--filete);border-radius:12px;overflow:hidden}
+td,th{padding:12px 14px;border-bottom:1px solid var(--filete);text-align:left}
+td:last-child,th:last-child{text-align:right;font-family:"IBM Plex Mono",monospace}
+tr:last-child td{border-bottom:0;font-weight:600}
+.nota{color:var(--atenuado);font-size:14px}
+details{background:var(--panel);border:1px solid var(--filete);border-radius:10px;margin:0 0 10px}
+summary{cursor:pointer;padding:14px 16px;font-weight:600}
+details ul{margin:0;padding:0 16px 14px 34px}
+details li{margin:0 0 8px;font-size:15px}
+details h5{margin:6px 16px 8px;font-size:13px;color:var(--atenuado);text-transform:uppercase;letter-spacing:.08em}
+.boton{display:inline-block;padding:12px 18px;border-radius:8px;background:var(--acc);color:#161b22;text-decoration:none;font-weight:600}
+a.act:hover .nombre{color:var(--acc)}
+.cerrojo p{margin:0 0 10px;color:var(--atenuado)}
+.cerrojo form{display:flex;gap:8px;flex-wrap:wrap}
+.cerrojo input{flex:1 1 12rem;font:16px "IBM Plex Mono",monospace;padding:10px 12px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.cerrojo .error{color:var(--crit);min-height:1.4em;margin:8px 0 0}
+.puerta{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin:16px 0 0;padding:16px;border:1px solid var(--acc);border-radius:12px;background:var(--suave)}
+.puerta>div:first-child{flex:1 1 20rem}
+.puerta-acciones{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.cerrojo p a{font-weight:600}
+footer{padding:36px 0 48px;color:var(--atenuado);font-size:14px;border-top:1px solid var(--filete);margin-top:36px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.chip{font-size:13px;border:1px solid var(--filete);border-radius:999px;padding:4px 10px;color:var(--texto)}
+.volver{display:inline-block;margin:0 0 14px;font-size:14px;text-decoration:none}
+.bloque{padding:28px 0 0}
+.bloque h2{font-size:22px}
+ol.pasos{margin:0;padding-left:22px}
+ol.pasos li{margin:0 0 10px}
+.pestana{border:1px solid var(--filete);border-radius:12px;background:var(--panel);margin:0 0 12px;transition:border-color .2s}
+.pestana:hover,.pestana[open]{border-color:var(--acc)}
+.pestana summary{list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:16px 18px;min-height:56px;cursor:pointer}
+.pestana summary::-webkit-details-marker{display:none}
+.pestana-titulo{font:600 18px "Source Serif 4",Georgia,serif}
+.pestana-dato{font:600 13px "IBM Plex Mono",monospace;color:var(--atenuado)}
+.pestana-flecha{margin-left:auto;width:12px;height:12px;border-right:2px solid var(--acc);border-bottom:2px solid var(--acc);transform:rotate(45deg);transition:transform .25s cubic-bezier(.2,.7,.2,1)}
+.pestana[open]>summary .pestana-flecha{transform:rotate(-135deg)}
+.pestana-cuerpo{padding:0 18px 18px;animation:desplegar .25s ease-out}
+@keyframes desplegar{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.rubrica-resumen{list-style:none;margin:0 0 16px;padding:12px 0 0;border-top:1px solid var(--filete);display:grid;gap:6px}
+.rubrica-resumen li{display:flex;justify-content:space-between;gap:12px;font-size:15px}
+.rubrica-resumen b{font:600 14px "IBM Plex Mono",monospace;color:var(--acc)}
+@media (prefers-reduced-motion:reduce){.pestana-cuerpo{animation:none}.pestana-flecha{transition:none}}
+.criterio{background:var(--bg);border:1px solid var(--filete);border-radius:10px;margin:0 0 12px;overflow:hidden}
+.criterio-cab{list-style:none;display:flex;align-items:center;gap:12px;padding:14px;min-height:52px;font-weight:600;cursor:pointer}
+.criterio-cab::-webkit-details-marker{display:none}
+.criterio-cab span:first-child{flex:1}
+.criterio-pts{font-family:"IBM Plex Mono",monospace;color:var(--acc)}
+.criterio-cab .pestana-flecha{margin-left:4px;width:9px;height:9px}
+.criterio[open]>summary .pestana-flecha{transform:rotate(-135deg)}
+.criterio:hover,.criterio[open]{border-color:var(--acc)}
+.criterio-cuerpo{border-top:1px solid var(--filete);animation:desplegar .25s ease-out}
+.nivel-fila{display:grid;grid-template-columns:7.5rem 1fr;gap:10px;padding:10px 14px;border-bottom:1px solid var(--filete);font-size:15px}
+.nivel-fila:last-child{border-bottom:0}
+.nivel-fila b{font-weight:600}
+.nivel-fila small{display:block;font-family:"IBM Plex Mono",monospace;color:var(--atenuado)}
+@media (max-width:480px){.nivel-fila{grid-template-columns:1fr;gap:2px}}
+.ia-caja{background:var(--panel);border:1px solid var(--filete);border-radius:10px;padding:14px 16px}
+.ia-caja ul{margin:8px 0 0;padding-left:20px}
+.pendiente{margin:18px 0 0;padding:12px 14px;border-left:3px solid var(--alerta);background:var(--panel);border-radius:0 8px 8px 0}
+.lista-v{list-style:none;padding:0;margin:0}
+.lista-v li{padding:8px 0 8px 30px;position:relative;border-bottom:1px dashed var(--filete)}
+.lista-v li:before{content:"";position:absolute;left:4px;top:12px;width:14px;height:14px;border:2px solid var(--acc2);border-radius:3px}
+.entrega{margin:28px 0 0;padding:18px;background:var(--panel);border:1px solid var(--acc);border-radius:12px}
+.entrega p{margin:10px 0 0;color:var(--atenuado);font-size:14px}
+.pregunta{background:var(--panel);border:1px solid var(--filete);border-radius:10px;padding:14px 16px;margin:0 0 12px}
+.pregunta p{margin:0 0 10px}
+.pregunta label{display:flex;gap:10px;align-items:flex-start;padding:8px;border-radius:6px;cursor:pointer;min-height:44px}
+.pregunta label:hover{background:var(--suave)}
+.pregunta input{margin-top:4px}
+.pregunta .expl{display:none;margin:10px 0 0;padding:10px 12px;border-radius:6px;font-size:15px}
+.pregunta.bien .expl{display:block;border-left:3px solid var(--pos)}
+.pregunta.mal .expl{display:block;border-left:3px solid var(--crit)}
+button.boton{border:0;font:inherit;font-weight:600;cursor:pointer}
+#resultado{display:none;margin:18px 0 0}
+section#resultado:not([hidden]){display:block} /* el resultado del control; sin esto quedaba oculto */
+#resumen{width:100%;min-height:90px;margin:10px 0;font:14px "IBM Plex Mono",monospace;background:var(--bg);color:var(--texto);border:1px solid var(--filete);border-radius:8px;padding:10px}
+#aviso{color:var(--alerta);min-height:1.4em}
+.formulario{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:12px}
+.campo{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--atenuado)}
+.campo input,.campo select{font:16px "IBM Plex Sans",sans-serif;padding:10px 12px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.consiente{display:flex;gap:10px;align-items:flex-start;margin:16px 0 0;font-size:15px}
+.consiente input{margin-top:4px}
+.pregunta.ver .expl{display:block;border-left:3px solid var(--acc2)}
+.candado .campo{margin:10px 0}
+#barra-ctrl{position:sticky;top:0;z-index:5;display:flex;gap:12px;justify-content:space-between;align-items:center;padding:10px 14px;margin:0 0 14px;background:var(--panel);border:1px solid var(--filete);border-radius:10px;font-size:14px}
+#reloj{font:600 20px "IBM Plex Mono",monospace;color:var(--acc)}
+#reloj.urgente{color:var(--crit)}
+#salidas-txt{color:var(--alerta)}
+#velo{position:fixed;inset:0;z-index:20;background:rgba(10,12,16,.92);display:flex;align-items:center;justify-content:center;padding:16px}
+#velo[hidden]{display:none}
+.velo-caja{max-width:28rem;background:var(--panel);border:1px solid var(--crit);border-radius:14px;padding:22px}
+.error-txt{color:var(--crit);min-height:1.4em}
+.hito{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:18px;margin:0 0 16px;scroll-margin-top:16px}
+.hito:target{border-color:var(--acc)}
+.hito-cab{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;margin:0 0 6px}
+.hito h3{font:600 19px/1.25 "Source Serif 4",Georgia,serif;margin:0}
+.hito-fechas{color:var(--atenuado);font-size:15px}
+.lectura-lista li{padding-left:30px}
+.hito-botones{display:flex;flex-wrap:wrap;gap:10px}
+.boton.sec{background:transparent;color:var(--texto);border:1px solid var(--filete)}
+.candado{max-width:30rem;margin:12vh auto 0;padding:24px;background:var(--panel);border:1px solid var(--filete);border-radius:14px}
+.candado input{width:100%;font:16px "IBM Plex Mono",monospace;padding:12px;margin:12px 0;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.candado .error{color:var(--crit);min-height:1.4em;margin:0}
+
+.video-act{margin:28px 0 0;border-radius:14px;overflow:hidden;border:1px solid var(--filete);background:#0e1218}
+.video-act video,.video-act iframe{display:block;width:100%;height:auto;aspect-ratio:16/9;border:0;background:#0e1218}
+.videos-foro{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:18px;margin:16px 0 0}
+.secuencia{margin:24px 0 0;border:1px solid var(--filete);border-radius:14px;overflow:hidden;background:#0e1218}
+.sec-escenario{position:relative;aspect-ratio:16/9;background:#0e1218}
+.sec-escenario video,.sec-yt,.sec-yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#0e1218}
+.sec-escenario [hidden]{display:none}
+.sec-play{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:0 0 9%;background:linear-gradient(transparent 55%,rgba(8,12,18,.7));border:0;cursor:pointer}
+.sec-play span{display:flex;align-items:center;gap:12px;padding:16px 30px;border-radius:40px;background:var(--acc);color:#0e1218;font:600 18px "IBM Plex Sans",sans-serif;letter-spacing:.04em}
+.sec-play span::before{content:"";border-style:solid;border-width:10px 0 10px 16px;border-color:transparent transparent transparent #0e1218}
+@media(max-width:600px){.sec-play span{padding:9px 18px;font-size:15px}}
+.sec-seguir{position:absolute;right:16px;bottom:56px;z-index:2}
+.sec-barra{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--panel);border-top:1px solid var(--filete)}
+.sec-capitulos{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0;flex:1 1 30rem}
+.sec-cap{display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:7px 11px;border:1px solid var(--filete);border-radius:8px;background:transparent;color:var(--texto);cursor:pointer;font:13px "IBM Plex Sans",sans-serif;text-align:left}
+.sec-cap b{font-weight:600;font-size:14px}.sec-cap small{color:var(--atenuado);font-size:12px}
+.sec-cap:hover{border-color:var(--acc)}
+.sec-cap.visto b::after{content:" \2713";color:var(--pos)}
+.sec-cap.actual{border-color:var(--acc);background:var(--suave)}
+.secuencia:fullscreen{display:flex;flex-direction:column;border:0;border-radius:0}
+.secuencia:fullscreen .sec-escenario{flex:1;aspect-ratio:auto}
+.video-foro{margin:0}.video-foro .video-act{margin:0}
+.video-foro figcaption{display:flex;flex-direction:column;gap:2px;margin:10px 2px 0;font-size:14px;color:var(--atenuado)}
+.video-foro figcaption b{color:var(--texto);font:600 16px "Source Serif 4",Georgia,serif}
+.foro-tarjeta{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.foro-tarjeta.mio{border-color:var(--acc)}
+.foro-meta{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin:0 0 8px;font-size:13px;color:var(--atenuado)}
+.foro-meta b{font:600 16px "Source Serif 4",Georgia,serif;color:var(--texto)}
+.foro-texto{white-space:pre-wrap;line-height:1.6;margin:0}
+.foro-replicas{margin:14px 0 0;padding:0 0 0 16px;border-left:2px solid var(--filete)}
+.foro-replicas .foro-tarjeta{background:var(--bg);margin:10px 0 0}
+.foro-editor textarea{width:100%;min-height:220px;font:16px/1.55 "IBM Plex Sans",sans-serif;padding:12px;border-radius:10px;border:1px solid var(--filete);background:var(--bg);color:var(--texto);resize:vertical}
+.foro-editor.replica textarea{min-height:130px}
+.contador{font:600 13px "IBM Plex Mono",monospace;color:var(--alerta);margin:6px 0 10px}
+.contador.ok{color:var(--pos)}
+.foro-barra{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin:0 0 16px;padding:12px 16px;border:1px solid var(--filete);border-radius:10px}
+.foro-oculto{opacity:.5}
+.boton.chico{min-height:40px;padding:8px 14px;font-size:14px}
+.boton.sec{background:transparent;color:var(--texto);border:1px solid var(--filete)}
+.boton.sec:hover{border-color:var(--acc)}
+.boton:disabled{opacity:.6;cursor:wait}
+.calif-fila{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 14px;border:1px solid var(--filete);border-radius:10px;margin:0 0 8px;background:var(--panel);cursor:pointer}
+.calif-fila:hover{border-color:var(--acc)}
+.calif-fila small{display:block;color:var(--atenuado);font-size:13px}
+.calif-total{font:600 15px "IBM Plex Mono",monospace;color:var(--acc)}
+.calif-detalle{padding:6px 4px 18px}
+.nivel-opciones{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 14px}
+.nivel-opciones label{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border:1px solid var(--filete);border-radius:8px;cursor:pointer;font-size:13px;min-width:7.5rem}
+.nivel-opciones label:has(input:checked){border-color:var(--acc);background:var(--suave)}
+.nivel-opciones input{position:absolute;opacity:0}
+.nivel-opciones small{font-family:"IBM Plex Mono",monospace;color:var(--atenuado)}
+
+.av-resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:10px;margin:0 0 16px}
+.av-cifra{background:var(--panel);border:1px solid var(--filete);border-radius:10px;padding:12px 14px}
+.av-cifra b{display:block;font:600 24px "IBM Plex Mono",monospace;color:var(--acc)}
+.av-cifra span{font-size:13px;color:var(--atenuado)}
+.av-buscar{width:100%;font:16px "IBM Plex Sans",sans-serif;padding:10px 12px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto);margin:0 0 12px}
+.av-tabla-caja{overflow-x:auto;border:1px solid var(--filete);border-radius:12px}
+.av-tabla{width:100%;border-collapse:collapse;min-width:760px;background:var(--panel)}
+.av-tabla th,.av-tabla td{padding:10px 12px;border-bottom:1px solid var(--filete);text-align:left;font-size:14px;vertical-align:top}
+.av-tabla th{font:600 12px "IBM Plex Sans",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--atenuado);position:sticky;top:0;background:var(--panel)}
+.av-tabla tr.av-fila{cursor:pointer}.av-tabla tr.av-fila:hover td{background:var(--suave)}
+.av-tabla td small{display:block;color:var(--atenuado);font-size:12px}
+.av-tabla tr:last-child td{font-weight:400}
+.av-ok{color:var(--pos)}.av-no{color:var(--crit)}.av-pend{color:var(--atenuado)}.av-marca{color:var(--alerta)}
+.av-total{font:600 15px "IBM Plex Mono",monospace;color:var(--acc);text-align:right}
+.cuaderno{margin:18px 0 0;padding:18px;background:var(--panel);border:1px solid var(--acc);border-radius:14px}
+.cuaderno h3{font:600 22px "Source Serif 4",Georgia,serif;margin:0}
+.cuaderno .dato{color:var(--atenuado);font-size:14px;margin:4px 0 14px}
+.cu-fila{display:grid;grid-template-columns:minmax(0,1fr) 7.5rem;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--filete)}
+.cu-fila small{display:block;color:var(--atenuado);font-size:12.5px}
+.cu-fila input{width:100%;font:600 16px "IBM Plex Mono",monospace;padding:8px 10px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto);text-align:right}
+.cu-fila .auto{font:600 16px "IBM Plex Mono",monospace;text-align:right}
+.cu-total{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 10px;font:600 20px "Source Serif 4",Georgia,serif}
+.cu-total b{font-family:"IBM Plex Mono",monospace;color:var(--acc)}
+.cuaderno textarea{width:100%;min-height:90px;font:15px/1.5 "IBM Plex Sans",sans-serif;padding:10px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+
+.tg-tabla td input{font:inherit;font-size:14px;width:100%;box-sizing:border-box;padding:6px 8px;border-radius:6px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.tg-estado{font-size:13px;color:var(--atenuado)}
+.tg-estado.ok{color:var(--ok)}
+</style>
+</head><body>
+<header><div class="envoltura">
+<a class="volver" href="../../">Volver al aula</a>
+<div class="antetitulo">Economía y Finanzas de los Servicios de Salud, modo docente</div>
+<h1>Tableros de los grupos</h1>
+<p class="aviso"><strong>Grupos de trabajo y trabajo final.</strong> Asigne a cada participante su grupo y guarde: desde ese momento entra al tablero de su grupo con su cédula y su contraseña. Para calificar un hito, abra el tablero del grupo; la nota es la misma para todos sus integrantes y el grupo la ve cuando usted publica la devolución.</p>
+</div></header>
+<main class="envoltura">
+<section class="bloque" id="d-entrar"><div class="formulario"><label class="campo"><span>Clave docente</span><input id="d-clave" type="password" autocomplete="off"></label></div>
+<p class="error-txt" id="d-aviso" role="alert"></p><button class="boton" id="d-boton">Entrar</button></section>
+<section class="bloque" id="d-zona" hidden>
+<h2>Tableros por hito</h2>
+<div id="tg-hitos"></div>
+<div class="foro-barra"><span id="tg-resumen"></span><span><button class="boton sec chico" id="d-csv">Descargar notas</button> <button class="boton sec chico" id="d-copiar">Copiar notas</button> <button class="boton sec chico" id="d-recargar">Actualizar</button></span></div>
+<p class="nota" id="d-copiado"></p>
+<h2>Grupos de trabajo</h2>
+<p class="nota">Escriba el nombre del grupo de cada participante, por ejemplo A, B o C. Deje vacío a quien no tiene grupo.</p>
+<div class="av-tabla-caja"><table class="av-tabla tg-tabla"><thead><tr><th>Participante</th><th style="width:40%">Grupo</th></tr></thead><tbody id="tg-gente"></tbody></table></div>
+<datalist id="tg-nombres"></datalist>
+<p><button class="boton" id="tg-guardar">Guardar los grupos</button></p>
+<p class="nota" id="tg-msg" role="status"></p>
+</section>
+</main>
+<textarea id="d-portapapeles" aria-hidden="true" style="position:fixed;left:-9999px;top:0"></textarea>
+<script>
+
+/* Controles de lectura en ventana emergente, aparte del aula (17-oct-2026). */
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a[data-ventana]'); if(!a||e.ctrlKey||e.metaKey||e.shiftKey) return;
+  var an=Math.min(1100,screen.availWidth-40), al=Math.min(900,screen.availHeight-60);
+  var w=window.open(a.href,'control-aula','popup=yes,width='+an+',height='+al+',left='+Math.max(0,(screen.availWidth-an)/2)+',top=20');
+  if(w){e.preventDefault(); try{w.focus();}catch(x){}}
+});
+function normLlave(s){return s.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'-');}
+function b64(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+async function abrirCon(d,llave){
+  try{
+    var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(normLlave(llave)),'PBKDF2',false,['deriveKey']);
+    var k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(d.s),iterations:d.it,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+    var t=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(d.iv)},k,b64(d.c));
+    return new TextDecoder().decode(t);
+  }catch(e){return null;}
+}
+function llaveGuardada(j){var M=modoDocente(); if(M&&M.llaves&&M.llaves[j]) return M.llaves[j]; try{return localStorage.getItem('econ-llave-j'+j)||sessionStorage.getItem('econ-llave-j'+j);}catch(e){return null;}}
+/* En modo docente no se guarda nada del estudiante: las llaves salen del paquete docente. */
+function guardarLlave(j,v){if(modoDocente()) return; try{localStorage.setItem('econ-llave-j'+j,v);}catch(e){} try{sessionStorage.setItem('econ-llave-j'+j,v);}catch(e){}}
+function guardarLlaves(o){for(var j in o){if(o[j])guardarLlave(j,o[j]);}}
+/* Modo docente: el paquete descifrado con la clave docente (llaves y configuración de los
+   controles) queda 8 horas en este navegador o hasta que el docente sale. */
+var HORAS_DOCENTE=8;
+function modoDocente(){
+  try{var M=JSON.parse(localStorage.getItem('econ-docente')||'null'); if(M&&M.hasta>Date.now()) return M; if(M) localStorage.removeItem('econ-docente');}catch(e){}
+  return null;
+}
+function entrarDocente(M){M.hasta=Date.now()+HORAS_DOCENTE*3600000; try{localStorage.setItem('econ-docente',JSON.stringify(M)); return true;}catch(e){return false;}}
+function salirDocente(){try{localStorage.removeItem('econ-docente');localStorage.removeItem('econ-docente-ensayo');}catch(e){}}
+function barraDocente(){
+  var M=modoDocente(); if(!M||document.getElementById('barra-docente')) return;
+  var C=M.cfg||{}, J=document.body.dataset.control, diag=document.body.hasAttribute('data-diagnostica');
+  var clave=J?(C.ctrl||{})[J]:diag?C.diag:null;
+  var b=document.createElement('div'); b.id='barra-docente'; b.setAttribute('role','region'); b.setAttribute('aria-label','Modo docente');
+  b.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px 14px;background:var(--panel,#1b2027);color:var(--texto,#e9edf1);border:1px solid var(--acc,#d9a441);border-radius:12px;font:14px/1.4 "IBM Plex Sans",sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35)';
+  var txt='<span>Todo abierto. Nada se envía al servidor ni a la hoja de calificaciones.</span>';
+  if(J&&clave){
+    var E={}; try{E=JSON.parse(localStorage.getItem('econ-docente-ensayo')||'{}');}catch(e){}
+    var usados=((E.int||{})[J]||[]).length, n=clave.length, min=Math.ceil(C.umbral*n-1e-9);
+    txt+='<span>Control de la jornada '+J+': '+n+' preguntas, aprueba con '+min+' aciertos ('+Math.round(C.umbral*100)+' %), '+C.intentos+' intentos de '+C.minutos+' minutos; la segunda salida de la ventana lo envía. Ensayos usados: '+usados+' de '+C.intentos+'.</span>';
+  } else if(diag&&clave){
+    txt+='<span>La inscripción es un ensayo: no crea ninguna fila.</span>';
+  }
+  var boton=function(id,t){return '<button type="button" id="'+id+'" style="background:transparent;border:1px solid var(--filete,#555);color:inherit;border-radius:8px;padding:6px 10px;font:inherit;cursor:pointer;min-height:36px">'+t+'</button>';};
+  /* En el teléfono la barra empieza plegada: solo el rótulo, que la despliega. */
+  b.innerHTML='<button type="button" id="bd-plegar" aria-expanded="true" style="background:none;border:0;padding:4px 0;font:600 14px \'IBM Plex Sans\',sans-serif;color:var(--acc,#d9a441);cursor:pointer;min-height:36px">Modo docente</button>'
+    +'<span id="bd-detalle" style="display:contents">'+txt+'<span style="display:flex;flex-wrap:wrap;gap:8px;margin-left:auto">'+(clave?boton('bd-clave','Ver respuestas correctas'):'')+(J?boton('bd-reiniciar','Reiniciar ensayos'):'')+boton('bd-salir','Salir del modo docente')+'</span></span>';
+  document.body.appendChild(b);
+  var det=document.getElementById('bd-detalle'), pl=document.getElementById('bd-plegar');
+  var plegar=function(si){det.style.display=si?'none':'contents'; pl.setAttribute('aria-expanded',si?'false':'true'); pl.textContent=si?'Modo docente (abrir)':'Modo docente'; b.style.left=si?'auto':'12px'; document.body.style.paddingBottom=(b.offsetHeight+28)+'px';};
+  pl.onclick=function(){plegar(det.style.display!=='none');};
+  plegar(innerWidth<600);
+  var ced=document.getElementById('c-cedula'), cla=document.getElementById('c-clave');
+  if(J&&ced) ced.value='DOCENTE'; if(J&&cla) cla.value='ensayo';
+  var bc=document.getElementById('bd-clave');
+  if(bc) bc.onclick=function(){
+    var ver=bc.dataset.ver!=='1'; bc.dataset.ver=ver?'1':''; bc.textContent=ver?'Ocultar respuestas':'Ver respuestas correctas';
+    clave.forEach(function(k,i){
+      var r=document.querySelector('input[name=p'+i+'][value="'+k+'"]'), l=r&&r.closest('label'); if(!l) return;
+      l.style.outline=ver?'2px solid var(--pos,#5fb37a)':''; var s=l.querySelector('.bd-ok');
+      if(ver&&!s){s=document.createElement('b');s.className='bd-ok';s.textContent='Correcta';s.style.cssText='margin-left:auto;color:var(--pos,#5fb37a);font-size:13px';l.appendChild(s);}
+      if(!ver&&s) s.remove();
+    });
+  };
+  var br=document.getElementById('bd-reiniciar');
+  if(br) br.onclick=function(){try{localStorage.removeItem('econ-docente-ensayo');}catch(e){} location.reload();};
+  document.getElementById('bd-salir').onclick=function(){
+    salirDocente(); var raiz=document.querySelector('a.volver,a[href$="../"]'); location.href=raiz?raiz.getAttribute('href'):location.href;
+  };
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',barraDocente); else setTimeout(barraDocente,0);
+
+var SERVIDOR="https://script.google.com/macros/s/AKfycbzuix939G9-1sksrINsXjb7yLYz_1aA74ffiPl_FUILKNoZaRDEUkHpp9_DHXpuAW6F/exec";
+/* En modo docente las solicitudes no salen del navegador: las contesta simuladorDocente(), que
+   repite las reglas del servidor (tiempo, salidas, intentos, umbral) con la clave del paquete
+   docente y guarda los ensayos solo en este equipo. Nada llega al Apps Script ni a la hoja. */
+if(!window.__servidorPrueba&&modoDocente()) window.__servidorPrueba=simuladorDocente;
+function simuladorDocente(d){
+  var M=modoDocente()||{}, C=M.cfg||{}, GRACIA=90, E={};
+  try{E=JSON.parse(localStorage.getItem('econ-docente-ensayo')||'{}');}catch(e){}
+  E.int=E.int||{}; E.ab=E.ab||{};
+  var guardar=function(){try{localStorage.setItem('econ-docente-ensayo',JSON.stringify(E));}catch(e){}};
+  var aciertos=function(r,k){var n=0;for(var i=0;i<k.length;i++)if(Number(r[i])===k[i])n++;return n;};
+  var previos=function(j){return E.int[j]||[];};
+  var restan=function(it){return Math.round(C.minutos*60-(Date.now()-it.inicio)/1000);};
+  // Detalle por pregunta con las mismas reglas del servidor (detalle e historialControl).
+  var PQ=C.preg||{diag:[],ctrl:{}};
+  var det=function(resp,k,pq,rev){return k.map(function(c,i){var q=(pq||[])[i]||['',[],''],m=Number(resp[i]);
+    var x={n:i+1,enunciado:q[0],opciones:q[1],marcada:m>=0&&m<q[1].length?m:-1,acierto:m===c}; if(rev){x.correcta=c;x.explicacion=q[2];} return x;});};
+  var revelado=function(j){var p=previos(j);return p.some(function(f){return f.aprobado;})||p.length>=C.intentos;};
+  var hist=function(j){var p=previos(j),k=C.ctrl[j],rev=revelado(j);
+    return {jornada:j,total:k.length,aprobado:p.some(function(f){return f.aprobado;}),agotado:p.length>=C.intentos&&!p.some(function(f){return f.aprobado;}),revelado:rev,restantes:Math.max(0,C.intentos-p.length),
+      intentos:p.map(function(f,i){return {intento:i+1,fecha:f.fecha||0,aciertos:f.aciertos,total:k.length,aprobado:f.aprobado,motivo:f.motivo,detalle:det(f.resp||[],k,PQ.ctrl[j],rev)};})};};
+  var cerrar=function(it,resp,motivo){
+    var k=C.ctrl[it.j], n=aciertos(resp,k), ok=n/k.length>=C.umbral, p=previos(it.j);
+    it.estado='cerrado: '+motivo; it.resp=resp; p.push({aciertos:n,aprobado:ok,motivo:motivo,resp:(resp||[]).slice(),fecha:Date.now()}); E.int[it.j]=p; guardar();
+    // Tercer intento sin aprobar: la jornada se abre igual (ficha T5), como en el servidor.
+    var abre=!ok&&p.length>=C.intentos;
+    var r={ok:true,cerrado:true,motivo:motivo,aprobado:ok,aciertos:n,total:k.length,restantes:Math.max(0,C.intentos-p.length),abierta:abre};
+    if(ok||abre) r.llaves=M.llaves; r.detalle=det(resp||[],k,PQ.ctrl[it.j],ok||abre); return r;
+  };
+  var cerrado=function(it){
+    var p=previos(it.j), f=p[p.length-1]||{aciertos:0,aprobado:false}, abre=!f.aprobado&&p.length>=C.intentos;
+    var r={ok:true,cerrado:true,motivo:it.estado.replace('cerrado: ',''),aprobado:f.aprobado,aciertos:f.aciertos,total:C.ctrl[it.j].length,restantes:Math.max(0,C.intentos-p.length),abierta:abre};
+    if(f.aprobado||abre) r.llaves=M.llaves; r.detalle=det(f.resp||[],C.ctrl[it.j],PQ.ctrl[it.j],revelado(it.j)); return r;
+  };
+  var a=d.accion, it=d.id?E.ab[d.id]:null;
+  if(a==='inscribir'){
+    var r=d.respuestas||[];
+    if(r.length!==C.diag.length||r.some(function(x){return x<0;})) return {ok:false,error:'Conteste las '+C.diag.length+' preguntas.'};
+    E.diag=r.slice(); guardar();
+    return {ok:true,aciertos:aciertos(r,C.diag),total:C.diag.length,llaves:M.llaves,detalle:det(r,C.diag,PQ.diag,true)};
+  }
+  if(a==='entrar'||a==='recuperar') return {ok:true,nueva:false,llaves:M.llaves};
+  if(a==='resultados'){
+    var dr=E.diag||[], cs={}; for(var jj in C.ctrl) cs[jj]=hist(Number(jj));
+    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,
+      diagnostica:{aciertos:aciertos(dr,C.diag),total:C.diag.length,detalle:det(dr,C.diag,PQ.diag,true)}};
+  }
+  if(a==='iniciar'){
+    var j=Number(d.jornada); if(!C.ctrl[j]) return {ok:false,error:'Control desconocido.'};
+    var ab=null; for(var id in E.ab) if(E.ab[id].j===j&&E.ab[id].estado==='abierto') ab=E.ab[id];
+    if(ab&&restan(ab)<-GRACIA){cerrar(ab,ab.resp||[],'tiempo vencido sin envío'); ab=null;}
+    var p=previos(j);
+    if(p.some(function(f){return f.aprobado;})){var b=p.filter(function(f){return f.aprobado;})[0]; return {ok:true,aprobado:true,repetido:true,aciertos:b.aciertos,total:C.ctrl[j].length,llaves:M.llaves,historial:hist(j)};}
+    if(!ab&&p.length>=C.intentos){var u=p[p.length-1]||{aciertos:0}; return {ok:true,agotado:true,abierta:true,aprobado:false,cerrado:true,aciertos:u.aciertos,total:C.ctrl[j].length,restantes:0,llaves:M.llaves,historial:hist(j)};}
+    if(ab) return {ok:true,id:ab.id,segundos:Math.max(0,restan(ab)),salidas:ab.salidas,respuestas:ab.resp||[],reanudado:true};
+    var nuevo={id:'ensayo-'+Date.now(),j:j,inicio:Date.now(),salidas:0,resp:[],estado:'abierto'};
+    E.ab[nuevo.id]=nuevo; guardar();
+    return {ok:true,id:nuevo.id,segundos:C.minutos*60,salidas:0,intento:p.length+1};
+  }
+  if(!it) return {ok:a==='vuelta'||a==='guardar',error:'Intento desconocido.'};
+  if(a==='vuelta') return {ok:true};
+  if(a==='guardar'){ if(it.estado==='abierto'){it.resp=d.respuestas||[]; guardar();} return {ok:true}; }
+  if(it.estado!=='abierto') return cerrado(it);
+  if(a==='estado') return {ok:true,abierto:true,salidas:it.salidas};
+  if(a==='salida'){
+    it.salidas++; if(Array.isArray(d.respuestas)) it.resp=d.respuestas; guardar();
+    return it.salidas>=2?cerrar(it,it.resp,'segunda salida de la ventana'):{ok:true,salidas:it.salidas};
+  }
+  if(a==='control'){
+    if(restan(it)<-GRACIA) return cerrar(it,it.resp||[],'tiempo vencido sin envío');
+    return cerrar(it,d.respuestas||[],d.cierre?'cerró o recargó la página':d.tiempo?'fin del tiempo':'enviado');
+  }
+  return {ok:false,error:'Acción desconocida.'};
+}
+function servidor(d){
+  // El foro va siempre al servidor real, también en modo docente: allí se califica de verdad.
+  var simulado=window.__servidorPrueba&&!(window.__servidorPrueba===simuladorDocente&&/^(foro_|docente_)/.test(d.accion));
+  if(simulado) return Promise.resolve(window.__servidorPrueba(d));
+  if(!SERVIDOR) return Promise.resolve({ok:false,error:'La inscripción todavía no está habilitada.'});
+  var pedir=function(){return fetch(SERVIDOR,{method:'POST',body:JSON.stringify(d)}).then(function(r){return r.json();});};
+  var falla={ok:false,error:'No hubo conexión con el servidor del aula. Revise su internet e intente de nuevo.'};
+  // Reintenta una vez si la red falla; no en la inscripción, que no se debe registrar dos veces.
+  return pedir().catch(function(){
+    if(d.accion==='inscribir') return falla;
+    return new Promise(function(r){setTimeout(r,3000);}).then(pedir).catch(function(){return falla;});
+  });
+}
+// El servidor de Google duerme si nadie lo usa: se le despierta apenas se abre la página.
+if(SERVIDOR&&!window.__servidorPrueba){try{fetch(SERVIDOR).catch(function(){});}catch(e){}}
+function idGuardada(){try{return JSON.parse(localStorage.getItem('econ-id')||'null');}catch(e){return null;}}
+function guardarId(o){if(modoDocente()) return; try{localStorage.setItem('econ-id',JSON.stringify(o));}catch(e){}}
+function respuestas(n){var r=[],f=[];for(var i=0;i<n;i++){var s=document.querySelector('input[name=p'+i+']:checked');if(!s)f.push(i+1);r.push(s?+s.value:-1);}return {r:r,falta:f};}
+
+(function(){
+var CFG={"hitos": [[1, "Hito 1. Perfil de red del territorio", 10, "trabajo-final/hito-1"], [2, "Hito 2. Oferta, marco legal y costo", 15, "trabajo-final/hito-2"], [3, "Hito 3. Brechas, primera medida y hoja de ruta", 15, "trabajo-final/hito-3"]], "archivo": "notas_hitos_trabajo_final.csv"}, $=function(x){return document.getElementById(x);}, D=null, clave='';
+function el(tag,cls,txt){var e=document.createElement(tag); if(cls) e.className=cls; if(txt!==undefined) e.textContent=txt; return e;}
+function fecha(ms){try{return ms?new Date(ms).toLocaleString('es-PA',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'sin actividad';}catch(e){return '';}}
+var ESTADO={abierto:'Abierto',entregado:'Entregado, por calificar',reabierto:'Reabierto para corregir',cerrado:'Cerrado'};
+try{clave=sessionStorage.getItem('econ-clave-docente-foro')||'';}catch(e){}
+async function cargar(){
+  var x=await servidor({accion:'docente_tableros',claveDocente:clave});
+  if(!x.ok){$('d-aviso').textContent=x.error||'No se pudo entrar.'; $('d-entrar').hidden=false; $('d-zona').hidden=true; return;}
+  try{sessionStorage.setItem('econ-clave-docente-foro',clave);}catch(e){}
+  D=x; $('d-entrar').hidden=true; $('d-zona').hidden=false; pintar();
+}
+function pintar(){
+  var cont=$('tg-hitos'); cont.innerHTML='';
+  var sin=D.participantes.filter(function(p){return !p.grupo;}).length;
+  $('tg-resumen').textContent=D.participantes.length+' inscritos en '+D.grupos.length+(D.grupos.length===1?' grupo':' grupos')+(sin?', '+sin+' sin grupo':'')+'.';
+  CFG.hitos.forEach(function(h){
+    cont.append(el('h3','',h[1]+' (vale '+h[2]+' puntos del curso)'));
+    if(!D.grupos.length){cont.append(el('p','pendiente','Todavía no hay grupos. Asígnelos abajo.'));return;}
+    var caja=el('div','av-tabla-caja'), t=el('table','av-tabla'), th=el('tr');
+    ['Grupo','Integrantes','Campos con texto','Última modificación','Estado','Nota',''].forEach(function(x){th.append(el('th','',x));});
+    var thead=el('thead'); thead.append(th); t.append(thead); var tb=el('tbody'); t.append(tb);
+    D.grupos.forEach(function(g){
+      var s=g.hitos[String(h[0])]||{}, tr=el('tr');
+      tr.append(el('td','',g.grupo), el('td','',g.integrantes.join(', ')), el('td','',String(s.llenos||0)), el('td','',fecha(s.ultima)));
+      var est=el('td'); est.append(el('span','tg-estado'+(s.publicada?' ok':''),(ESTADO[s.estado]||'')+(s.publicada?', devolución publicada':''))); tr.append(est);
+      tr.append(el('td','',s.nota!==null&&s.nota!==undefined?s.nota+' de '+h[2]:'Sin calificar'));
+      var a=el('a','boton sec chico','Abrir el tablero'); a.href='../../'+h[3]+'/#docente';
+      a.onclick=function(){try{sessionStorage.setItem('tg-docente-grupo',g.grupo);}catch(e){}};
+      var td=el('td'); td.append(a); tr.append(td); tb.append(tr);
+    });
+    caja.append(t); cont.append(caja);
+  });
+  var dl=$('tg-nombres'); dl.innerHTML=''; D.grupos.forEach(function(g){var o=el('option'); o.value=g.grupo; dl.append(o);});
+  var gente=$('tg-gente'); gente.innerHTML='';
+  D.participantes.slice().sort(function(a,b){return (a.grupo||'~').localeCompare(b.grupo||'~')||a.nombre.localeCompare(b.nombre);}).forEach(function(p){
+    var tr=el('tr'), td=el('td'), i=el('input'); i.value=p.grupo||''; i.setAttribute('list','tg-nombres'); i.setAttribute('aria-label','Grupo de '+p.nombre); i.dataset.cedula=p.cedula;
+    tr.append(el('td','',p.nombre)); td.append(i); tr.append(td); gente.append(tr);
+  });
+}
+$('tg-guardar').onclick=async function(){
+  var asig=[].slice.call(document.querySelectorAll('#tg-gente input')).map(function(i){return {cedula:i.dataset.cedula,grupo:i.value.trim()};});
+  this.disabled=true; $('tg-msg').textContent='Guardando...';
+  var x=await servidor({accion:'docente_grupos',claveDocente:clave,asignaciones:asig}); this.disabled=false;
+  if(!x.ok){$('tg-msg').textContent=x.error||'No se pudieron guardar los grupos.';return;}
+  $('tg-msg').textContent='Grupos guardados: '+x.guardados+' participantes con grupo.'; cargar();
+};
+function filas(){
+  var f=[['Cédula','Nombre','Grupo'].concat(CFG.hitos.map(function(h){return 'Hito '+h[0]+' (de '+h[2]+')';}))];
+  var nota={}; D.grupos.forEach(function(g){nota[g.grupo]=g.hitos;});
+  D.participantes.forEach(function(p){var hs=nota[p.grupo]||{}; f.push([p.cedula,p.nombre,p.grupo].concat(CFG.hitos.map(function(h){var s=hs[String(h[0])]; return s&&s.nota!==null&&s.nota!==undefined?s.nota:'';})));});
+  return f;
+}
+function csv(f){return f.map(function(r){return r.map(function(v){v=String(v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',');}).join('\r\n');}
+$('d-csv').onclick=function(){
+  var b=new Blob(['\ufeff'+csv(filas())],{type:'text/csv;charset=utf-8'}), a=document.createElement('a');
+  a.href=URL.createObjectURL(b); a.download=CFG.archivo; document.body.append(a); a.click(); a.remove();
+};
+$('d-copiar').onclick=function(){
+  var t=$('d-portapapeles'); t.value=filas().map(function(r){return r.join('\t');}).join('\n'); t.focus(); t.select(); var ok=false;
+  try{ok=document.execCommand('copy');}catch(e){}
+  if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t.value).then(function(){$('d-copiado').textContent='Notas copiadas: péguelas en la hoja de calificaciones.';},function(){$('d-copiado').textContent='No se pudo copiar; use Descargar notas.';});return;}
+  $('d-copiado').textContent=ok?'Notas copiadas: péguelas en la hoja de calificaciones.':'No se pudo copiar; use Descargar notas.';
+};
+$('d-recargar').onclick=cargar;
+$('d-boton').onclick=function(){clave=$('d-clave').value; $('d-aviso').textContent=''; cargar();};
+if(clave) cargar();
+})();
+</script>
+<footer><div class="envoltura">Economía y Finanzas de los Servicios de Salud, UDELAS. Dr. Manuel S. Nazas R., docente del curso.</div></footer>
+</body></html>

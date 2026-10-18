@@ -307,33 +307,47 @@ function simuladorDocente(d){
   var aciertos=function(r,k){var n=0;for(var i=0;i<k.length;i++)if(Number(r[i])===k[i])n++;return n;};
   var previos=function(j){return E.int[j]||[];};
   var restan=function(it){return Math.round(C.minutos*60-(Date.now()-it.inicio)/1000);};
+  // Detalle por pregunta con las mismas reglas del servidor (detalle e historialControl).
+  var PQ=C.preg||{diag:[],ctrl:{}};
+  var det=function(resp,k,pq,rev){return k.map(function(c,i){var q=(pq||[])[i]||['',[],''],m=Number(resp[i]);
+    var x={n:i+1,enunciado:q[0],opciones:q[1],marcada:m>=0&&m<q[1].length?m:-1,acierto:m===c}; if(rev){x.correcta=c;x.explicacion=q[2];} return x;});};
+  var revelado=function(j){var p=previos(j);return p.some(function(f){return f.aprobado;})||p.length>=C.intentos;};
+  var hist=function(j){var p=previos(j),k=C.ctrl[j],rev=revelado(j);
+    return {jornada:j,total:k.length,aprobado:p.some(function(f){return f.aprobado;}),agotado:p.length>=C.intentos&&!p.some(function(f){return f.aprobado;}),revelado:rev,restantes:Math.max(0,C.intentos-p.length),
+      intentos:p.map(function(f,i){return {intento:i+1,fecha:f.fecha||0,aciertos:f.aciertos,total:k.length,aprobado:f.aprobado,motivo:f.motivo,detalle:det(f.resp||[],k,PQ.ctrl[j],rev)};})};};
   var cerrar=function(it,resp,motivo){
     var k=C.ctrl[it.j], n=aciertos(resp,k), ok=n/k.length>=C.umbral, p=previos(it.j);
-    it.estado='cerrado: '+motivo; it.resp=resp; p.push({aciertos:n,aprobado:ok,motivo:motivo}); E.int[it.j]=p; guardar();
+    it.estado='cerrado: '+motivo; it.resp=resp; p.push({aciertos:n,aprobado:ok,motivo:motivo,resp:(resp||[]).slice(),fecha:Date.now()}); E.int[it.j]=p; guardar();
     // Tercer intento sin aprobar: la jornada se abre igual (ficha T5), como en el servidor.
     var abre=!ok&&p.length>=C.intentos;
     var r={ok:true,cerrado:true,motivo:motivo,aprobado:ok,aciertos:n,total:k.length,restantes:Math.max(0,C.intentos-p.length),abierta:abre};
-    if(ok||abre) r.llaves=M.llaves; return r;
+    if(ok||abre) r.llaves=M.llaves; r.detalle=det(resp||[],k,PQ.ctrl[it.j],ok||abre); return r;
   };
   var cerrado=function(it){
     var p=previos(it.j), f=p[p.length-1]||{aciertos:0,aprobado:false}, abre=!f.aprobado&&p.length>=C.intentos;
     var r={ok:true,cerrado:true,motivo:it.estado.replace('cerrado: ',''),aprobado:f.aprobado,aciertos:f.aciertos,total:C.ctrl[it.j].length,restantes:Math.max(0,C.intentos-p.length),abierta:abre};
-    if(f.aprobado||abre) r.llaves=M.llaves; return r;
+    if(f.aprobado||abre) r.llaves=M.llaves; r.detalle=det(f.resp||[],C.ctrl[it.j],PQ.ctrl[it.j],revelado(it.j)); return r;
   };
   var a=d.accion, it=d.id?E.ab[d.id]:null;
   if(a==='inscribir'){
     var r=d.respuestas||[];
     if(r.length!==C.diag.length||r.some(function(x){return x<0;})) return {ok:false,error:'Conteste las '+C.diag.length+' preguntas.'};
-    return {ok:true,aciertos:aciertos(r,C.diag),total:C.diag.length,llaves:M.llaves};
+    E.diag=r.slice(); guardar();
+    return {ok:true,aciertos:aciertos(r,C.diag),total:C.diag.length,llaves:M.llaves,detalle:det(r,C.diag,PQ.diag,true)};
   }
   if(a==='entrar'||a==='recuperar') return {ok:true,nueva:false,llaves:M.llaves};
+  if(a==='resultados'){
+    var dr=E.diag||[], cs={}; for(var jj in C.ctrl) cs[jj]=hist(Number(jj));
+    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,
+      diagnostica:{aciertos:aciertos(dr,C.diag),total:C.diag.length,detalle:det(dr,C.diag,PQ.diag,true)}};
+  }
   if(a==='iniciar'){
     var j=Number(d.jornada); if(!C.ctrl[j]) return {ok:false,error:'Control desconocido.'};
     var ab=null; for(var id in E.ab) if(E.ab[id].j===j&&E.ab[id].estado==='abierto') ab=E.ab[id];
     if(ab&&restan(ab)<-GRACIA){cerrar(ab,ab.resp||[],'tiempo vencido sin envío'); ab=null;}
     var p=previos(j);
-    if(p.some(function(f){return f.aprobado;})) return {ok:true,aprobado:true,repetido:true,llaves:M.llaves};
-    if(!ab&&p.length>=C.intentos){var u=p[p.length-1]||{aciertos:0}; return {ok:true,agotado:true,abierta:true,aprobado:false,cerrado:true,aciertos:u.aciertos,total:C.ctrl[j].length,restantes:0,llaves:M.llaves};}
+    if(p.some(function(f){return f.aprobado;})){var b=p.filter(function(f){return f.aprobado;})[0]; return {ok:true,aprobado:true,repetido:true,aciertos:b.aciertos,total:C.ctrl[j].length,llaves:M.llaves,historial:hist(j)};}
+    if(!ab&&p.length>=C.intentos){var u=p[p.length-1]||{aciertos:0}; return {ok:true,agotado:true,abierta:true,aprobado:false,cerrado:true,aciertos:u.aciertos,total:C.ctrl[j].length,restantes:0,llaves:M.llaves,historial:hist(j)};}
     if(ab) return {ok:true,id:ab.id,segundos:Math.max(0,restan(ab)),salidas:ab.salidas,respuestas:ab.resp||[],reanudado:true};
     var nuevo={id:'ensayo-'+Date.now(),j:j,inicio:Date.now(),salidas:0,resp:[],estado:'abierto'};
     E.ab[nuevo.id]=nuevo; guardar();
@@ -376,6 +390,22 @@ function respuestas(n){var r=[],f=[];for(var i=0;i<n;i++){var s=document.querySe
 (function(){
 var CFG={"rubrica": [{"nombre": "Caso y estimación del costo", "puntos": 35, "niveles": ["Caso real y anonimizado, con su costo calculado por un método explícito y cada cifra con su fuente.", "Caso anonimizado y costo con método, con alguna cifra sin fuente.", "Costo estimado sin método claro o con supuestos que no dice.", "Caso sin costo, o con datos que identifican a pacientes o a personal.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Medida y análisis propio", "puntos": 20, "niveles": ["Medida factible, con su costo comparado con lo que evita, y dice si se paga sola.", "Medida factible con su costo, sin compararlo con lo que evita.", "Medida general, sin costo.", "Sin medida, o una medida que no corresponde al caso.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Réplicas", "puntos": 25, "niveles": ["Dos réplicas o más que cuestionan una cifra o una medida de un compañero con un dato o una fuente.", "Dos réplicas, una de ellas con fundamento.", "Una réplica con fundamento, o dos réplicas que solo coinciden.", "Réplicas de cortesía.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Fuentes y APA 7", "puntos": 10, "niveles": ["Fuentes primarias o institucionales, citadas y referenciadas sin errores.", "Fuentes adecuadas con errores menores de formato.", "Fuentes de calidad desigual o citas incompletas.", "Sin referencias para las cifras que usa.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Redacción", "puntos": 10, "niveles": ["Clara, concisa y sin errores, dentro de la extensión pedida.", "Clara, con pocos errores.", "Se entiende, con errores frecuentes o fuera de la extensión.", "Difícil de seguir.", "No lo entregó, o no hay evidencia de este criterio."]}], "niveles": [["Excelente", 1.0], ["Bueno", 0.85], ["Suficiente", 0.72], ["Insuficiente", 0.5], ["No presentado", 0.0]], "peso": 10, "foro": 2, "archivo": "notas_foro_no_calidad.csv"}, $=function(x){return document.getElementById(x);}, D=null, clave='';
 function el(tag,cls,txt){var e=document.createElement(tag); if(cls) e.className=cls; if(txt!==undefined) e.textContent=txt; return e;}
+/* Regla del foro (foro_curso.py, 18-oct-2026): la lista de referencias no cuenta en la extensión. */
+function foroContar(t) {
+  var lineas = String(t || '').replace(/\r\n?/g, '\n').split('\n'), corte = -1, resto = '';
+  lineas.forEach(function (l, i) {
+    var m = l.replace(/[*_#]/g, ' ').trim().match(/^(?:\d+[.)]?\s*)?(?:referencias?(?:\s+bibliogr[aá]ficas?)?|bibliograf[ií]as?|fuentes?)\s*(?:[:.]\s*(.*))?$/i);
+    if (m && corte < 0) { corte = i; resto = m[1] || ''; }
+  });
+  function contar(x) { return x.trim().split(/\s+/).filter(Boolean).length; }
+  function pareceRef(l) {
+    return /https?:\/\/|www\.|doi\.org|\bdoi\s*:/i.test(l) || /^.{2,250}?\.\s*\(\s*(?:\d{4}[a-z]?|s\.\s*f\.)(?:,[^)]*)?\)\s*\./i.test(l.trim());
+  }
+  var cuerpo = corte < 0 ? lineas : lineas.slice(0, corte);
+  var refs = corte < 0 ? '' : [resto].concat(lineas.slice(corte + 1)).join('\n');
+  return {palabras: contar(cuerpo.join('\n')), referencias: contar(refs), encabezado: corte >= 0,
+          sospecha: corte < 0 && cuerpo.some(pareceRef)};
+}
 try{clave=sessionStorage.getItem('econ-clave-docente-foro')||'';}catch(e){}
 async function cargar(){
   var x=await servidor({accion:'foro_docente',foro:CFG.foro,claveDocente:clave});
@@ -390,7 +420,7 @@ function pintar(){
   $('d-resumen').textContent=D.participantes.length+' inscritos, '+con+' participaron, '+calif+' calificados'+(D.cerrado?'. El foro está cerrado.':'. El foro sigue abierto.');
   D.participantes.forEach(function(p){
     var ap=p.mensajes.filter(function(m){return m.tipo==='aporte';}), re=p.mensajes.filter(function(m){return m.tipo==='replica';});
-    var fila=el('div','calif-fila'), info=el('div'); info.append(el('b','',p.nombre), el('small','',(ap.length?'Con aporte':'Sin aporte')+', '+re.length+(re.length===1?' réplica, ':' réplicas, ')+p.mensajes.reduce(function(s,m){return s+m.palabras;},0)+' palabras'));
+    var fila=el('div','calif-fila'), info=el('div'); info.append(el('b','',p.nombre), el('small','',(ap.length?'Con aporte':'Sin aporte')+', '+re.length+(re.length===1?' réplica, ':' réplicas, ')+p.mensajes.reduce(function(s,m){return s+foroContar(m.texto).palabras;},0)+' palabras sin referencias'));
     fila.append(info, el('span','calif-total',p.calificacion?(p.calificacion.total+' de 100'):'Sin calificar'));
     var det=el('div','calif-detalle'); det.hidden=true;
     fila.onclick=function(){ if(!det.firstChild) detalle(p,det); det.hidden=!det.hidden; };
@@ -401,7 +431,8 @@ function detalle(p,det){
   if(!p.mensajes.length) det.append(el('p','pendiente','No ha publicado nada en el foro.'));
   p.mensajes.forEach(function(m){
     var t=el('article','foro-tarjeta'+(m.oculto?' foro-oculto':'')), meta=el('p','foro-meta');
-    meta.append(el('b','',m.tipo==='aporte'?'Aporte':'Réplica a '+autorDe(m.padre)), el('span','',m.palabras+' palabras'), el('span','',new Date(m.fecha).toLocaleString('es-PA')));
+    var q=foroContar(m.texto);
+    meta.append(el('b','',m.tipo==='aporte'?'Aporte':'Réplica a '+autorDe(m.padre)), el('span','',q.palabras+' palabras sin referencias'+(q.referencias?', '+q.referencias+' en referencias':'')+(q.sospecha?'. Ojo: referencias sin encabezado, cuentan':'')), el('span','',new Date(m.fecha).toLocaleString('es-PA')));
     var oc=el('button','boton sec chico',m.oculto?'Mostrar':'Ocultar'); oc.onclick=async function(){oc.disabled=true; var x=await servidor({accion:'foro_ocultar',foro:CFG.foro,claveDocente:clave,id:m.id,ocultar:!m.oculto}); if(x.ok){m.oculto=!m.oculto; oc.textContent=m.oculto?'Mostrar':'Ocultar'; t.classList.toggle('foro-oculto',m.oculto);} oc.disabled=false;};
     meta.append(oc); t.append(meta, el('p','foro-texto',m.texto)); det.append(t);
   });

@@ -206,7 +206,7 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 <a class="volver" href="../">Volver al aula</a>
 <div class="antetitulo">Economía y Finanzas de los Servicios de Salud</div>
 <h1>Mis resultados</h1>
-<p class="bajada">La prueba diagnóstica y los controles de lectura, pregunta por pregunta. Mirarlos aquí no gasta ningún intento.</p>
+<p class="bajada">Sus notas, lo que le falta y, más abajo, la prueba diagnóstica y los controles de lectura pregunta por pregunta. Mirarlos aquí no gasta ningún intento.</p>
 </div></header>
 <main class="envoltura">
 <section class="bloque" id="entrar"><h2>Entre con su cédula y su contraseña</h2>
@@ -217,6 +217,8 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 <p class="nota">¿Olvidó su contraseña? Escríbale al docente: él la reinicia y usted crea una nueva al volver a entrar.</p>
 </section>
 <div id="res" hidden>
+<section class="bloque" id="res-notas"><h2>Sus notas</h2><p class="nota">Cada nota aparece aquí cuando el docente la publica, para todo el curso a la vez. Aquí solo está lo suyo.</p><div id="pn-zona"></div></section>
+<section class="bloque" id="res-pend"><h2>Lo que le falta</h2><ul class="pn-pend" id="pn-pend"></ul></section>
 <section class="bloque" id="res-diag"><h2>Prueba diagnóstica</h2><p class="det-estado" id="diag-puntaje"></p><p class="nota">No lleva nota. Cada pregunta trae la correcta y su explicación.</p><div id="diag-detalle"></div></section>
 <div id="res-ctrl"></div>
 <div class="res-acciones"><a class="boton" href="../">Volver al aula</a></div>
@@ -384,7 +386,8 @@ function simuladorDocente(d){
   if(a==='entrar'||a==='recuperar') return {ok:true,nueva:false,llaves:M.llaves};
   if(a==='resultados'){
     var dr=E.diag||[], cs={}; for(var jj in C.ctrl) cs[jj]=hist(Number(jj));
-    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,
+    // Panel vacío: en el ensayo no hay notas publicadas; las piezas salen como Sin publicar.
+    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,panel:{grupo:'',foros:{},piezas:{},hitos:{}},
       diagnostica:{aciertos:aciertos(dr,C.diag),total:C.diag.length,detalle:det(dr,C.diag,PQ.diag,true)}};
   }
   if(a==='iniciar'){
@@ -450,9 +453,116 @@ $('enviar').onclick=async function(){
   $('res-ctrl').innerHTML=Object.keys(x.controles||{}).sort().map(function(j){
     return '<section class="bloque" id="res-control-'+j+'"><h2>Control de lectura de la jornada '+j+'</h2>'+htmlHistorial(x.controles[j])+'</section>';
   }).join('');
+  pintarPanel(x.panel||null,x.controles||{});
   $('entrar').hidden=true; $('res').hidden=false; window.scrollTo(0,0);
 };
 })();
+</script>
+<style>
+.pn-acum{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin:10px 0 14px}
+.pn-acum b{font:600 40px "IBM Plex Mono",monospace;color:var(--acc);line-height:1}
+.pn-acum span{font:600 18px "Source Serif 4",Georgia,serif}
+.pn-acum p{flex:1 1 100%;margin:0;color:var(--atenuado)}
+.pn-rubros{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:10px;margin:0 0 16px}
+.pn-rubro{background:var(--panel);border:1px solid var(--filete);border-radius:10px;padding:10px 12px;display:grid;gap:2px}
+.pn-rubro span{font:600 15px "IBM Plex Mono",monospace}
+.pn-rubro small{color:var(--atenuado);font-size:13px}
+.pn-piezas{display:grid;gap:10px}
+.pn-pieza{background:var(--panel);border:1px solid var(--filete);border-left:4px solid var(--filete);border-radius:10px;padding:12px 14px;min-width:0}
+.pn-pieza.con-nota{border-left-color:var(--pos)}
+.pn-pieza p{margin:6px 0 0;overflow-wrap:anywhere}
+.pn-cab{display:flex;gap:10px;justify-content:space-between;align-items:baseline}
+.pn-cab div{min-width:0}
+.pn-cab small{display:block;color:var(--atenuado);font-size:14px}
+.pn-nota{font:600 16px "IBM Plex Mono",monospace;white-space:nowrap;color:var(--acc)}
+.pn-pieza:not(.con-nota) .pn-nota{color:var(--atenuado);font-family:"IBM Plex Sans",sans-serif;font-weight:400;font-size:14px}
+.pn-peso{font-size:13px;color:var(--atenuado)}
+.pn-criterios{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:4px}
+.pn-criterios li{display:flex;justify-content:space-between;gap:10px;font-size:14px;border-bottom:1px dashed var(--filete);padding:4px 0}
+.pn-criterios b{white-space:nowrap}
+.pn-realim{margin:10px 0 0;padding:8px 10px;border-left:3px solid var(--acc2);background:var(--bg);border-radius:0 6px 6px 0}
+.pn-realim p{white-space:pre-wrap;margin:4px 0 0}
+.pn-pend{margin:8px 0 0;padding-left:20px;display:grid;gap:6px}
+</style><script>
+var PANEL={"piezas": [{"clave": "foro1", "tipo": "foro", "n": 1, "nombre": "Foro 1", "detalle": "¿Es posible una salud universal en Panamá?", "peso": 10, "rubro": "Foros", "apertura": "", "aperturaTexto": "", "cierre": "2026-10-24T23:59:59-05:00", "cierreTexto": "sábado 24 de octubre a las 11:59 p. m."}, {"clave": "club", "tipo": "pieza", "nombre": "Club de revistas", "detalle": "Parte A individual, dossier del equipo y mesa de veredictos", "peso": 20, "rubro": "Club de revistas", "fechas": [["2026-10-28T23:59:59-05:00", "Parte A individual", "miércoles 28 de octubre a las 11:59 p. m."], ["2026-10-31T23:59:59-05:00", "dossier del equipo", "sábado 31 de octubre a las 11:59 p. m."], ["2026-11-01T12:00:00-05:00", "mesa de veredictos", "domingo 1 de noviembre, en la jornada 3"]]}, {"clave": "foro2", "tipo": "foro", "n": 2, "nombre": "Foro 2", "detalle": "¿Cuánto le cuesta a su servicio la no calidad?", "peso": 10, "rubro": "Foros", "apertura": "2026-11-01T00:00:00-05:00", "aperturaTexto": "domingo 1 de noviembre", "cierre": "2026-11-07T23:59:59-05:00", "cierreTexto": "sábado 7 de noviembre a las 11:59 p. m."}, {"clave": "hito1", "tipo": "hito", "n": 1, "nombre": "Hito 1", "detalle": "Perfil de red del territorio", "peso": 10, "rubro": "Trabajo final", "ruta": "trabajo-final/hito-1", "cierre": "2026-10-24T23:59:59-05:00", "cierreTexto": "sábado 24 de octubre a las 11:59 p. m.", "reabre": "2026-11-07T23:59:59-05:00", "reabreTexto": "sábado 7 de noviembre a las 11:59 p. m."}, {"clave": "hito2", "tipo": "hito", "n": 2, "nombre": "Hito 2", "detalle": "Oferta, marco legal y costo", "peso": 15, "rubro": "Trabajo final", "ruta": "trabajo-final/hito-2", "cierre": "2026-10-31T23:59:59-05:00", "cierreTexto": "sábado 31 de octubre a las 11:59 p. m.", "reabre": "2026-11-07T23:59:59-05:00", "reabreTexto": "sábado 7 de noviembre a las 11:59 p. m."}, {"clave": "hito3", "tipo": "hito", "n": 3, "nombre": "Hito 3", "detalle": "Brechas, primera medida y hoja de ruta", "peso": 15, "rubro": "Trabajo final", "ruta": "trabajo-final/hito-3", "cierre": "2026-11-07T23:59:59-05:00", "cierreTexto": "sábado 7 de noviembre a las 11:59 p. m.", "reabre": "", "reabreTexto": ""}, {"clave": "exposicion", "tipo": "pieza", "nombre": "Exposición", "detalle": "Exposición del equipo en la jornada 4", "peso": 10, "rubro": "Trabajo final", "fechas": [["2026-11-08T12:00:00-05:00", "exposición del equipo", "domingo 8 de noviembre, en la jornada 4"]]}, {"clave": "defensa", "tipo": "pieza", "nombre": "Defensa individual", "detalle": "Hito sorteado y pregunta del docente en la jornada 4", "peso": 10, "rubro": "Trabajo final", "fechas": [["2026-11-08T12:00:00-05:00", "defensa individual", "domingo 8 de noviembre, en la jornada 4"]]}], "rubros": [["Foros", 20], ["Club de revistas", 20], ["Trabajo final", 60]], "pedidas": 2, "niveles": ["Excelente", "Bueno", "Suficiente", "Insuficiente", "No presentado"]}, TXT_PN={"intro": "Cada nota aparece aquí cuando el docente la publica, para todo el curso a la vez. Aquí solo está lo suyo.", "sinPanel": "Sus notas no se pudieron leer en este momento. Intente de nuevo más tarde. La diagnóstica y los controles están más abajo.", "de100": "puntos de 100", "evaluados": "puntos evaluados y publicados hasta hoy.", "nadaPublicado": "Todavía no hay notas publicadas.", "sinNotas": "Sin notas publicadas", "evaluadosCorto": "evaluados", "vale": "Vale", "puntos": "puntos", "puntosCurso": "puntos del curso.", "sinPublicar": "Sin publicar", "rubrica": "En la rúbrica:", "de100r": "de 100.", "foroSinCalif": "El docente ya publicó las notas de este foro, pero no aparece una calificación suya. Si participó, escríbale.", "piezaSinNota": "El docente ya publicó esta pieza, pero no aparece una nota suya. Si la presentó, escríbale.", "verDevolucion": "Ver la devolución en el tablero", "abrirTablero": "Abrir el tablero del equipo", "suEquipo": "Su equipo:", "sinEquipo": "Todavía no tiene equipo asignado: escríbale al docente.", "realimentacion": "Realimentación del docente", "cierra": "Cierra el", "abre": "abre el", "faltaAporte": "falta su aporte.", "falta1Replica": "le falta 1 réplica.", "faltanReplicas": "le faltan {n} réplicas.", "tableroAbierto": "el tablero de su equipo está abierto, con {n} campos con contenido.", "sinEquipoPend": "todavía no tiene equipo asignado.", "vence": "Vence el", "reabierto": "con la devolución publicada, su equipo puede corregir hasta el", "control": "Control de lectura de la jornada", "queda1": "sin aprobar, le queda 1 intento.", "quedan": "sin aprobar, le quedan {n} intentos.", "nadaPendiente": "No tiene nada pendiente por ahora."};
+function r2(x){return Math.round(Number(x)*100)/100;}
+// Punto final sin duplicar el de "p. m.".
+function finPn(s){return /\.$/.test(s)?s:s+'.';}
+function elP(tag,cls,txt){var e=document.createElement(tag); if(cls) e.className=cls; if(txt!==undefined) e.textContent=txt; return e;}
+function datoPn(pz,pn){
+  if(!pn) return {};
+  if(pz.tipo==='foro') return (pn.foros||{})[pz.n]||{};
+  if(pz.tipo==='hito') return (pn.hitos||{})[pz.n]||{};
+  return (pn.piezas||{})[pz.clave]||{};
+}
+function notaPn(pz,pn){var d=datoPn(pz,pn); return d.publicada&&d.nota!==null&&d.nota!==undefined&&d.nota!==''&&!isNaN(d.nota)?Number(d.nota):null;}
+function realimPn(c,t){if(!t||!String(t).trim()) return; var b=elP('div','pn-realim'); b.append(elP('b','',TXT_PN.realimentacion),elP('p','',String(t))); c.append(b);}
+function tarjetaPn(pz,pn){
+  var v=notaPn(pz,pn), d=datoPn(pz,pn), c=elP('article','pn-pieza'+(v!==null?' con-nota':'')), cab=elP('div','pn-cab'), izq=elP('div');
+  c.id='pn-'+pz.clave;
+  izq.append(elP('b','',pz.nombre),elP('small','',pz.detalle));
+  cab.append(izq,elP('span','pn-nota',v!==null?r2(v)+' de '+pz.peso:TXT_PN.sinPublicar)); c.append(cab);
+  c.append(elP('p','pn-peso',TXT_PN.vale+' '+pz.peso+' '+TXT_PN.puntosCurso));
+  if(pz.tipo==='foro'){
+    if(d.publicada&&v===null) c.append(elP('p','nota',TXT_PN.foroSinCalif));
+    if(v!==null){
+      c.append(elP('p','',TXT_PN.rubrica+' '+r2(d.total)+' '+TXT_PN.de100r));
+      var ul=elP('ul','pn-criterios');
+      (d.criterios||[]).forEach(function(k){var n=PANEL.niveles[k.nivel], li=elP('li'); li.append(elP('span','',k.nombre+' ('+k.puntos+' pts)'),elP('b','',(n?n+', ':'')+r2(k.obtenidos)+' pts')); ul.append(li);});
+      c.append(ul); realimPn(c,d.realimentacion);
+    }
+  } else if(pz.tipo==='hito'){
+    var p=elP('p'), a=elP('a','',d.publicada?TXT_PN.verDevolucion:TXT_PN.abrirTablero); a.href='../'+pz.ruta+'/';
+    p.append((pn.grupo?TXT_PN.suEquipo+' '+pn.grupo+'.':TXT_PN.sinEquipo)+' ',a); c.append(p);
+    if(v!==null&&d.total) c.append(elP('p','',TXT_PN.rubrica+' '+r2(d.total)+' '+TXT_PN.de100r));
+  } else {
+    if(d.publicada&&v===null) c.append(elP('p','nota',TXT_PN.piezaSinNota));
+    if(d.publicada) realimPn(c,d.realimentacion);
+  }
+  return c;
+}
+function pendientesPn(pn,controles){
+  var ahora=window.__ahoraPanel||Date.now(), it=[], t=function(iso){return new Date(iso).getTime();};
+  PANEL.piezas.forEach(function(pz){
+    var d=datoPn(pz,pn);
+    if(pz.tipo==='foro'){
+      // Sin el dato del servidor (el ensayo docente), apertura y cierre salen de las fechas del foro.
+      var cerrado=d.cerrado!==undefined?d.cerrado:t(pz.cierre)<ahora, sinAbrir=d.sinAbrir!==undefined?d.sinAbrir:!!pz.apertura&&t(pz.apertura)>ahora;
+      if(cerrado) return;
+      var cierre=finPn(TXT_PN.cierra+' '+pz.cierreTexto);
+      if(sinAbrir) it.push([t(pz.apertura),pz.nombre+': '+TXT_PN.abre+' '+pz.aperturaTexto+'. '+cierre]);
+      else if(!d.aportes) it.push([t(pz.cierre),pz.nombre+': '+TXT_PN.faltaAporte+' '+cierre]);
+      else if((d.replicas||0)<PANEL.pedidas){var n=PANEL.pedidas-(d.replicas||0); it.push([t(pz.cierre),pz.nombre+': '+(n===1?TXT_PN.falta1Replica:TXT_PN.faltanReplicas.replace('{n}',n))+' '+cierre]);}
+    } else if(pz.tipo==='hito'){
+      if(d.estado==='abierto') it.push([t(pz.cierre),pz.nombre+': '+(pn.grupo?TXT_PN.tableroAbierto.replace('{n}',d.llenos||0):TXT_PN.sinEquipoPend)+' '+finPn(TXT_PN.vence+' '+pz.cierreTexto)]);
+      else if(d.estado==='reabierto') it.push([t(pz.reabre),pz.nombre+': '+finPn(TXT_PN.reabierto+' '+pz.reabreTexto)]);
+    } else (pz.fechas||[]).forEach(function(x){if(t(x[0])>=ahora) it.push([t(x[0]),finPn(pz.nombre+', '+x[1]+': '+x[2])]);});
+  });
+  Object.keys(controles||{}).sort().forEach(function(j){
+    var h=controles[j];
+    if(h&&h.intentos&&h.intentos.length&&!h.aprobado&&!h.agotado) it.push([Infinity,TXT_PN.control+' '+j+': '+(h.restantes===1?TXT_PN.queda1:TXT_PN.quedan.replace('{n}',h.restantes))]);
+  });
+  it.sort(function(a,b){return a[0]-b[0];});
+  var ul=document.getElementById('pn-pend'); ul.innerHTML='';
+  if(!it.length) ul.append(elP('li','',TXT_PN.nadaPendiente));
+  it.forEach(function(x){ul.append(elP('li','',x[1]));});
+}
+function pintarPanel(pn,controles){
+  var zona=document.getElementById('pn-zona'); zona.innerHTML='';
+  document.getElementById('res-pend').hidden=!pn;
+  if(!pn){zona.append(elP('p','nota',TXT_PN.sinPanel)); return;}
+  var lleva=0, ev=0, rub={};
+  PANEL.rubros.forEach(function(r){rub[r[0]]={lleva:0,ev:0};});
+  PANEL.piezas.forEach(function(pz){var v=notaPn(pz,pn); if(v!==null){lleva+=v; ev+=pz.peso; rub[pz.rubro].lleva+=v; rub[pz.rubro].ev+=pz.peso;}});
+  var ac=elP('div','pn-acum'); ac.id='pn-acum';
+  ac.append(elP('b','',String(r2(lleva))),elP('span','',TXT_PN.de100),elP('p','',ev?r2(lleva)+' de '+ev+' '+TXT_PN.evaluados:TXT_PN.nadaPublicado));
+  zona.append(ac);
+  var rs=elP('div','pn-rubros');
+  PANEL.rubros.forEach(function(r){var x=rub[r[0]], d=elP('div','pn-rubro'); d.append(elP('b','',r[0]),elP('span','',x.ev?r2(x.lleva)+' de '+x.ev+' '+TXT_PN.evaluadosCorto:TXT_PN.sinNotas),elP('small','',TXT_PN.vale+' '+r[1]+' '+TXT_PN.puntos)); rs.append(d);});
+  zona.append(rs);
+  var lista=elP('div','pn-piezas'); PANEL.piezas.forEach(function(pz){lista.append(tarjetaPn(pz,pn));}); zona.append(lista);
+  pendientesPn(pn,controles);
+}
 </script>
 <footer><div class="envoltura">Economía y Finanzas de los Servicios de Salud, UDELAS. Dr. Manuel S. Nazas R., docente del curso.</div></footer>
 </body></html>

@@ -215,6 +215,7 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 <section class="bloque" id="d-zona" hidden>
 <div class="foro-barra"><span id="d-resumen"></span><span><button class="boton sec chico" id="d-csv">Descargar notas</button> <button class="boton sec chico" id="d-copiar">Copiar notas</button> <button class="boton sec chico" id="d-recargar">Actualizar</button></span></div>
 <p class="nota" id="d-copiado"></p>
+<div class="foro-barra" id="d-publicar"><span id="d-pub-estado"></span><button class="boton chico" id="d-pub-boton">Publicar las notas del foro</button></div>
 <div id="d-lista"></div>
 </section>
 </main>
@@ -340,7 +341,8 @@ function simuladorDocente(d){
   if(a==='entrar'||a==='recuperar') return {ok:true,nueva:false,llaves:M.llaves};
   if(a==='resultados'){
     var dr=E.diag||[], cs={}; for(var jj in C.ctrl) cs[jj]=hist(Number(jj));
-    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,
+    // Panel vacío: en el ensayo no hay notas publicadas; las piezas salen como Sin publicar.
+    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,panel:{grupo:'',foros:{},piezas:{},hitos:{}},
       diagnostica:{aciertos:aciertos(dr,C.diag),total:C.diag.length,detalle:det(dr,C.diag,PQ.diag,true)}};
   }
   if(a==='iniciar'){
@@ -408,6 +410,21 @@ function foroContar(t) {
   return {palabras: contar(cuerpo.join('\n')), referencias: contar(refs), encabezado: corte >= 0,
           sospecha: corte < 0 && cuerpo.some(pareceRef)};
 }
+// Publicar las notas del foro (decisión D3 del 18-oct-2026): libera a la vez, para todo el curso, la nota,
+// los niveles por criterio y la realimentación en Mis resultados. Retirarla las vuelve a ocultar.
+function pintarPublicacion(){
+  var t=D.publicada;
+  $('d-pub-estado').textContent=t?'Notas publicadas el '+new Date(t).toLocaleString('es-PA',{day:'numeric',month:'long',hour:'numeric',minute:'2-digit'})+': cada estudiante ve la suya en Mis resultados. Lo que cambie desde ahora también lo ve.':'Notas sin publicar: los estudiantes todavía no ven su calificación.';
+  $('d-pub-boton').textContent=t?'Retirar la publicación':'Publicar las notas del foro';
+  $('d-pub-boton').className=t?'boton sec chico':'boton chico';
+}
+$('d-pub-boton').onclick=async function(){
+  var b=this; b.disabled=true;
+  var x=await servidor({accion:'docente_publicar',claveDocente:clave,pieza:'foro'+CFG.foro,publicar:!D.publicada});
+  b.disabled=false;
+  if(!x.ok){$('d-pub-estado').textContent=x.error||'No se pudo cambiar la publicación.';return;}
+  D.publicada=(x.publicadas||{})['foro'+CFG.foro]||0; pintarPublicacion();
+};
 try{clave=sessionStorage.getItem('econ-clave-docente-foro')||'';}catch(e){}
 async function cargar(){
   var x=await servidor({accion:'foro_docente',foro:CFG.foro,claveDocente:clave});
@@ -417,6 +434,7 @@ async function cargar(){
 }
 function autorDe(id){var a=(D.aportes||[]).find(function(x){return x.id===id;}); return a?a.autor:'un aporte';}
 function pintar(){
+  pintarPublicacion();
   var lista=$('d-lista'); lista.innerHTML='';
   var con=D.participantes.filter(function(p){return p.mensajes.length;}).length, calif=D.participantes.filter(function(p){return p.calificacion;}).length;
   $('d-resumen').textContent=D.participantes.length+' inscritos, '+con+' participaron, '+calif+' calificados'+(D.cerrado?'. El foro está cerrado.':'. El foro sigue abierto.');

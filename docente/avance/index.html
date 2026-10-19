@@ -225,6 +225,11 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 .cu-total{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 10px;font:600 20px "Source Serif 4",Georgia,serif}
 .cu-total b{font-family:"IBM Plex Mono",monospace;color:var(--acc)}
 .cuaderno textarea{width:100%;min-height:90px;font:15px/1.5 "IBM Plex Sans",sans-serif;padding:10px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.cuaderno textarea.cu-realim{min-height:64px;margin:0 0 6px}
+.av-publicar{display:grid;gap:8px;margin:0 0 16px;padding:12px 14px;border:1px solid var(--filete);border-radius:10px;background:var(--panel)}
+.av-publicar p{margin:0;font-size:14px;color:var(--atenuado)}
+.av-pub-fila{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.av-pub-fila span{font-size:14px}
 </style>
 </head><body>
 <header><div class="envoltura">
@@ -238,6 +243,7 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 <p class="error-txt" id="d-aviso" role="alert"></p><button class="boton" id="d-boton">Entrar</button></section>
 <section class="bloque" id="d-zona" hidden>
 <div class="av-resumen" id="av-resumen"></div>
+<div class="av-publicar" id="av-publicar"></div>
 <div class="foro-barra"><span id="av-estado"></span><span><button class="boton sec chico" id="d-csv">Descargar notas</button> <button class="boton sec chico" id="d-copiar">Copiar notas</button> <button class="boton sec chico" id="d-recargar">Actualizar</button></span></div>
 <p class="nota" id="d-copiado"></p>
 <input class="av-buscar" id="av-buscar" placeholder="Buscar por nombre, cédula, institución o provincia" aria-label="Buscar participante">
@@ -368,7 +374,8 @@ function simuladorDocente(d){
   if(a==='entrar'||a==='recuperar') return {ok:true,nueva:false,llaves:M.llaves};
   if(a==='resultados'){
     var dr=E.diag||[], cs={}; for(var jj in C.ctrl) cs[jj]=hist(Number(jj));
-    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,
+    // Panel vacío: en el ensayo no hay notas publicadas; las piezas salen como Sin publicar.
+    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,panel:{grupo:'',foros:{},piezas:{},hitos:{}},
       diagnostica:{aciertos:aciertos(dr,C.diag),total:C.diag.length,detalle:det(dr,C.diag,PQ.diag,true)}};
   }
   if(a==='iniciar'){
@@ -461,8 +468,29 @@ function resumen(){
   var r=$('av-resumen'); r.innerHTML='';
   cifras.forEach(function(c){var d=el('div','av-cifra'); d.append(el('b','',String(c[0])),el('span','',c[1])); r.append(d);});
 }
+function fechaPub(t){try{return new Date(t).toLocaleString('es-PA',{day:'numeric',month:'long',hour:'numeric',minute:'2-digit'});}catch(e){return '';}}
+// Lo que ve cada estudiante en Mis resultados (decisiones D3, D5 y D7 del 18-oct-2026).
+function publicacion(){
+  var c=$('av-publicar'), P=D.publicadas||{}; c.innerHTML='';
+  c.append(el('p','','Lo que ve cada estudiante en Mis resultados. Una nota sale solo cuando usted la publica, para todo el curso a la vez, y se puede retirar. Los foros se publican en su calificador y los hitos con la devolución de cada tablero.'));
+  CFG.foros.forEach(function(f){
+    var t=P['foro'+f[0]], fila=el('div','av-pub-fila'), a=el('a','','Ir a su calificador'); a.href='../../'+f[3];
+    fila.append(el('span','','Foro '+f[0]+': '+(t?'publicado el '+fechaPub(t)+'.':'sin publicar.')), a); c.append(fila);
+  });
+  (D.realim||[]).forEach(function(k){
+    var pz=CFG.piezas.filter(function(x){return x.clave===k;})[0]; if(!pz) return;
+    var t=P[k], fila=el('div','av-pub-fila'), b=el('button','boton sec chico',t?'Retirar la publicación':'Publicar al curso');
+    fila.append(el('span','',pz.nombre+': '+(t?'publicado el '+fechaPub(t)+'.':'sin publicar.')), b);
+    b.onclick=async function(){
+      b.disabled=true; var x=await servidor({accion:'docente_publicar',claveDocente:clave,pieza:k,publicar:!t}); b.disabled=false;
+      if(!x.ok){fila.append(el('span','av-no',x.error||'No se pudo cambiar.'));return;}
+      D.publicadas=x.publicadas; publicacion();
+    };
+    c.append(fila);
+  });
+}
 function pintar(){
-  resumen();
+  resumen(); publicacion();
   var q=$('av-buscar').value.trim().toLowerCase(), cuerpo=$('av-cuerpo'); cuerpo.innerHTML='';
   var lista=D.participantes.filter(function(p){return !q||[p.nombre,p.cedula,p.institucion,p.provincia].join(' ').toLowerCase().indexOf(q)>=0;});
   $('av-estado').textContent=lista.length+' de '+D.participantes.length+' participantes';
@@ -483,7 +511,7 @@ function cuaderno(p){
   var c=$('cuaderno'); c.innerHTML='';
   var caja=el('div','cuaderno'); caja.append(el('h3','','Cuaderno de notas: '+p.nombre));
   caja.append(el('p','dato','Cédula '+p.cedula+', '+p.correo+'. Inscripción: '+new Date(p.inscripcion).toLocaleString('es-PA')+'. Diagnóstica: '+p.diagnostica+' de '+D.totalDiag+'.'));
-  var entradas=[];
+  var entradas=[], realim={}, auto=p.notas.auto||{};
   CFG.foros.forEach(function(f){
     var v=notaForo(p,f[0]), fila=el('div','cu-fila'), izq=el('div');
     izq.append(el('b','','Foro '+f[0]+' ('+f[2]+')')); var s=el('small',''); s.append(f[1]+' Se califica en '); var a=el('a','','su página'); a.href='../../'+f[3]; s.append(a,'.'); izq.append(s);
@@ -495,12 +523,21 @@ function cuaderno(p){
     var inp=el('input'); inp.type='number'; inp.min='0'; inp.max=String(pz.max); inp.step='0.01'; inp.inputMode='decimal';
     inp.setAttribute('aria-label',pz.nombre+', de 0 a '+pz.max); var v=p.notas.valores[i]; inp.value=v===null?'':String(v);
     inp.oninput=function(){ actualizar(); };
+    if(auto[i]!==undefined) izq.append(el('small','','Viene de la calificación del tablero del grupo. Si la cambia, su nota manda.'));
     entradas.push(inp); fila.append(izq,inp); caja.append(fila);
+    var j=(D.realim||[]).indexOf(pz.clave);
+    if(j>=0){
+      var ta=el('textarea','cu-realim'); ta.placeholder='Realimentación para el estudiante: la ve en Mis resultados cuando publique '+pz.nombre.toLowerCase()+'.';
+      ta.setAttribute('aria-label','Realimentación de '+pz.nombre+' para el estudiante'); ta.value=(p.notas.realim||[])[j]||''; realim[j]=ta; caja.append(ta);
+    }
   });
   var tot=el('div','cu-total'); tot.append(el('span','','Nota del curso'), el('b','')); caja.append(tot);
   var com=el('textarea'); com.placeholder='Observaciones del docente sobre este participante (no se publican)'; com.value=p.notas.comentario||''; caja.append(com);
   var msg=el('p','nota'), g=el('button','boton','Guardar notas'); g.style.marginTop='10px';
   function leer(){return entradas.map(function(i){return i.value===''?null:Number(i.value);});}
+  // Lo que se guarda: la nota del hito que vino del tablero y no se tocó no se escribe como nota a mano.
+  function aGuardar(vals){return vals.map(function(v,i){return auto[i]!==undefined&&v===auto[i]?null:v;});}
+  function leerRealim(){return (D.realim||[]).map(function(_,j){return realim[j]?realim[j].value:'';});}
   function actualizar(){
     var vals=leer(), t=0;
     CFG.foros.forEach(function(f){var v=notaForo(p,f[0]); if(v!==null) t+=v;});
@@ -512,10 +549,11 @@ function cuaderno(p){
     var vals=leer();
     for(var i=0;i<vals.length;i++){ if(vals[i]!==null&&(isNaN(vals[i])||vals[i]<0||vals[i]>CFG.piezas[i].max)){msg.textContent=CFG.piezas[i].nombre+': la nota va de 0 a '+CFG.piezas[i].max+'.';return;} }
     g.disabled=true; msg.textContent='Guardando...';
-    var x=await servidor({accion:'docente_nota',claveDocente:clave,cedula:p.cedula,valores:vals,comentario:com.value});
+    var re=leerRealim(), x=await servidor({accion:'docente_nota',claveDocente:clave,cedula:p.cedula,valores:aGuardar(vals),comentario:com.value,realim:re});
     g.disabled=false;
     if(!x.ok){msg.textContent=x.error||'No se pudo guardar.';return;}
-    p.notas={valores:vals,comentario:com.value}; pintar(); var m=document.querySelector('.cuaderno .nota'); if(m) m.textContent='Guardado en la hoja Notas.';
+    var au={}; aGuardar(vals).forEach(function(v,i){if(v===null&&vals[i]!==null) au[i]=vals[i];});
+    p.notas={valores:vals,comentario:com.value,realim:re,auto:au}; pintar(); var m=document.querySelector('.cuaderno .nota'); if(m) m.textContent='Guardado en la hoja Notas.';
   };
   caja.append(g,msg); c.append(caja);
 }

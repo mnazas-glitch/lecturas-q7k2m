@@ -225,6 +225,11 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 .cu-total{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 10px;font:600 20px "Source Serif 4",Georgia,serif}
 .cu-total b{font-family:"IBM Plex Mono",monospace;color:var(--acc)}
 .cuaderno textarea{width:100%;min-height:90px;font:15px/1.5 "IBM Plex Sans",sans-serif;padding:10px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.cuaderno textarea.cu-realim{min-height:64px;margin:0 0 6px}
+.av-publicar{display:grid;gap:8px;margin:0 0 16px;padding:12px 14px;border:1px solid var(--filete);border-radius:10px;background:var(--panel)}
+.av-publicar p{margin:0;font-size:14px;color:var(--atenuado)}
+.av-pub-fila{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.av-pub-fila span{font-size:14px}
 
 .tg-tabla td input{font:inherit;font-size:14px;width:100%;box-sizing:border-box;padding:6px 8px;border-radius:6px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
 .tg-estado{font-size:13px;color:var(--atenuado)}
@@ -375,7 +380,8 @@ function simuladorDocente(d){
   if(a==='entrar'||a==='recuperar') return {ok:true,nueva:false,llaves:M.llaves};
   if(a==='resultados'){
     var dr=E.diag||[], cs={}; for(var jj in C.ctrl) cs[jj]=hist(Number(jj));
-    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,
+    // Panel vacío: en el ensayo no hay notas publicadas; las piezas salen como Sin publicar.
+    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,panel:{grupo:'',foros:{},piezas:{},hitos:{}},
       diagnostica:{aciertos:aciertos(dr,C.diag),total:C.diag.length,detalle:det(dr,C.diag,PQ.diag,true)}};
   }
   if(a==='iniciar'){

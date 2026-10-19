@@ -399,7 +399,8 @@ function simuladorDocente(d){
   if(a==='entrar'||a==='recuperar') return {ok:true,nueva:false,llaves:M.llaves};
   if(a==='resultados'){
     var dr=E.diag||[], cs={}; for(var jj in C.ctrl) cs[jj]=hist(Number(jj));
-    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,
+    // Panel vacío: en el ensayo no hay notas publicadas; las piezas salen como Sin publicar.
+    return {ok:true,nueva:false,nombre:'Ensayo docente',llaves:M.llaves,controles:cs,panel:{grupo:'',foros:{},piezas:{},hitos:{}},
       diagnostica:{aciertos:aciertos(dr,C.diag),total:C.diag.length,detalle:det(dr,C.diag,PQ.diag,true)}};
   }
   if(a==='iniciar'){

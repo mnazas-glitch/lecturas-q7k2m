@@ -261,7 +261,7 @@ function barraDocente(){
   if(J&&clave){
     var E={}; try{E=JSON.parse(localStorage.getItem('econ-docente-ensayo')||'{}');}catch(e){}
     var usados=((E.int||{})[J]||[]).length, n=clave.length, min=Math.ceil(C.umbral*n-1e-9);
-    txt+='<span>Control de la jornada '+J+': '+n+' preguntas, aprueba con '+min+' aciertos ('+Math.round(C.umbral*100)+' %), '+C.intentos+' intentos de '+C.minutos+' minutos; la segunda salida de la ventana lo envía. Ensayos usados: '+usados+' de '+C.intentos+'.</span>';
+    txt+='<span>Control de la jornada '+J+': '+n+' preguntas, aprueba con '+min+' aciertos ('+Math.round(C.umbral*100)+' %), '+C.intentos+' intentos de '+(typeof C.minutos==='object'?C.minutos[J]:C.minutos)+' minutos; la segunda salida de la ventana lo envía. Ensayos usados: '+usados+' de '+C.intentos+'.</span>';
   } else if(diag&&clave){
     txt+='<span>La inscripción es un ensayo: no crea ninguna fila.</span>';
   }
@@ -306,7 +306,9 @@ function simuladorDocente(d){
   var guardar=function(){try{localStorage.setItem('econ-docente-ensayo',JSON.stringify(E));}catch(e){}};
   var aciertos=function(r,k){var n=0;for(var i=0;i<k.length;i++)if(Number(r[i])===k[i])n++;return n;};
   var previos=function(j){return E.int[j]||[];};
-  var restan=function(it){return Math.round(C.minutos*60-(Date.now()-it.inicio)/1000);};
+  // Minutos por control, como minutosDe() del servidor (un número en paquetes docentes viejos).
+  var mins=function(j){var m=C.minutos;return typeof m==='object'?(Number(m[j])||15):(Number(m)||15);};
+  var restan=function(it){return Math.round(mins(it.j)*60-(Date.now()-it.inicio)/1000);};
   // Detalle por pregunta con las mismas reglas del servidor (detalle e historialControl).
   var PQ=C.preg||{diag:[],ctrl:{}};
   var det=function(resp,k,pq,rev){return k.map(function(c,i){var q=(pq||[])[i]||['',[],''],m=Number(resp[i]);
@@ -351,7 +353,7 @@ function simuladorDocente(d){
     if(ab) return {ok:true,id:ab.id,segundos:Math.max(0,restan(ab)),salidas:ab.salidas,respuestas:ab.resp||[],reanudado:true};
     var nuevo={id:'ensayo-'+Date.now(),j:j,inicio:Date.now(),salidas:0,resp:[],estado:'abierto'};
     E.ab[nuevo.id]=nuevo; guardar();
-    return {ok:true,id:nuevo.id,segundos:C.minutos*60,salidas:0,intento:p.length+1};
+    return {ok:true,id:nuevo.id,segundos:mins(j)*60,salidas:0,intento:p.length+1};
   }
   if(!it) return {ok:a==='vuelta'||a==='guardar',error:'Intento desconocido.'};
   if(a==='vuelta') return {ok:true};

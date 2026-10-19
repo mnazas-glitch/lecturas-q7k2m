@@ -296,7 +296,7 @@ function barraDocente(){
   if(J&&clave){
     var E={}; try{E=JSON.parse(localStorage.getItem('econ-docente-ensayo')||'{}');}catch(e){}
     var usados=((E.int||{})[J]||[]).length, n=clave.length, min=Math.ceil(C.umbral*n-1e-9);
-    txt+='<span>Control de la jornada '+J+': '+n+' preguntas, aprueba con '+min+' aciertos ('+Math.round(C.umbral*100)+' %), '+C.intentos+' intentos de '+C.minutos+' minutos; la segunda salida de la ventana lo envía. Ensayos usados: '+usados+' de '+C.intentos+'.</span>';
+    txt+='<span>Control de la jornada '+J+': '+n+' preguntas, aprueba con '+min+' aciertos ('+Math.round(C.umbral*100)+' %), '+C.intentos+' intentos de '+(typeof C.minutos==='object'?C.minutos[J]:C.minutos)+' minutos; la segunda salida de la ventana lo envía. Ensayos usados: '+usados+' de '+C.intentos+'.</span>';
   } else if(diag&&clave){
     txt+='<span>La inscripción es un ensayo: no crea ninguna fila.</span>';
   }
@@ -341,7 +341,9 @@ function simuladorDocente(d){
   var guardar=function(){try{localStorage.setItem('econ-docente-ensayo',JSON.stringify(E));}catch(e){}};
   var aciertos=function(r,k){var n=0;for(var i=0;i<k.length;i++)if(Number(r[i])===k[i])n++;return n;};
   var previos=function(j){return E.int[j]||[];};
-  var restan=function(it){return Math.round(C.minutos*60-(Date.now()-it.inicio)/1000);};
+  // Minutos por control, como minutosDe() del servidor (un número en paquetes docentes viejos).
+  var mins=function(j){var m=C.minutos;return typeof m==='object'?(Number(m[j])||15):(Number(m)||15);};
+  var restan=function(it){return Math.round(mins(it.j)*60-(Date.now()-it.inicio)/1000);};
   // Detalle por pregunta con las mismas reglas del servidor (detalle e historialControl).
   var PQ=C.preg||{diag:[],ctrl:{}};
   var det=function(resp,k,pq,rev){return k.map(function(c,i){var q=(pq||[])[i]||['',[],''],m=Number(resp[i]);
@@ -386,7 +388,7 @@ function simuladorDocente(d){
     if(ab) return {ok:true,id:ab.id,segundos:Math.max(0,restan(ab)),salidas:ab.salidas,respuestas:ab.resp||[],reanudado:true};
     var nuevo={id:'ensayo-'+Date.now(),j:j,inicio:Date.now(),salidas:0,resp:[],estado:'abierto'};
     E.ab[nuevo.id]=nuevo; guardar();
-    return {ok:true,id:nuevo.id,segundos:C.minutos*60,salidas:0,intento:p.length+1};
+    return {ok:true,id:nuevo.id,segundos:mins(j)*60,salidas:0,intento:p.length+1};
   }
   if(!it) return {ok:a==='vuelta'||a==='guardar',error:'Intento desconocido.'};
   if(a==='vuelta') return {ok:true};
@@ -459,7 +461,15 @@ function pintar(){
   var gente=$('tg-gente'); gente.innerHTML='';
   D.participantes.slice().sort(function(a,b){return (a.grupo||'~').localeCompare(b.grupo||'~')||a.nombre.localeCompare(b.nombre);}).forEach(function(p){
     var tr=el('tr'), td=el('td'), i=el('input'); i.value=p.grupo||''; i.setAttribute('list','tg-nombres'); i.setAttribute('aria-label','Grupo de '+p.nombre); i.dataset.cedula=p.cedula;
-    tr.append(el('td','',p.nombre)); td.append(i); tr.append(td); gente.append(tr);
+    // Reiniciar contraseña: para quien no puede entrar; la siguiente entrada con su cédula crea una nueva.
+    var tn=el('td'), rb=el('button','boton sec chico','Reiniciar contraseña'), rm=el('small','tg-estado');
+    rb.onclick=async function(){
+      if(rb.dataset.ok!=='1'){rb.dataset.ok='1'; rb.textContent='Pulse otra vez para confirmar'; setTimeout(function(){rb.dataset.ok=''; rb.textContent='Reiniciar contraseña';},5000); return;}
+      rb.disabled=true; var x=await servidor({accion:'docente_reiniciar_clave',claveDocente:clave,cedula:p.cedula}); rb.disabled=false; rb.dataset.ok=''; rb.textContent='Reiniciar contraseña';
+      rm.textContent=x.ok?' Reiniciada: al entrar escribe una nueva.':' '+(x.error||'No se pudo.');
+    };
+    tn.append(el('div','',p.nombre), rb, rm);
+    tr.append(tn); td.append(i); tr.append(td); gente.append(tr);
   });
 }
 $('tg-guardar').onclick=async function(){

@@ -431,7 +431,7 @@ function guardarId(o){if(modoDocente()) return; try{localStorage.setItem('econ-i
 function respuestas(n){var r=[],f=[];for(var i=0;i<n;i++){var s=document.querySelector('input[name=p'+i+']:checked');if(!s)f.push(i+1);r.push(s?+s.value:-1);}return {r:r,falta:f};}
 
 (function(){
-var CFG={"hitos": [[1, "Hito 1. Perfil de red del territorio", 10, "trabajo-final/hito-1"], [2, "Hito 2. Oferta, marco legal y costo", 15, "trabajo-final/hito-2"], [3, "Hito 3. Brechas, primera medida y hoja de ruta", 15, "trabajo-final/hito-3"]], "archivo": "notas_hitos_trabajo_final.csv"}, $=function(x){return document.getElementById(x);}, D=null, clave='';
+var CFG={"hitos": [[1, "Hito 1. Perfil de red del territorio", 6, "trabajo-final/hito-1"], [2, "Hito 2. Oferta, marco legal y costo", 8, "trabajo-final/hito-2"], [3, "Hito 3. Brechas, primera medida y hoja de ruta", 8, "trabajo-final/hito-3"]], "archivo": "notas_hitos_trabajo_final.csv"}, $=function(x){return document.getElementById(x);}, D=null, clave='';
 function el(tag,cls,txt){var e=document.createElement(tag); if(cls) e.className=cls; if(txt!==undefined) e.textContent=txt; return e;}
 function fecha(ms){try{return ms?new Date(ms).toLocaleString('es-PA',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'sin actividad';}catch(e){return '';}}
 var ESTADO={abierto:'Abierto',entregado:'Entregado, por calificar',reabierto:'Reabierto para corregir',cerrado:'Cerrado'};

@@ -458,6 +458,9 @@ b.onclick=async function(){
   var p={}, falta=[];
   CAMPOS.forEach(function(k){var e=document.getElementById('c-'+k); p[k]=e.value.trim(); if(e.required&&!p[k]) falta.push(e.closest('label').querySelector('span').textContent);});
   if(falta.length){aviso.textContent='Le faltan datos: '+falta.join(', ')+'.';document.getElementById('inscripcion').scrollIntoView();return;}
+  // La misma regla que cedulaValida() del servidor (21-oct-2026).
+  var ced=p.cedula.toUpperCase().replace(/[\s._]+/g,'-').replace(/[^0-9A-Z-]/g,'').replace(/-+/g,'-').split('-').map(function(x){return x.replace(/^0+(?=[0-9])/,'');}).join('-');
+  if(!modoDocente()&&!/^(?:(?:[1-9]|1[0-3])(?:AV|PI)?|PE|E|N)-[0-9]{1,4}-[0-9]{1,6}$/.test(ced)){aviso.textContent='Revise la cédula: escríbala con sus dos guiones, como 4-123-456.';document.getElementById('c-cedula').focus();return;}
   var clave=document.getElementById('c-clave').value, clave2=document.getElementById('c-clave2').value;
   if(clave.length<6){aviso.textContent='La contraseña debe tener al menos 6 caracteres.';return;}
   if(clave!==clave2){aviso.textContent='Las dos contraseñas no coinciden.';return;}

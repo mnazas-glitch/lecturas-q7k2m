@@ -473,7 +473,7 @@ function detalle(p,det){
   p.mensajes.forEach(function(m){
     var t=el('article','foro-tarjeta'+(m.oculto?' foro-oculto':'')), meta=el('p','foro-meta');
     var q=foroContar(m.texto);
-    meta.append(el('b','',m.tipo==='aporte'?'Aporte':'Réplica a '+autorDe(m.padre)), el('span','',q.palabras+' palabras sin referencias'+(q.referencias?', '+q.referencias+' en referencias':'')+(q.sospecha?'. Ojo: referencias sin encabezado, cuentan':'')), el('span','',new Date(m.fecha).toLocaleString('es-PA')));
+    meta.append(el('b','',(m.tipo==='aporte'?'Aporte':'Réplica a '+autorDe(m.padre))+(m.editado?', editado el '+new Date(m.editado).toLocaleString('es-PA'):'')), el('span','',q.palabras+' palabras sin referencias'+(q.referencias?', '+q.referencias+' en referencias':'')+(q.sospecha?'. Ojo: referencias sin encabezado, cuentan':'')), el('span','',new Date(m.fecha).toLocaleString('es-PA')));
     var oc=el('button','boton sec chico',m.oculto?'Mostrar':'Ocultar'); oc.onclick=async function(){oc.disabled=true; var x=await servidor({accion:'foro_ocultar',foro:CFG.foro,claveDocente:clave,id:m.id,ocultar:!m.oculto}); if(x.ok){m.oculto=!m.oculto; oc.textContent=m.oculto?'Mostrar':'Ocultar'; t.classList.toggle('foro-oculto',m.oculto);} oc.disabled=false;};
     meta.append(oc); t.append(meta, el('p','foro-texto',m.texto)); det.append(t);
     if(m.tipo==='aporte'){

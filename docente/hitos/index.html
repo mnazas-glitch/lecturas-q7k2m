@@ -186,6 +186,8 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 .contador.ok{color:var(--pos)}
 .foro-barra{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin:0 0 16px;padding:12px 16px;border:1px solid var(--filete);border-radius:10px}
 .foro-oculto{opacity:.5}
+.foro-tarjeta.docente{border-color:var(--acc);border-left:4px solid var(--acc)}
+.foro-avisos{margin:0 0 16px}
 .boton.chico{min-height:40px;padding:8px 14px;font-size:14px}
 .boton.sec{background:transparent;color:var(--texto);border:1px solid var(--filete)}
 .boton.sec:hover{border-color:var(--acc)}
@@ -301,7 +303,7 @@ function barraDocente(){
   if(J&&clave){
     var E={}; try{E=JSON.parse(localStorage.getItem('econ-docente-ensayo')||'{}');}catch(e){}
     var usados=((E.int||{})[J]||[]).length, n=clave.length, min=Math.ceil(C.umbral*n-1e-9);
-    txt+='<span>Control de la jornada '+J+': '+n+' preguntas, aprueba con '+min+' aciertos ('+Math.round(C.umbral*100)+' %), '+C.intentos+' intentos de '+(typeof C.minutos==='object'?C.minutos[J]:C.minutos)+' minutos; la segunda salida de la ventana lo envía. Ensayos usados: '+usados+' de '+C.intentos+'.</span>';
+    txt+='<span>Control de la jornada '+J+': '+n+' preguntas, aprueba con '+min+' aciertos ('+Math.round(C.umbral*100)+' %), intentos de '+(typeof C.minutos==='object'?C.minutos[J]:C.minutos)+' minutos hasta aprobar (la jornada siguiente se abre al '+C.intentos+'.º sin aprobar); la segunda salida de la ventana lo envía. Ensayos usados: '+usados+'.</span>';
   } else if(diag&&clave){
     txt+='<span>La inscripción es un ensayo: no crea ninguna fila.</span>';
   }
@@ -353,21 +355,21 @@ function simuladorDocente(d){
   var PQ=C.preg||{diag:[],ctrl:{}};
   var det=function(resp,k,pq,rev){return k.map(function(c,i){var q=(pq||[])[i]||['',[],''],m=Number(resp[i]);
     var x={n:i+1,enunciado:q[0],opciones:q[1],marcada:m>=0&&m<q[1].length?m:-1,acierto:m===c}; if(rev){x.correcta=c;x.explicacion=q[2];} return x;});};
-  var revelado=function(j){var p=previos(j);return p.some(function(f){return f.aprobado;})||p.length>=C.intentos;};
+  var revelado=function(j){var p=previos(j);return p.some(function(f){return f.aprobado;});};
   var hist=function(j){var p=previos(j),k=C.ctrl[j],rev=revelado(j);
-    return {jornada:j,total:k.length,aprobado:p.some(function(f){return f.aprobado;}),agotado:p.length>=C.intentos&&!p.some(function(f){return f.aprobado;}),revelado:rev,restantes:Math.max(0,C.intentos-p.length),
+    return {jornada:j,total:k.length,aprobado:p.some(function(f){return f.aprobado;}),agotado:p.length>=C.intentos&&!p.some(function(f){return f.aprobado;}),revelado:rev,
       intentos:p.map(function(f,i){return {intento:i+1,fecha:f.fecha||0,aciertos:f.aciertos,total:k.length,aprobado:f.aprobado,motivo:f.motivo,detalle:det(f.resp||[],k,PQ.ctrl[j],rev)};})};};
   var cerrar=function(it,resp,motivo){
     var k=C.ctrl[it.j], n=aciertos(resp,k), ok=n/k.length>=C.umbral, p=previos(it.j);
     it.estado='cerrado: '+motivo; it.resp=resp; p.push({aciertos:n,aprobado:ok,motivo:motivo,resp:(resp||[]).slice(),fecha:Date.now()}); E.int[it.j]=p; guardar();
-    // Tercer intento sin aprobar: la jornada se abre igual (ficha T5), como en el servidor.
+    // Tercer intento sin aprobar: la jornada se abre igual (ficha T5) y puede seguir intentando, como en el servidor.
     var abre=!ok&&p.length>=C.intentos;
-    var r={ok:true,cerrado:true,motivo:motivo,aprobado:ok,aciertos:n,total:k.length,restantes:Math.max(0,C.intentos-p.length),abierta:abre};
-    if(ok||abre) r.llaves=M.llaves; r.detalle=det(resp||[],k,PQ.ctrl[it.j],ok||abre); return r;
+    var r={ok:true,cerrado:true,motivo:motivo,aprobado:ok,aciertos:n,total:k.length,intento:p.length,abierta:abre};
+    if(ok||abre) r.llaves=M.llaves; r.detalle=det(resp||[],k,PQ.ctrl[it.j],ok); return r;
   };
   var cerrado=function(it){
     var p=previos(it.j), f=p[p.length-1]||{aciertos:0,aprobado:false}, abre=!f.aprobado&&p.length>=C.intentos;
-    var r={ok:true,cerrado:true,motivo:it.estado.replace('cerrado: ',''),aprobado:f.aprobado,aciertos:f.aciertos,total:C.ctrl[it.j].length,restantes:Math.max(0,C.intentos-p.length),abierta:abre};
+    var r={ok:true,cerrado:true,motivo:it.estado.replace('cerrado: ',''),aprobado:f.aprobado,aciertos:f.aciertos,total:C.ctrl[it.j].length,intento:p.length,abierta:abre};
     if(f.aprobado||abre) r.llaves=M.llaves; r.detalle=det(f.resp||[],C.ctrl[it.j],PQ.ctrl[it.j],revelado(it.j)); return r;
   };
   var a=d.accion, it=d.id?E.ab[d.id]:null;
@@ -390,7 +392,6 @@ function simuladorDocente(d){
     if(ab&&restan(ab)<-GRACIA){cerrar(ab,ab.resp||[],'tiempo vencido sin envío'); ab=null;}
     var p=previos(j);
     if(p.some(function(f){return f.aprobado;})){var b=p.filter(function(f){return f.aprobado;})[0]; return {ok:true,aprobado:true,repetido:true,aciertos:b.aciertos,total:C.ctrl[j].length,llaves:M.llaves,historial:hist(j)};}
-    if(!ab&&p.length>=C.intentos){var u=p[p.length-1]||{aciertos:0}; return {ok:true,agotado:true,abierta:true,aprobado:false,cerrado:true,aciertos:u.aciertos,total:C.ctrl[j].length,restantes:0,llaves:M.llaves,historial:hist(j)};}
     if(ab) return {ok:true,id:ab.id,segundos:Math.max(0,restan(ab)),salidas:ab.salidas,respuestas:ab.resp||[],reanudado:true};
     var nuevo={id:'ensayo-'+Date.now(),j:j,inicio:Date.now(),salidas:0,resp:[],estado:'abierto'};
     E.ab[nuevo.id]=nuevo; guardar();

@@ -437,6 +437,7 @@ function el(tag,cls,txt){var e=document.createElement(tag); if(cls) e.className=
 function fecha(ms){try{return ms?new Date(ms).toLocaleString('es-PA',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'sin actividad';}catch(e){return '';}}
 var ESTADO={abierto:'Abierto',entregado:'Entregado, por calificar',reabierto:'Reabierto para corregir',cerrado:'Cerrado'};
 try{clave=sessionStorage.getItem('econ-clave-docente-foro')||'';}catch(e){}
+if(!clave&&typeof modoDocente==='function') clave=(modoDocente()||{}).clave||'';
 async function cargar(){
   var x=await servidor({accion:'docente_tableros',claveDocente:clave});
   if(!x.ok){$('d-aviso').textContent=x.error||'No se pudo entrar.'; $('d-entrar').hidden=false; $('d-zona').hidden=true; return;}

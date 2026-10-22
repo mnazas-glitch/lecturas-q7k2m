@@ -432,6 +432,7 @@ $('d-pub-boton').onclick=async function(){
   D.publicada=(x.publicadas||{})['foro'+CFG.foro]||0; pintarPublicacion();
 };
 try{clave=sessionStorage.getItem('econ-clave-docente-foro')||'';}catch(e){}
+if(!clave&&typeof modoDocente==='function') clave=(modoDocente()||{}).clave||'';
 async function cargar(){
   var x=await servidor({accion:'foro_docente',foro:CFG.foro,claveDocente:clave});
   if(!x.ok){$('d-aviso').textContent=x.error||'No se pudo entrar.'; $('d-entrar').hidden=false; $('d-zona').hidden=true; return;}

@@ -418,7 +418,14 @@ function simuladorDocente(d){
   }
   return {ok:false,error:'Acción desconocida.'};
 }
+// La misma regla que normCedula() y cedulaValida() del servidor. 23-oct-2026: un estudiante cuya cédula se
+// corrigió en la hoja seguía entrando con la que su navegador guardó sin el primer guion (4732-478) y solo
+// veía "Cédula o contraseña incorrectas".
+function normCed(c){return String(c||'').toUpperCase().trim().replace(/[\s._]+/g,'-').replace(/[^0-9A-Z-]/g,'').replace(/-+/g,'-').split('-').map(function(x){return x.replace(/^0+(?=[0-9])/,'');}).join('-');}
+function cedOk(c){c=normCed(c); return /^(?:(?:[1-9]|1[0-3])(?:AV|PI)?|PE|E|N)-[0-9]{1,4}-[0-9]{1,6}$/.test(c)||/^PRUEBA/.test(c);}
+var CED_MAL='Revise la cédula: escríbala con sus dos guiones, como 4-123-456.';
 function servidor(d){
+  if(/^(entrar|recuperar|resultados|iniciar|foro_leer)$/.test(d.accion)&&!modoDocente()&&!cedOk(d.cedula)) return Promise.resolve({ok:false,error:CED_MAL});
   // El foro va siempre al servidor real, también en modo docente: allí se califica de verdad.
   var simulado=window.__servidorPrueba&&!(window.__servidorPrueba===simuladorDocente&&/^(foro_|docente_)/.test(d.accion));
   if(simulado) return Promise.resolve(window.__servidorPrueba(d));
@@ -433,7 +440,8 @@ function servidor(d){
 }
 // El servidor de Google duerme si nadie lo usa: se le despierta apenas se abre la página.
 if(SERVIDOR&&!window.__servidorPrueba){try{fetch(SERVIDOR).catch(function(){});}catch(e){}}
-function idGuardada(){try{return JSON.parse(localStorage.getItem('econ-id')||'null');}catch(e){return null;}}
+// Una cédula guardada sin sus dos guiones no se vuelve a rellenar: se borra y el estudiante la escribe bien.
+function idGuardada(){try{var o=JSON.parse(localStorage.getItem('econ-id')||'null'); if(o&&o.cedula&&!cedOk(o.cedula)){localStorage.removeItem('econ-id'); return null;} return o;}catch(e){return null;}}
 function guardarId(o){if(modoDocente()) return; try{localStorage.setItem('econ-id',JSON.stringify(o));}catch(e){}}
 function respuestas(n){var r=[],f=[];for(var i=0;i<n;i++){var s=document.querySelector('input[name=p'+i+']:checked');if(!s)f.push(i+1);r.push(s?+s.value:-1);}return {r:r,falta:f};}
 

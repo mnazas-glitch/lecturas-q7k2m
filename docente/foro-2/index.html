@@ -410,7 +410,8 @@ var CFG={"rubrica": [{"nombre": "Caso y estimación del costo", "puntos": 35, "n
 function el(tag,cls,txt){var e=document.createElement(tag); if(cls) e.className=cls; if(txt!==undefined) e.textContent=txt; return e;}
 /* Regla del foro (foro_curso.py, 18-oct-2026): la lista de referencias no cuenta en la extensión. */
 function foroContar(t) {
-  var lineas = String(t || '').replace(/\r\n?/g, '\n').split('\n'), corte = -1, resto = '';
+  // Caracteres invisibles (6-nov-2026): un U+200B pegado antes de Referencias hacia contar toda la lista.
+  var lineas = String(t || '').replace(/[\u00AD\u180E\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g, '').replace(/\r\n?/g, '\n').split('\n'), corte = -1, resto = '';
   lineas.forEach(function (l, i) {
     var m = l.replace(/[*_#]/g, ' ').trim().match(/^(?:\d+[.)]?\s*)?(?:referencias?(?:\s+bibliogr[aá]ficas?)?|bibliograf[ií]as?|fuentes?)\s*(?:[:.]\s*(.*))?$/i);
     if (m && corte < 0) { corte = i; resto = m[1] || ''; }

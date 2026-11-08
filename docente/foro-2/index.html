@@ -278,6 +278,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .sg-panel-cab h2{font:600 18px "Source Serif 4",Georgia,serif;margin:0}
 .sg-total{font:600 22px "IBM Plex Mono",monospace;color:var(--acc);font-variant-numeric:tabular-nums;text-align:right}
 .sg-total small{display:block;font:500 12px "IBM Plex Mono",monospace;color:var(--atenuado)}
+.sg-segunda{margin:0;padding:10px 16px;border-bottom:1px solid var(--filete);background:color-mix(in srgb,var(--alerta) 10%,transparent);font-size:13px;line-height:1.5}
+.sg-segunda b{color:var(--alerta)}
 .sg-rub-envol{overflow-x:auto}
 .sg-rub{width:100%;border-collapse:collapse;font-size:12.5px;table-layout:fixed;hyphens:auto;-webkit-hyphens:auto}
 .sg-rub col.sg-col-crit{width:7.2rem}
@@ -343,6 +345,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   </div>
   <div class="sg-avance"><span id="sg-cuenta"></span><i><b id="sg-barra-av"></b></i></div>
   <label class="sg-filtro"><input type="checkbox" id="sg-solo"> Solo sin calificar</label>
+  <label class="sg-filtro" id="sg-solo2-l" hidden><input type="checkbox" id="sg-solo2"> Solo segunda entrega por recalificar</label>
   <div class="sg-herr">
     <button class="sg-btn sg-sec" id="sg-herr-b" aria-expanded="false">Herramientas</button>
     <div class="sg-menu" id="sg-menu" hidden>
@@ -371,6 +374,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   </section>
   <aside class="sg-panel" aria-label="Calificación con la rúbrica">
     <div class="sg-panel-cab"><h2>Rúbrica</h2><div class="sg-total" id="sg-total"></div></div>
+    <p class="sg-segunda" id="sg-segunda" hidden></p>
     <div class="sg-rub-envol"><table class="sg-rub" id="sg-rub"></table></div>
     <div class="sg-pie">
       <label for="sg-com">Realimentación para el estudiante, en su voz</label>
@@ -602,7 +606,7 @@ function foroContar(t) {
           sospecha: corte < 0 && cuerpo.some(pareceRef)};
 }
 (function(){
-var CFG={"rubrica": [{"nombre": "Caso y estimación del costo", "puntos": 35, "niveles": ["Caso real y anonimizado, con su costo calculado por un método explícito y cada cifra con su fuente.", "Caso anonimizado y costo con método, con alguna cifra sin fuente.", "Costo estimado sin método claro o con supuestos que no dice.", "Caso sin costo, o con datos que identifican a pacientes o a personal.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Medida y análisis propio", "puntos": 20, "niveles": ["Medida factible, con su costo comparado con lo que evita, y dice si se paga sola.", "Medida factible con su costo, sin compararlo con lo que evita.", "Medida general, sin costo.", "Sin medida, o una medida que no corresponde al caso.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Réplicas", "puntos": 25, "niveles": ["Dos réplicas o más que cuestionan una cifra o una medida de un compañero con un dato o una fuente.", "Dos réplicas, una de ellas con fundamento.", "Una réplica con fundamento, o dos réplicas que solo coinciden.", "Réplicas de cortesía.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Fuentes y APA 7", "puntos": 10, "niveles": ["Fuentes primarias o institucionales, citadas y referenciadas sin errores.", "Fuentes adecuadas con errores menores de formato.", "Fuentes de calidad desigual o citas incompletas.", "Sin referencias para las cifras que usa.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Redacción", "puntos": 10, "niveles": ["Clara, concisa y sin errores, dentro de la extensión pedida.", "Clara, con pocos errores.", "Se entiende, con errores frecuentes o fuera de la extensión.", "Difícil de seguir.", "No lo entregó, o no hay evidencia de este criterio."]}], "niveles": [["Excelente", 1.0], ["Bueno", 0.85], ["Suficiente", 0.72], ["Insuficiente", 0.5], ["No presentado", 0.0]], "peso": 8, "foro": 2, "archivo": "notas_foro_no_calidad.csv", "aporte": [250, 400], "replica": [100, 200], "replicasPedidas": 2};
+var CFG={"rubrica": [{"nombre": "Caso y estimación del costo", "puntos": 35, "niveles": ["Caso real y anonimizado, con su costo calculado por un método explícito y cada cifra con su fuente.", "Caso anonimizado y costo con método, con alguna cifra sin fuente.", "Costo estimado sin método claro o con supuestos que no dice.", "Caso sin costo, o con datos que identifican a pacientes o a personal.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Medida y análisis propio", "puntos": 20, "niveles": ["Medida factible, con su costo comparado con lo que evita, y dice si se paga sola.", "Medida factible con su costo, sin compararlo con lo que evita.", "Medida general, sin costo.", "Sin medida, o una medida que no corresponde al caso.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Réplicas", "puntos": 25, "niveles": ["Dos réplicas o más que cuestionan una cifra o una medida de un compañero con un dato o una fuente.", "Dos réplicas, una de ellas con fundamento.", "Una réplica con fundamento, o dos réplicas que solo coinciden.", "Réplicas de cortesía.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Fuentes y APA 7", "puntos": 10, "niveles": ["Fuentes primarias o institucionales, citadas y referenciadas sin errores.", "Fuentes adecuadas con errores menores de formato.", "Fuentes de calidad desigual o citas incompletas.", "Sin referencias para las cifras que usa.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Redacción", "puntos": 10, "niveles": ["Clara, concisa y sin errores, dentro de la extensión pedida.", "Clara, con pocos errores.", "Se entiende, con errores frecuentes o fuera de la extensión.", "Difícil de seguir.", "No lo entregó, o no hay evidencia de este criterio."]}], "niveles": [["Excelente", 1.0], ["Bueno", 0.85], ["Suficiente", 0.72], ["Insuficiente", 0.5], ["No presentado", 0.0]], "peso": 8, "foro": 2, "archivo": "notas_foro_no_calidad.csv", "aporte": [250, 400], "replica": [100, 200], "replicasPedidas": 2, "segunda": null};
 var $=function(x){return document.getElementById(x);};
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e;}
 var D=null, clave='', idx=0, niv=[], sucio=false, activo=0, pendiente=null, CLAVE_POS='econ-calif-foro'+CFG.foro;
@@ -618,6 +622,8 @@ async function cargar(){
   if(!antes){try{antes=sessionStorage.getItem(CLAVE_POS)||'';}catch(e){}}
   D=x; $('d-entrar').hidden=true; $('d-zona').hidden=false;
   var i=D.participantes.findIndex(function(p){return p.cedula===antes;});
+  $('sg-solo2-l').hidden=!SEG();
+  if(i<0&&SEG()) i=D.participantes.findIndex(porRecalificar);
   if(i<0) i=D.participantes.findIndex(function(p){return !p.calificacion&&p.mensajes.length;});
   if(i<0) i=0;
   pintarPublicacion(); pintarAvisos();
@@ -636,17 +642,30 @@ function aporteDe(id){return (D.aportes||[]).find(function(a){return a.id===id;}
 function fmt(x){return String(Math.round(Number(x)*100)/100).replace('.',',');}
 function totalDe(n){if(n.some(function(k){return k<0;}))return null;var ex=CFG.rubrica.map(function(c,i){return c.puntos*CFG.niveles[n[i]][1];});return Math.round(ex.reduce(function(s,x){return s+x;},0)*10)/10;}
 
+/* ===== Segunda entrega (foro 1, aviso del 6-nov-2026): 10 % menos y se queda la nota mayor =====
+   El servidor decide quién la usó (aporte o réplica publicado o editado después del primer cierre) y aplica la
+   regla al guardar; aquí solo se marca y se muestra antes cuál nota quedaría. */
+function SEG(){return D&&D.segundaEntrega||CFG.segunda||null;}
+function despuesDe(t){var s=SEG();return !!(s&&t&&t>new Date(s.desde).getTime());}
+function usoSegunda(p){if(!SEG())return false; if(typeof p.segunda==='boolean')return p.segunda;
+  return p.mensajes.some(function(m){return !m.oculto&&(m.tipo==='aporte'||m.tipo==='replica')&&(despuesDe(m.fecha)||despuesDe(m.editado));});}
+function porRecalificar(p){return usoSegunda(p)&&!(p.calificacion&&p.calificacion.recalificada);}
+function primeraNota(p){var c=p.calificacion; if(!c)return null; if(c.recalificada)return c.primera===null||c.primera===undefined||c.primera===''?null:Number(c.primera); return c.total===''?null:Number(c.total);}
+function pasa(p){return (!$('sg-solo').checked||!p.calificacion)&&(!$('sg-solo2').checked||porRecalificar(p));}
+
 /* ===== Barra superior (D1, D2) ===== */
 function pintarSelector(){
   var s=$('sg-sel'); s.innerHTML='';
   D.participantes.forEach(function(p,i){
     var c=p.calificacion;
-    var o=el('option','',(c?'✓ ':'○ ')+p.nombre+(c?'  ('+fmt(c.total)+')':p.mensajes.length?'':'  (sin participación)'));
-    o.value=i; if($('sg-solo').checked&&c&&i!==idx){o.hidden=true;o.disabled=true;} s.append(o);
+    var pr=porRecalificar(p);
+    var o=el('option','',(c&&!pr?'✓ ':'○ ')+p.nombre+(c?'  ('+fmt(c.total)+')':p.mensajes.length?'':'  (sin participación)')+(pr?'  segunda entrega por recalificar':usoSegunda(p)?'  segunda entrega recalificada':''));
+    o.value=i; if(!pasa(p)&&i!==idx){o.hidden=true;o.disabled=true;} s.append(o);
   });
   s.value=idx;
   var n=D.participantes.length, k=D.participantes.filter(function(p){return p.calificacion;}).length;
-  $('sg-cuenta').textContent=k+' de '+n+' calificados';
+  var seg=D.participantes.filter(usoSegunda), rec=seg.filter(function(p){return !porRecalificar(p);}).length;
+  $('sg-cuenta').textContent=k+' de '+n+' calificados'+(SEG()?'; segunda entrega: '+rec+' de '+seg.length+' recalificados':'');
   $('sg-barra-av').style.width=(n?100*k/n:0)+'%';
 }
 function pintarPublicacion(){
@@ -672,6 +691,7 @@ function pintarCentro(){
   ch.append(el('span','sg-chip '+(vis(re)>=CFG.replicasPedidas?'sg-ok':vis(re)?'sg-av':'sg-no'),vis(re)+' de '+CFG.replicasPedidas+' réplicas'));
   ch.append(el('span','sg-chip',p.mensajes.reduce(function(s,m){return s+foroContar(m.texto).palabras;},0)+' palabras en total'));
   if(p.calificacion) ch.append(el('span','sg-chip sg-ok','Calificado: '+fmt(p.calificacion.total)+' de 100'));
+  if(usoSegunda(p)) ch.append(el('span','sg-chip sg-av',porRecalificar(p)?'Segunda entrega: por recalificar':'Segunda entrega: recalificada'));
   f.append(ch); c.append(f);
   if(!p.mensajes.length){c.append(el('div','sg-vacio','No publicó nada en el foro. Si corresponde, marque No presentado en cada criterio (tecla 5) y guarde.'));return;}
   var secAnt='';
@@ -682,6 +702,7 @@ function pintarCentro(){
     cab.append(el('b','',m.tipo==='aporte'?'Aporte':m.tipo==='replica'?'Réplica a '+(padre?padre.autor:'un aporte'):'Respuesta al docente'), medida(q,m.tipo), el('span','',fechaTxt(m.fecha)+(m.editado?', editado el '+fechaTxt(m.editado):'')));
     if(q.sospecha) cab.append(el('span','sg-med sg-av','Referencias sin encabezado: cuentan'));
     if(m.oculto) cab.append(el('span','sg-med sg-av','Oculto'));
+    if((m.tipo==='aporte'||m.tipo==='replica')&&(despuesDe(m.fecha)||despuesDe(m.editado))) cab.append(el('span','sg-med sg-av',despuesDe(m.fecha)?'Publicado en la segunda entrega':'Editado en la segunda entrega'));
     var acc=el('span','sg-acc'), oc=el('button','sg-chico',m.oculto?'Mostrar':'Ocultar');
     oc.onclick=async function(){oc.disabled=true;var x=await servidor({accion:'foro_ocultar',foro:CFG.foro,claveDocente:clave,id:m.id,ocultar:!m.oculto});oc.disabled=false;
       if(!x.ok){aviso(x.error||'No se pudo cambiar.');return;} m.oculto=!m.oculto; pintarCentro();};
@@ -755,9 +776,22 @@ function pintarRubrica(){
 function marcarActivo(){[].forEach.call(document.querySelectorAll('#sg-rub tbody tr'),function(r){r.classList.toggle('sg-activo',+r.dataset.i===activo);});}
 function poner(i,k){niv[i]=k;ensuciar();pintarRubrica();}
 function pintarTotal(){
+  pintarSegunda();
   var t=totalDe(niv), parcial=CFG.rubrica.reduce(function(s,c,i){return s+(niv[i]>=0?c.puntos*CFG.niveles[niv[i]][1]:0);},0), falta=niv.filter(function(k){return k<0;}).length;
   var z=$('sg-total'); z.innerHTML='';
   z.append(fmt(t===null?Math.round(parcial*10)/10:t)+' de 100', el('small','',t===null?'Faltan '+falta+(falta===1?' criterio':' criterios'):'Nota del foro '+fmt(Math.round(t*CFG.peso)/100)+' de '+CFG.peso));
+}
+function pintarSegunda(){
+  var p=D&&D.participantes[idx], z=$('sg-segunda');
+  if(!p||!usoSegunda(p)){z.hidden=true;return;}
+  var s=SEG(), f=Number(s.factor)||1, pc=Math.round((1-f)*100), t=totalDe(niv), prim=primeraNota(p);
+  z.hidden=false; z.innerHTML='';
+  z.append(el('b','','Segunda entrega. '), 'Se califica con '+pc+' % menos y queda la nota mayor. ');
+  z.append(prim===null?'No tenía nota antes. ':'Primera nota: '+fmt(prim)+' de 100. ');
+  if(t===null){z.append('Marque los criterios para ver cuál queda.');return;}
+  var td=Math.round(CFG.rubrica.reduce(function(a,c,i){return a+c.puntos*CFG.niveles[niv[i]][1]*f;},0)*10)/10;
+  z.append('Con el descuento: '+fmt(td)+'. ');
+  z.append(el('b','',prim!==null&&prim>=td?'Queda la primera, '+fmt(prim)+'.':'Queda la nueva, '+fmt(td)+'.'));
 }
 function ensuciar(){sucio=true;$('sg-estado').className='sg-estado sg-sucio';$('sg-estado').textContent='Cambios sin guardar.';}
 
@@ -775,7 +809,7 @@ function cargarEstudiante(i){
 }
 function vecino(paso){
   // Recorre la lista completa desde el estudiante actual: con el filtro, salta a los ya calificados.
-  for(var j=idx+paso;j>=0&&j<D.participantes.length;j+=paso){ if(!$('sg-solo').checked||!D.participantes[j].calificacion) return j; }
+  for(var j=idx+paso;j>=0&&j<D.participantes.length;j+=paso){ if(pasa(D.participantes[j])) return j; }
   return -1;
 }
 function ir(i){
@@ -787,13 +821,21 @@ function ir(i){
 async function guardar(){
   var p=actual();
   if(niv.some(function(k){return k<0;})){$('sg-estado').className='sg-estado sg-err';$('sg-estado').textContent='Marque un nivel en cada criterio antes de guardar.';return false;}
+  // Seguro: un servidor sin la regla de la segunda entrega no devuelve segundaEntrega; guardaría sin el descuento.
+  if(usoSegunda(p)&&!(D&&'segundaEntrega' in D)){$('sg-estado').className='sg-estado sg-err';$('sg-estado').textContent='El servidor del aula todavía no tiene la regla de la segunda entrega: pegue el código nuevo en Apps Script antes de recalificar a este estudiante.';return false;}
   $('sg-guardar').disabled=$('sg-guardar-sig').disabled=true; $('sg-estado').className='sg-estado'; $('sg-estado').textContent='Guardando...';
   var x=await servidor({accion:'foro_calificar',foro:CFG.foro,claveDocente:clave,cedula:p.cedula,niveles:niv.slice(),comentario:$('sg-com').value});
   $('sg-guardar').disabled=$('sg-guardar-sig').disabled=false;
   if(!x.ok){$('sg-estado').className='sg-estado sg-err';$('sg-estado').textContent=(x.error||'No se pudo guardar.')+' Sus marcas siguen en pantalla: intente de nuevo.';return false;}
-  p.calificacion={total:x.total,nota:x.nota,comentario:$('sg-com').value,niveles:niv.join('')};
+  var antes=p.calificacion||{};
+  p.calificacion={total:x.total,nota:x.nota,comentario:$('sg-com').value,niveles:x.niveles||niv.join(''),
+    recalificada:x.segunda?true:!!antes.recalificada, primera:x.segunda?x.primera:antes.primera};
   sucio=false; $('sg-estado').className='sg-estado sg-ok';
-  $('sg-estado').textContent='Guardado a las '+new Date().toLocaleTimeString('es-PA',{hour:'numeric',minute:'2-digit'})+': '+fmt(x.total)+' de 100, nota '+fmt(x.nota)+' de '+CFG.peso+'.';
+  var hora='Guardado a las '+new Date().toLocaleTimeString('es-PA',{hour:'numeric',minute:'2-digit'})+': ';
+  if(x.segunda){
+    $('sg-estado').textContent=hora+'segunda entrega con el descuento, '+fmt(x.calculada)+'. '+(x.conservada?'Se queda la primera nota, '+fmt(x.total)+' de 100 (nota '+fmt(x.nota)+' de '+CFG.peso+'); su realimentación nueva sí se guardó.':
+      'Queda '+fmt(x.total)+' de 100, nota '+fmt(x.nota)+' de '+CFG.peso+(x.primera===null?' (no tenía nota antes).':' (la primera era '+fmt(x.primera)+').'));
+  } else $('sg-estado').textContent=hora+fmt(x.total)+' de 100, nota '+fmt(x.nota)+' de '+CFG.peso+'.';
   pintarSelector(); pintarCentro(); return true;
 }
 $('sg-guardar').onclick=guardar;
@@ -805,7 +847,7 @@ $('sg-com').addEventListener('input',ensuciar);
 $('sg-ant').onclick=function(){ir(vecino(-1));};
 $('sg-sig').onclick=function(){ir(vecino(1));};
 $('sg-sel').onchange=function(){ir(+this.value);};
-$('sg-solo').onchange=pintarSelector;
+$('sg-solo').onchange=pintarSelector; $('sg-solo2').onchange=pintarSelector;
 window.addEventListener('beforeunload',function(e){if(sucio){e.preventDefault();e.returnValue='';}});
 
 /* ===== Herramientas (D9): las mismas de antes, en un menú ===== */

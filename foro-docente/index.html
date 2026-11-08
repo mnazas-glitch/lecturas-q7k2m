@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Foro del docente, Economía y Finanzas de los Servicios de Salud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#161b22;--panel:#1f2630;--texto:#e9edf1;--atenuado:#9aa6b2;--filete:#2e3742;
+--acc:#e0915e;--acc2:#8fb8c9;--suave:#3a2a24;--pos:#7fc4a0;--alerta:#e2c15a;--crit:#e58a8a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--texto);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
+a{color:var(--acc2)}
+.envoltura{max-width:62rem;margin:0 auto;padding:0 16px}
+header{padding:48px 0 28px;border-bottom:1px solid var(--filete)}
+.antetitulo{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--acc2)}
+h1{font:600 clamp(28px,5vw,44px)/1.12 "Source Serif 4",Georgia,serif;margin:10px 0 12px;color:var(--texto)}
+h1 em{font-style:normal;color:var(--acc)}
+.docente{color:var(--atenuado);margin:0}
+.aviso{margin:24px 0 0;padding:14px 16px;border-left:3px solid var(--acc);background:var(--panel);border-radius:0 8px 8px 0}
+.aviso strong{color:var(--acc)}
+nav.indice{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0}
+nav.indice a{font-size:14px;text-decoration:none;color:var(--texto);border:1px solid var(--filete);border-radius:999px;padding:6px 12px}
+nav.indice a:hover{border-color:var(--acc)}
+section{padding:36px 0 8px}
+h2{font:600 26px/1.2 "Source Serif 4",Georgia,serif;margin:0 0 6px}
+.bajada{color:var(--atenuado);margin:0 0 18px}
+.jornada{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:18px;margin:0 0 18px}
+.jornada-cab{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px;margin:0 0 12px}
+.jornada h3{font:600 20px/1.2 "Source Serif 4",Georgia,serif;margin:0}
+.fecha{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--atenuado)}
+.fecha.fija{color:var(--acc)}
+.sesiones{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.sesiones a,.sesiones .sin{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:8px;
+border:1px solid var(--filete);text-decoration:none;color:var(--texto);min-height:48px}
+.sesiones a:hover{border-color:var(--acc);background:var(--suave)}
+.num{font:600 13px "IBM Plex Mono",monospace;color:var(--acc);min-width:2.4em}
+.sesiones .ir{margin-left:auto;color:var(--acc2);font-size:14px;white-space:nowrap}
+.sesiones .sin{color:var(--atenuado);border-style:dashed}
+.actividades{margin:14px 0 0;padding:12px 0 0;border-top:1px dashed var(--filete)}
+.actividades h4{margin:0 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--atenuado);font-weight:600}
+.act{text-decoration:none;color:var(--texto);border-radius:6px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:6px 0}
+.act .nombre{flex:1 1 16rem}
+.peso{font:600 13px "IBM Plex Mono",monospace}
+.nivel{font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid currentColor}
+.n-pro{color:var(--crit)}.n-lim{color:var(--alerta)}.n-obl{color:var(--acc2)}.n-lib{color:var(--pos)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--filete);border-radius:12px;overflow:hidden}
+td,th{padding:12px 14px;border-bottom:1px solid var(--filete);text-align:left}
+td:last-child,th:last-child{text-align:right;font-family:"IBM Plex Mono",monospace}
+tr:last-child td{border-bottom:0;font-weight:600}
+.nota{color:var(--atenuado);font-size:14px}
+details{background:var(--panel);border:1px solid var(--filete);border-radius:10px;margin:0 0 10px}
+summary{cursor:pointer;padding:14px 16px;font-weight:600}
+details ul{margin:0;padding:0 16px 14px 34px}
+details li{margin:0 0 8px;font-size:15px}
+details h5{margin:6px 16px 8px;font-size:13px;color:var(--atenuado);text-transform:uppercase;letter-spacing:.08em}
+.boton{display:inline-block;padding:12px 18px;border-radius:8px;background:var(--acc);color:#161b22;text-decoration:none;font-weight:600}
+a.act:hover .nombre{color:var(--acc)}
+.cerrojo p{margin:0 0 10px;color:var(--atenuado)}
+.cerrojo form{display:flex;gap:8px;flex-wrap:wrap}
+.cerrojo input{flex:1 1 12rem;font:16px "IBM Plex Mono",monospace;padding:10px 12px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.cerrojo .error{color:var(--crit);min-height:1.4em;margin:8px 0 0}
+.puerta{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin:16px 0 0;padding:16px;border:1px solid var(--acc);border-radius:12px;background:var(--suave)}
+.puerta>div:first-child{flex:1 1 20rem}
+.puerta-acciones{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.cerrojo p a{font-weight:600}
+footer{padding:36px 0 48px;color:var(--atenuado);font-size:14px;border-top:1px solid var(--filete);margin-top:36px}
+
+[hidden]{display:none!important}
+.fd-herr{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:22px 0 6px}
+.fd-herr input{flex:1 1 16rem;min-width:0;font:15px "IBM Plex Sans",system-ui,sans-serif;padding:9px 12px;border-radius:8px;border:1px solid var(--filete);background:var(--panel);color:var(--texto)}
+.fd-cuenta{color:var(--atenuado);font-size:14px}
+.fd-lista{margin:8px 0 0}
+.fd-post{border-top:1px solid var(--filete);padding:20px 0}
+.fd-post:first-child{border-top:0}
+.fd-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px;color:var(--atenuado)}
+.fd-nuevo,.fd-oculto{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:1px 8px}
+.fd-nuevo{color:var(--bg);background:var(--acc)}
+.fd-oculto{color:var(--bg);background:var(--crit)}
+.fd-post h2{font:600 22px/1.25 "Source Serif 4",Georgia,serif;margin:6px 0 8px}
+.fd-cuerpo p{margin:0 0 12px;max-width:68ch}
+.fd-cuerpo.corto{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.fd-acciones{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:4px}
+.fd-enlace{font:600 14px "IBM Plex Sans",system-ui,sans-serif;color:var(--acc2);background:none;border:0;padding:0;cursor:pointer}
+.fd-boton{font:600 14px "IBM Plex Sans",system-ui,sans-serif;background:var(--acc);color:#1b1410;border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
+.fd-boton.sec{background:transparent;color:var(--texto);border:1px solid var(--filete);padding:6px 12px;font-size:13px}
+.fd-boton:disabled{opacity:.5;cursor:wait}
+.fd-post.es-oculto{opacity:.6}
+.fd-form{display:grid;gap:8px;border:1px solid var(--acc);border-radius:12px;padding:16px;background:var(--panel);margin:18px 0 8px}
+.fd-form label{font-size:13px;font-weight:600;color:var(--atenuado)}
+.fd-form input,.fd-form textarea{width:100%;font:15px "IBM Plex Sans",system-ui,sans-serif;padding:9px 11px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.fd-form textarea{min-height:170px;resize:vertical}
+.fd-fila{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center}
+.fd-fila small{color:var(--atenuado)}
+.fd-estado{font-size:14px;color:var(--pos)}.fd-estado.error{color:var(--crit)}
+.fd-vacio{color:var(--atenuado);padding:20px 0}
+.fd-pie{border-top:1px solid var(--filete);margin:36px 0 0;padding:18px 0 48px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.fd-pie form{display:flex;flex-wrap:wrap;gap:8px}
+.fd-pie input{font:15px "IBM Plex Mono",monospace;padding:7px 10px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+</style>
+</head><body>
+<header><div class="envoltura">
+<div class="antetitulo">Economía y Finanzas de los Servicios de Salud</div>
+<h1>Foro del docente</h1>
+<p class="docente">Dr. Manuel S. Nazas R.</p>
+<nav class="indice"><a href="../">Volver al aula</a><a href="../resultados/">Mis resultados</a></nav>
+</div></header>
+<main class="envoltura">
+<p class="bajada" style="margin-top:24px">Aquí quedan reunidos todos mis anuncios del curso, con su fecha. Los más recientes van arriba. Si tiene una duda sobre un anuncio, escríbala en el foro de la actividad o por WhatsApp.</p>
+<form class="fd-form" id="fd-publicar" hidden>
+<input type="hidden" id="fd-id">
+<label for="fd-tit">Título del anuncio</label><input id="fd-tit" maxlength="160" autocomplete="off">
+<label for="fd-txt">Mensaje</label><textarea id="fd-txt" placeholder="Los párrafos se separan con una línea en blanco."></textarea>
+<div class="fd-fila"><small>Sale con la fecha y la hora de hoy, y aparece en la ventana de la portada a quien no lo haya visto.</small>
+<span><button type="button" class="fd-boton sec" id="fd-cancelar" hidden>Cancelar</button> <button type="submit" class="fd-boton" id="fd-enviar">Publicar</button></span></div>
+</form>
+<p class="fd-estado" id="fd-estado" aria-live="polite"></p>
+<div class="fd-herr"><input type="search" id="fd-buscar" placeholder="Buscar en los anuncios" aria-label="Buscar en los anuncios"><span class="fd-cuenta" id="fd-cuenta"></span></div>
+<div class="fd-lista" id="fd-lista"><p class="fd-vacio">Cargando los anuncios...</p></div>
+<div class="fd-pie"><a href="../">Volver al aula</a>
+<form id="fd-entrar"><input type="password" id="fd-clave" placeholder="Clave docente" aria-label="Clave docente" autocomplete="current-password"><button type="submit" class="fd-boton sec">Modo docente</button></form>
+<button type="button" class="fd-boton sec" id="fd-salir" hidden>Salir del modo docente</button></div>
+</main>
+<script>var SERVIDOR_FD="https://script.google.com/macros/s/AKfycbzuix939G9-1sksrINsXjb7yLYz_1aA74ffiPl_FUILKNoZaRDEUkHpp9_DHXpuAW6F/exec",FD_DESDE=1794114000000;(function(){
+  var S=SERVIDOR_FD, CL='econ-anuncios-vistos', CK='econ-clave-docente-foro', LISTA=[], DOC=false, VISTOS=[];
+  function $(id){return document.getElementById(id);}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function parrafos(t){return String(t).split(/\n\s*\n/).filter(function(x){return x.trim();}).map(function(x){return '<p>'+esc(x.trim()).replace(/\n/g,'<br>')+'</p>';}).join('');}
+  function cuando(ms){var d=new Date(ms);try{return d.toLocaleDateString('es-PA',{weekday:'long',day:'numeric',month:'long'})+', '+d.toLocaleTimeString('es-PA',{hour:'numeric',minute:'2-digit'});}catch(e){return d.toDateString();}}
+  function clave(){try{return sessionStorage.getItem(CK)||'';}catch(e){return '';}}
+  function pedir(d){return fetch(S,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(d)}).then(function(r){return r.json();});}
+  function estado(t,err){var e=$('fd-estado');e.textContent=t||'';e.className='fd-estado'+(err?' error':'');}
+  try{var v=JSON.parse(localStorage.getItem(CL)||'[]');VISTOS=Array.isArray(v)?v:[];}catch(e){}
+  function titulo(a){return a.titulo||(a.foro?'Aviso en el foro '+a.foro:'Anuncio');}
+  function pintar(){
+    var q=$('fd-buscar').value.trim().toLowerCase();
+    var l=LISTA.filter(function(a){return !q||(titulo(a)+' '+a.texto).toLowerCase().indexOf(q)>=0;});
+    var vis=LISTA.filter(function(a){return !a.oculto;}).length;
+    $('fd-cuenta').textContent=vis===1?'1 anuncio':vis+' anuncios';
+    $('fd-lista').innerHTML=l.length?l.map(function(a){
+      var largo=a.texto.length>420, nuevo=!a.oculto&&a.fecha>=FD_DESDE&&VISTOS.indexOf(a.id)<0;
+      var acc='';
+      if(largo) acc+='<button type="button" class="fd-enlace" data-leer="'+esc(a.id)+'">Leer completo</button>';
+      if(DOC&&!a.foro) acc+='<button type="button" class="fd-boton sec" data-editar="'+esc(a.id)+'">Editar</button><button type="button" class="fd-boton sec" data-ocultar="'+esc(a.id)+'">'+(a.oculto?'Mostrar':'Ocultar')+'</button>';
+      if(DOC&&a.foro) acc+='<small class="fd-cuenta">Publicado en el foro '+esc(a.foro)+'; se edita allí.</small>';
+      return '<article class="fd-post'+(a.oculto?' es-oculto':'')+'" id="a-'+esc(a.id)+'"><div class="fd-meta"><span>'+esc(cuando(a.fecha))+'</span>'
+        +(a.editado?'<span>(editado)</span>':'')+(nuevo?'<span class="fd-nuevo">Nuevo</span>':'')+(a.oculto?'<span class="fd-oculto">Oculto</span>':'')+'</div>'
+        +'<h2>'+esc(titulo(a))+'</h2><div class="fd-cuerpo'+(largo?' corto':'')+'" id="c-'+esc(a.id)+'">'+parrafos(a.texto)+'</div>'
+        +(acc?'<div class="fd-acciones">'+acc+'</div>':'')+'</article>';
+    }).join(''):'<p class="fd-vacio">'+(q?'Ningún anuncio coincide con la búsqueda.':'Todavía no hay anuncios.')+'</p>';
+  }
+  function cargar(){
+    var k=clave(), d=DOC&&k?{accion:'anuncios_docente',claveDocente:k}:{accion:'anuncios'};
+    return pedir(d).then(function(x){
+      if(!x||!x.ok){ if(DOC){DOC=false;try{sessionStorage.removeItem(CK);}catch(e){} modoDocente(); estado((x&&x.error)||'No se pudo entrar al modo docente.',true); return cargar();} throw new Error('sin datos'); }
+      LISTA=x.anuncios||[]; pintar();
+      try{localStorage.setItem(CL,JSON.stringify(LISTA.filter(function(a){return !a.oculto;}).map(function(a){return a.id;})));}catch(e){}
+    }).catch(function(){ $('fd-lista').innerHTML='<p class="fd-vacio">No se pudieron cargar los anuncios. Revise su conexión y recargue la página.</p>'; });
+  }
+  function modoDocente(){ $('fd-publicar').hidden=!DOC; $('fd-entrar').hidden=DOC; $('fd-salir').hidden=!DOC; }
+  $('fd-buscar').oninput=pintar;
+  $('fd-lista').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    if(b.dataset.leer){var c=$('c-'+b.dataset.leer), abierto=!c.classList.toggle('corto'); b.textContent=abierto?'Mostrar menos':'Leer completo';}
+    if(b.dataset.editar){var a=LISTA.filter(function(x){return x.id===b.dataset.editar;})[0]; if(!a) return;
+      $('fd-id').value=a.id; $('fd-tit').value=a.titulo; $('fd-txt').value=a.texto; $('fd-enviar').textContent='Guardar cambios'; $('fd-cancelar').hidden=false;
+      $('fd-publicar').scrollIntoView({behavior:'smooth',block:'start'}); $('fd-tit').focus();}
+    if(b.dataset.ocultar){var a2=LISTA.filter(function(x){return x.id===b.dataset.ocultar;})[0]; if(!a2) return; b.disabled=true;
+      pedir({accion:'anuncio_ocultar',claveDocente:clave(),id:a2.id,ocultar:!a2.oculto}).then(function(x){
+        if(!x.ok){estado(x.error||'No se pudo cambiar.',true);b.disabled=false;return;} estado(a2.oculto?'El anuncio vuelve a estar visible.':'Anuncio oculto para los estudiantes.'); cargar();
+      }).catch(function(){estado('Sin conexión con el servidor.',true);b.disabled=false;});}
+  });
+  function limpiar(){$('fd-id').value='';$('fd-tit').value='';$('fd-txt').value='';$('fd-enviar').textContent='Publicar';$('fd-cancelar').hidden=true;}
+  $('fd-cancelar').onclick=function(){limpiar();estado('');};
+  $('fd-publicar').onsubmit=function(e){
+    e.preventDefault(); var id=$('fd-id').value, t=$('fd-tit').value.trim(), x=$('fd-txt').value.trim();
+    if(!t||!x){estado('Escriba el título y el mensaje.',true);return;}
+    var btn=$('fd-enviar'); btn.disabled=true; estado(id?'Guardando...':'Publicando...');
+    pedir(id?{accion:'anuncio_editar',claveDocente:clave(),id:id,titulo:t,texto:x}:{accion:'anuncio_publicar',claveDocente:clave(),titulo:t,texto:x}).then(function(r){
+      btn.disabled=false; if(!r.ok){estado(r.error||'No se pudo publicar.',true);return;}
+      estado(id?'Cambios guardados.':'Anuncio publicado. Los estudiantes lo verán al entrar al aula.'); limpiar(); cargar();
+    }).catch(function(){btn.disabled=false;estado('Sin conexión con el servidor. El texto sigue en el formulario.',true);});
+  };
+  $('fd-entrar').onsubmit=function(e){
+    e.preventDefault(); var k=$('fd-clave').value; if(!k) return;
+    try{sessionStorage.setItem(CK,k);}catch(err){} $('fd-clave').value=''; DOC=true; modoDocente(); estado(''); cargar();
+  };
+  $('fd-salir').onclick=function(){try{sessionStorage.removeItem(CK);}catch(e){} DOC=false; modoDocente(); estado(''); cargar();};
+  DOC=!!clave(); modoDocente(); cargar();
+})();</script>
+</body></html>

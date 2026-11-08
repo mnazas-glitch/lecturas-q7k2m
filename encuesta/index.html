@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Encuesta de evaluación del curso, Economía y Finanzas de los Servicios de Salud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#161b22;--panel:#1f2630;--texto:#e9edf1;--atenuado:#9aa6b2;--filete:#2e3742;
+--acc:#e0915e;--acc2:#8fb8c9;--suave:#3a2a24;--pos:#7fc4a0;--alerta:#e2c15a;--crit:#e58a8a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--texto);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
+a{color:var(--acc2)}
+.envoltura{max-width:62rem;margin:0 auto;padding:0 16px}
+header{padding:48px 0 28px;border-bottom:1px solid var(--filete)}
+.antetitulo{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--acc2)}
+h1{font:600 clamp(28px,5vw,44px)/1.12 "Source Serif 4",Georgia,serif;margin:10px 0 12px;color:var(--texto)}
+h1 em{font-style:normal;color:var(--acc)}
+.docente{color:var(--atenuado);margin:0}
+.aviso{margin:24px 0 0;padding:14px 16px;border-left:3px solid var(--acc);background:var(--panel);border-radius:0 8px 8px 0}
+.aviso strong{color:var(--acc)}
+nav.indice{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0}
+nav.indice a{font-size:14px;text-decoration:none;color:var(--texto);border:1px solid var(--filete);border-radius:999px;padding:6px 12px}
+nav.indice a:hover{border-color:var(--acc)}
+section{padding:36px 0 8px}
+h2{font:600 26px/1.2 "Source Serif 4",Georgia,serif;margin:0 0 6px}
+.bajada{color:var(--atenuado);margin:0 0 18px}
+.jornada{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:18px;margin:0 0 18px}
+.jornada-cab{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px;margin:0 0 12px}
+.jornada h3{font:600 20px/1.2 "Source Serif 4",Georgia,serif;margin:0}
+.fecha{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--atenuado)}
+.fecha.fija{color:var(--acc)}
+.sesiones{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.sesiones a,.sesiones .sin{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:8px;
+border:1px solid var(--filete);text-decoration:none;color:var(--texto);min-height:48px}
+.sesiones a:hover{border-color:var(--acc);background:var(--suave)}
+.num{font:600 13px "IBM Plex Mono",monospace;color:var(--acc);min-width:2.4em}
+.sesiones .ir{margin-left:auto;color:var(--acc2);font-size:14px;white-space:nowrap}
+.sesiones .sin{color:var(--atenuado);border-style:dashed}
+.actividades{margin:14px 0 0;padding:12px 0 0;border-top:1px dashed var(--filete)}
+.actividades h4{margin:0 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--atenuado);font-weight:600}
+.act{text-decoration:none;color:var(--texto);border-radius:6px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:6px 0}
+.act .nombre{flex:1 1 16rem}
+.peso{font:600 13px "IBM Plex Mono",monospace}
+.nivel{font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid currentColor}
+.n-pro{color:var(--crit)}.n-lim{color:var(--alerta)}.n-obl{color:var(--acc2)}.n-lib{color:var(--pos)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--filete);border-radius:12px;overflow:hidden}
+td,th{padding:12px 14px;border-bottom:1px solid var(--filete);text-align:left}
+td:last-child,th:last-child{text-align:right;font-family:"IBM Plex Mono",monospace}
+tr:last-child td{border-bottom:0;font-weight:600}
+.nota{color:var(--atenuado);font-size:14px}
+details{background:var(--panel);border:1px solid var(--filete);border-radius:10px;margin:0 0 10px}
+summary{cursor:pointer;padding:14px 16px;font-weight:600}
+details ul{margin:0;padding:0 16px 14px 34px}
+details li{margin:0 0 8px;font-size:15px}
+details h5{margin:6px 16px 8px;font-size:13px;color:var(--atenuado);text-transform:uppercase;letter-spacing:.08em}
+.boton{display:inline-block;padding:12px 18px;border-radius:8px;background:var(--acc);color:#161b22;text-decoration:none;font-weight:600}
+a.act:hover .nombre{color:var(--acc)}
+.cerrojo p{margin:0 0 10px;color:var(--atenuado)}
+.cerrojo form{display:flex;gap:8px;flex-wrap:wrap}
+.cerrojo input{flex:1 1 12rem;font:16px "IBM Plex Mono",monospace;padding:10px 12px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.cerrojo .error{color:var(--crit);min-height:1.4em;margin:8px 0 0}
+.puerta{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin:16px 0 0;padding:16px;border:1px solid var(--acc);border-radius:12px;background:var(--suave)}
+.puerta>div:first-child{flex:1 1 20rem}
+.puerta-acciones{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.cerrojo p a{font-weight:600}
+footer{padding:36px 0 48px;color:var(--atenuado);font-size:14px;border-top:1px solid var(--filete);margin-top:36px}
+
+[hidden]{display:none!important}
+.ec-aviso{margin:20px 0 0;padding:14px 16px;border-left:3px solid var(--acc2);background:var(--panel);border-radius:0 8px 8px 0;font-size:15px}
+.ec-form{margin:20px 0 0}
+.ec-preg{border:1px solid var(--filete);border-radius:12px;background:var(--panel);margin:0 0 14px;padding:16px 18px}
+.ec-preg legend{padding:0;float:left;width:100%;margin:0 0 12px}
+.ec-num{display:block;font:600 13px "IBM Plex Mono",monospace;color:var(--acc);margin:0 0 4px}
+.ec-enun{display:block;font:600 18px/1.35 "Source Serif 4",Georgia,serif}
+.ec-escala{clear:both;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.ec-op{position:relative}
+.ec-op input{position:absolute;opacity:0;inset:0;margin:0}
+.ec-op span{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:64px;text-align:center;font-size:12.5px;line-height:1.2;border:1px solid var(--filete);border-radius:10px;padding:8px 4px;cursor:pointer;background:var(--bg)}
+.ec-op span b{font:600 16px "IBM Plex Mono",monospace;color:var(--atenuado)}
+.ec-op input:checked+span{border-color:var(--acc);background:var(--suave)}
+.ec-op input:checked+span b{color:var(--acc)}
+.ec-op input:focus-visible+span{outline:2px solid var(--acc2);outline-offset:2px}
+.ec-preg textarea{clear:both;display:block;width:100%;min-height:120px;resize:vertical;font:15px "IBM Plex Sans",system-ui,sans-serif;padding:10px 12px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.ec-cuenta{display:block;text-align:right;font-size:12px;color:var(--atenuado);margin-top:4px}
+.ec-preg.falta{border-color:var(--crit)}
+.ec-fila{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:6px 0 0}
+.ec-boton{font:600 15px "IBM Plex Sans",system-ui,sans-serif;background:var(--acc);color:#1b1410;border:0;border-radius:8px;padding:11px 20px;cursor:pointer}
+.ec-boton.sec{background:transparent;color:var(--texto);border:1px solid var(--filete);padding:7px 12px;font-size:13px}
+.ec-boton:disabled{opacity:.5;cursor:wait}
+.ec-estado{font-size:15px;color:var(--pos)}.ec-estado.error{color:var(--crit)}
+.ec-gracias{margin:28px 0 0;padding:22px;border:1px solid var(--pos);border-radius:12px;background:var(--panel)}
+.ec-gracias h2{font:600 22px "Source Serif 4",Georgia,serif;margin:0 0 8px}
+.ec-pie{border-top:1px solid var(--filete);margin:36px 0 0;padding:18px 0 48px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.ec-pie form{display:flex;flex-wrap:wrap;gap:8px}
+.ec-pie input{font:15px "IBM Plex Mono",monospace;padding:7px 10px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)}
+.ec-res{margin:20px 0 0}
+.ec-res h2{font:600 22px "Source Serif 4",Georgia,serif;margin:0 0 6px}
+.ec-item{border-top:1px solid var(--filete);padding:12px 0}
+.ec-item-cab{display:flex;justify-content:space-between;gap:12px;font-weight:600}
+.ec-item-cab b{font:600 15px "IBM Plex Mono",monospace;color:var(--acc)}
+.ec-barras{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:8px;font:12px "IBM Plex Mono",monospace;color:var(--atenuado);text-align:center}
+.ec-barra{height:42px;display:flex;align-items:flex-end;background:var(--bg);border-radius:4px;overflow:hidden}
+.ec-barra i{display:block;width:100%;background:var(--acc)}
+.ec-abiertas{margin:6px 0 0;padding-left:20px}
+.ec-abiertas li{margin:0 0 8px;max-width:70ch}
+.ec-escala-pie{display:none;justify-content:space-between;font-size:12px;color:var(--atenuado);margin-top:6px;clear:both}
+@media (max-width:560px){.ec-op span{font-size:0;min-height:48px}.ec-op span b{font-size:16px}.ec-escala-pie{display:flex}}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+</style>
+</head><body>
+<header><div class="envoltura">
+<div class="antetitulo">Economía y Finanzas de los Servicios de Salud</div>
+<h1>Encuesta de evaluación del curso</h1>
+<p class="docente">Dr. Manuel S. Nazas R.</p>
+<nav class="indice"><a href="../">Volver al aula</a><a href="../foro-docente/">Foro del docente</a></nav>
+</div></header>
+<main class="envoltura">
+<p class="bajada" style="margin-top:24px">Terminamos el curso y quiero saber qué le sirvió y qué debo cambiar para la próxima cohorte. Son diez preguntas y le toman unos cinco minutos. Responda con franqueza: lo que usted escriba aquí me sirve más que un elogio.</p>
+<p class="ec-aviso">La encuesta es anónima. No le pido nombre, cédula ni correo, y el servidor guarda solo el día del envío y sus respuestas, sin la hora. No cuenta para la nota y no hay forma de saber quién respondió qué. Puede responderla una sola vez, hasta el domingo 15 de noviembre a las 11:59 p. m.</p>
+<div class="ec-gracias" id="ec-gracias" hidden><h2>Gracias</h2><p>Su respuesta quedó registrada. Leeré cada comentario antes de preparar la próxima cohorte.</p><p><a href="../">Volver al aula</a></p></div>
+<div class="ec-gracias" id="ec-cerrada" hidden><h2>La encuesta ya cerró</h2><p>Recibió respuestas hasta el domingo 15 de noviembre a las 11:59 p. m.</p><p><a href="../">Volver al aula</a></p></div>
+<form class="ec-form" id="ec-form" novalidate>
+<fieldset class="ec-preg" id="ec-p-objetivo"><legend><span class="ec-num">1 de 10, Objetivo del módulo</span><span class="ec-enun">Al terminar el curso, puedo utilizar los datos del análisis económico y financiero de una instalación de salud para tomar decisiones gerenciales.</span></legend><div class="ec-escala"><label class="ec-op"><input type="radio" name="objetivo" value="1" aria-label="1, Totalmente en desacuerdo"><span><b>1</b>Totalmente en desacuerdo</span></label><label class="ec-op"><input type="radio" name="objetivo" value="2" aria-label="2, En desacuerdo"><span><b>2</b>En desacuerdo</span></label><label class="ec-op"><input type="radio" name="objetivo" value="3" aria-label="3, Ni de acuerdo ni en desacuerdo"><span><b>3</b>Ni de acuerdo ni en desacuerdo</span></label><label class="ec-op"><input type="radio" name="objetivo" value="4" aria-label="4, De acuerdo"><span><b>4</b>De acuerdo</span></label><label class="ec-op"><input type="radio" name="objetivo" value="5" aria-label="5, Totalmente de acuerdo"><span><b>5</b>Totalmente de acuerdo</span></label></div><div class="ec-escala-pie"><span>1: Totalmente en desacuerdo</span><span>5: Totalmente de acuerdo</span></div></fieldset>
+<fieldset class="ec-preg" id="ec-p-utilidad"><legend><span class="ec-num">2 de 10, Utilidad para su trabajo</span><span class="ec-enun">Lo que aprendí me sirve en mi trabajo actual o en el cargo al que aspiro.</span></legend><div class="ec-escala"><label class="ec-op"><input type="radio" name="utilidad" value="1" aria-label="1, Totalmente en desacuerdo"><span><b>1</b>Totalmente en desacuerdo</span></label><label class="ec-op"><input type="radio" name="utilidad" value="2" aria-label="2, En desacuerdo"><span><b>2</b>En desacuerdo</span></label><label class="ec-op"><input type="radio" name="utilidad" value="3" aria-label="3, Ni de acuerdo ni en desacuerdo"><span><b>3</b>Ni de acuerdo ni en desacuerdo</span></label><label class="ec-op"><input type="radio" name="utilidad" value="4" aria-label="4, De acuerdo"><span><b>4</b>De acuerdo</span></label><label class="ec-op"><input type="radio" name="utilidad" value="5" aria-label="5, Totalmente de acuerdo"><span><b>5</b>Totalmente de acuerdo</span></label></div><div class="ec-escala-pie"><span>1: Totalmente en desacuerdo</span><span>5: Totalmente de acuerdo</span></div></fieldset>
+<fieldset class="ec-preg" id="ec-p-materiales"><legend><span class="ec-num">3 de 10, Materiales</span><span class="ec-enun">Los decks, los guiones, los tableros y las consolas me ayudaron a entender y a aplicar los contenidos.</span></legend><div class="ec-escala"><label class="ec-op"><input type="radio" name="materiales" value="1" aria-label="1, Totalmente en desacuerdo"><span><b>1</b>Totalmente en desacuerdo</span></label><label class="ec-op"><input type="radio" name="materiales" value="2" aria-label="2, En desacuerdo"><span><b>2</b>En desacuerdo</span></label><label class="ec-op"><input type="radio" name="materiales" value="3" aria-label="3, Ni de acuerdo ni en desacuerdo"><span><b>3</b>Ni de acuerdo ni en desacuerdo</span></label><label class="ec-op"><input type="radio" name="materiales" value="4" aria-label="4, De acuerdo"><span><b>4</b>De acuerdo</span></label><label class="ec-op"><input type="radio" name="materiales" value="5" aria-label="5, Totalmente de acuerdo"><span><b>5</b>Totalmente de acuerdo</span></label></div><div class="ec-escala-pie"><span>1: Totalmente en desacuerdo</span><span>5: Totalmente de acuerdo</span></div></fieldset>
+<fieldset class="ec-preg" id="ec-p-zoom"><legend><span class="ec-num">4 de 10, Jornadas por Zoom</span><span class="ec-enun">Las cuatro jornadas por Zoom estuvieron bien organizadas y aprovecharon el tiempo.</span></legend><div class="ec-escala"><label class="ec-op"><input type="radio" name="zoom" value="1" aria-label="1, Totalmente en desacuerdo"><span><b>1</b>Totalmente en desacuerdo</span></label><label class="ec-op"><input type="radio" name="zoom" value="2" aria-label="2, En desacuerdo"><span><b>2</b>En desacuerdo</span></label><label class="ec-op"><input type="radio" name="zoom" value="3" aria-label="3, Ni de acuerdo ni en desacuerdo"><span><b>3</b>Ni de acuerdo ni en desacuerdo</span></label><label class="ec-op"><input type="radio" name="zoom" value="4" aria-label="4, De acuerdo"><span><b>4</b>De acuerdo</span></label><label class="ec-op"><input type="radio" name="zoom" value="5" aria-label="5, Totalmente de acuerdo"><span><b>5</b>Totalmente de acuerdo</span></label></div><div class="ec-escala-pie"><span>1: Totalmente en desacuerdo</span><span>5: Totalmente de acuerdo</span></div></fieldset>
+<fieldset class="ec-preg" id="ec-p-trabajo_final"><legend><span class="ec-num">5 de 10, Trabajo final por equipos</span><span class="ec-enun">El trabajo final por equipos, con la red integrada de un territorio, su exposición y la defensa individual, me ayudó a integrar lo aprendido.</span></legend><div class="ec-escala"><label class="ec-op"><input type="radio" name="trabajo_final" value="1" aria-label="1, Totalmente en desacuerdo"><span><b>1</b>Totalmente en desacuerdo</span></label><label class="ec-op"><input type="radio" name="trabajo_final" value="2" aria-label="2, En desacuerdo"><span><b>2</b>En desacuerdo</span></label><label class="ec-op"><input type="radio" name="trabajo_final" value="3" aria-label="3, Ni de acuerdo ni en desacuerdo"><span><b>3</b>Ni de acuerdo ni en desacuerdo</span></label><label class="ec-op"><input type="radio" name="trabajo_final" value="4" aria-label="4, De acuerdo"><span><b>4</b>De acuerdo</span></label><label class="ec-op"><input type="radio" name="trabajo_final" value="5" aria-label="5, Totalmente de acuerdo"><span><b>5</b>Totalmente de acuerdo</span></label></div><div class="ec-escala-pie"><span>1: Totalmente en desacuerdo</span><span>5: Totalmente de acuerdo</span></div></fieldset>
+<fieldset class="ec-preg" id="ec-p-club"><legend><span class="ec-num">6 de 10, Club de revistas</span><span class="ec-enun">El club de revistas, con CHEERS y CASPe, me ayudó a leer con criterio una evaluación económica.</span></legend><div class="ec-escala"><label class="ec-op"><input type="radio" name="club" value="1" aria-label="1, Totalmente en desacuerdo"><span><b>1</b>Totalmente en desacuerdo</span></label><label class="ec-op"><input type="radio" name="club" value="2" aria-label="2, En desacuerdo"><span><b>2</b>En desacuerdo</span></label><label class="ec-op"><input type="radio" name="club" value="3" aria-label="3, Ni de acuerdo ni en desacuerdo"><span><b>3</b>Ni de acuerdo ni en desacuerdo</span></label><label class="ec-op"><input type="radio" name="club" value="4" aria-label="4, De acuerdo"><span><b>4</b>De acuerdo</span></label><label class="ec-op"><input type="radio" name="club" value="5" aria-label="5, Totalmente de acuerdo"><span><b>5</b>Totalmente de acuerdo</span></label></div><div class="ec-escala-pie"><span>1: Totalmente en desacuerdo</span><span>5: Totalmente de acuerdo</span></div></fieldset>
+<fieldset class="ec-preg" id="ec-p-carga"><legend><span class="ec-num">7 de 10, Carga de trabajo</span><span class="ec-enun">Para el tiempo que duró el curso, la carga de trabajo fue:</span></legend><div class="ec-escala"><label class="ec-op"><input type="radio" name="carga" value="1" aria-label="1, Muy baja"><span><b>1</b>Muy baja</span></label><label class="ec-op"><input type="radio" name="carga" value="2" aria-label="2, Baja"><span><b>2</b>Baja</span></label><label class="ec-op"><input type="radio" name="carga" value="3" aria-label="3, Adecuada"><span><b>3</b>Adecuada</span></label><label class="ec-op"><input type="radio" name="carga" value="4" aria-label="4, Alta"><span><b>4</b>Alta</span></label><label class="ec-op"><input type="radio" name="carga" value="5" aria-label="5, Muy alta"><span><b>5</b>Muy alta</span></label></div><div class="ec-escala-pie"><span>1: Muy baja</span><span>5: Muy alta</span></div></fieldset>
+<fieldset class="ec-preg" id="ec-p-realimentacion"><legend><span class="ec-num">8 de 10, Realimentación del docente</span><span class="ec-enun">La realimentación del docente en los foros, los hitos y las entregas llegó a tiempo y me sirvió para mejorar.</span></legend><div class="ec-escala"><label class="ec-op"><input type="radio" name="realimentacion" value="1" aria-label="1, Totalmente en desacuerdo"><span><b>1</b>Totalmente en desacuerdo</span></label><label class="ec-op"><input type="radio" name="realimentacion" value="2" aria-label="2, En desacuerdo"><span><b>2</b>En desacuerdo</span></label><label class="ec-op"><input type="radio" name="realimentacion" value="3" aria-label="3, Ni de acuerdo ni en desacuerdo"><span><b>3</b>Ni de acuerdo ni en desacuerdo</span></label><label class="ec-op"><input type="radio" name="realimentacion" value="4" aria-label="4, De acuerdo"><span><b>4</b>De acuerdo</span></label><label class="ec-op"><input type="radio" name="realimentacion" value="5" aria-label="5, Totalmente de acuerdo"><span><b>5</b>Totalmente de acuerdo</span></label></div><div class="ec-escala-pie"><span>1: Totalmente en desacuerdo</span><span>5: Totalmente de acuerdo</span></div></fieldset>
+<fieldset class="ec-preg" id="ec-p-mantener"><legend><span class="ec-num">9 de 10, Lo que debe quedarse</span><span class="ec-enun">¿Qué actividad, material o parte del curso le sirvió más y no debería cambiar?</span></legend><textarea id="ec-t-mantener" maxlength="1500" aria-label="Lo que debe quedarse" placeholder="Opcional, pero es la parte que más leo."></textarea><span class="ec-cuenta">0 de 1500 caracteres</span></fieldset>
+<fieldset class="ec-preg" id="ec-p-mejorar"><legend><span class="ec-num">10 de 10, Lo que debe cambiar</span><span class="ec-enun">¿Qué cambiaría para la próxima cohorte? Sea concreto: diga qué, dónde y cómo lo haría usted.</span></legend><textarea id="ec-t-mejorar" maxlength="1500" aria-label="Lo que debe cambiar" placeholder="Opcional, pero es la parte que más leo."></textarea><span class="ec-cuenta">0 de 1500 caracteres</span></fieldset>
+<div class="ec-fila"><p class="ec-estado" id="ec-estado" aria-live="polite"></p><button type="submit" class="ec-boton" id="ec-enviar">Enviar mi evaluación</button></div>
+</form>
+<section class="ec-res" id="ec-res" hidden><h2>Resumen para el docente</h2><div id="ec-res-cuerpo"></div>
+<p><button type="button" class="ec-boton sec" id="ec-copiar">Copiar el resumen</button></p></section>
+<div class="ec-pie"><a href="../">Volver al aula</a>
+<form id="ec-entrar"><input type="password" id="ec-clave" placeholder="Clave docente" aria-label="Clave docente" autocomplete="current-password"><button type="submit" class="ec-boton sec">Ver resultados</button></form>
+<button type="button" class="ec-boton sec" id="ec-salir" hidden>Salir del modo docente</button></div>
+</main>
+<script>var SERVIDOR_EC="https://script.google.com/macros/s/AKfycbzuix939G9-1sksrINsXjb7yLYz_1aA74ffiPl_FUILKNoZaRDEUkHpp9_DHXpuAW6F/exec",CIERRE_EC="2026-11-15T23:59:00-05:00",MAX_EC=1500,PREG_EC=[{"k": "objetivo", "t": "Objetivo del módulo", "e": true}, {"k": "utilidad", "t": "Utilidad para su trabajo", "e": true}, {"k": "materiales", "t": "Materiales", "e": true}, {"k": "zoom", "t": "Jornadas por Zoom", "e": true}, {"k": "trabajo_final", "t": "Trabajo final por equipos", "e": true}, {"k": "club", "t": "Club de revistas", "e": true}, {"k": "carga", "t": "Carga de trabajo", "e": true}, {"k": "realimentacion", "t": "Realimentación del docente", "e": true}, {"k": "mantener", "t": "Lo que debe quedarse", "e": false}, {"k": "mejorar", "t": "Lo que debe cambiar", "e": false}];(function(){
+  var S=SERVIDOR_EC, MARCA='econ-encuesta-curso-2026', CK='econ-clave-docente-foro';
+  function $(id){return document.getElementById(id);}
+  function enviar(o){return fetch(S,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o)}).then(function(r){return r.json();});}
+  function estado(t,err){var e=$('ec-estado');e.textContent=t;e.className='ec-estado'+(err?' error':'');}
+  function ya(){try{return localStorage.getItem(MARCA)==='1';}catch(e){return false;}}
+  function gracias(){$('ec-form').hidden=true;$('ec-gracias').hidden=false;}
+  if(ya()) gracias();
+  if(Date.now()>Date.parse(CIERRE_EC) && !ya()){$('ec-form').hidden=true;$('ec-cerrada').hidden=false;}
+  Array.prototype.forEach.call(document.querySelectorAll('.ec-preg textarea'),function(t){
+    var c=t.parentNode.querySelector('.ec-cuenta');
+    t.addEventListener('input',function(){c.textContent=t.value.length+' de '+MAX_EC+' caracteres';});
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.ec-preg input'),function(i){
+    i.addEventListener('change',function(){i.closest('.ec-preg').classList.remove('falta');});
+  });
+  $('ec-form').onsubmit=function(ev){
+    ev.preventDefault();
+    var r={}, faltan=[];
+    PREG_EC.forEach(function(p,ix){
+      var caja=$('ec-p-'+p.k);
+      if(p.e){var m=document.querySelector('input[name="'+p.k+'"]:checked'); if(m) r[p.k]=Number(m.value); else {faltan.push(ix+1); caja.classList.add('falta');}}
+      else r[p.k]=$('ec-t-'+p.k).value.trim().slice(0,MAX_EC);
+    });
+    if(faltan.length){estado('Falta marcar la pregunta '+faltan.join(', ')+'. Las abiertas puede dejarlas en blanco.',true);
+      $('ec-p-'+PREG_EC[faltan[0]-1].k).scrollIntoView({behavior:'smooth',block:'center'});return;}
+    var b=$('ec-enviar'); b.disabled=true; estado('Enviando...');
+    enviar({accion:'encuesta',respuestas:r}).then(function(x){
+      b.disabled=false;
+      if(!x.ok){estado(x.error||'No se pudo enviar. Intente de nuevo.',true);return;}
+      try{localStorage.setItem(MARCA,'1');}catch(e){}
+      gracias(); window.scrollTo({top:0,behavior:'smooth'});
+    }).catch(function(){b.disabled=false;estado('Sin conexión con el aula. Revise su internet e intente de nuevo; sus respuestas siguen marcadas.',true);});
+  };
+  /* Modo docente: resumen de respuestas con la clave de los foros. */
+  function clave(){try{return sessionStorage.getItem(CK)||'';}catch(e){return '';}}
+  var TXT='';
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function resumen(){
+    var k=clave(); if(!k) return;
+    $('ec-res').hidden=false; $('ec-res-cuerpo').innerHTML='<p>Cargando...</p>';
+    $('ec-salir').hidden=false; $('ec-entrar').hidden=true;
+    enviar({accion:'encuesta_resultados',claveDocente:k}).then(function(x){
+      if(!x.ok){$('ec-res-cuerpo').innerHTML='<p class="ec-estado error">'+esc(x.error||'Error')+'</p>';return;}
+      var filas=x.filas||[], n=filas.length, h='<p>'+n+' respuesta'+(n===1?'':'s')+' recibida'+(n===1?'':'s')+'.</p>';
+      TXT='ENCUESTA DEL CURSO, '+n+' respuestas\n';
+      PREG_EC.forEach(function(p,ix){
+        var vals=filas.map(function(f){return f[p.k];});
+        if(p.e){
+          var nums=vals.map(Number).filter(function(v){return v>=1&&v<=5;}), cuenta=[0,0,0,0,0];
+          nums.forEach(function(v){cuenta[v-1]++;});
+          var media=nums.length?(nums.reduce(function(a,b){return a+b;},0)/nums.length).toFixed(2):'s. d.';
+          var max=Math.max.apply(null,cuenta.concat([1]));
+          h+='<div class="ec-item"><div class="ec-item-cab"><span>'+(ix+1)+'. '+esc(p.t)+'</span><b>media '+media+'</b></div><div class="ec-barras">'+
+            cuenta.map(function(c,i){return '<div><div class="ec-barra"><i style="height:'+Math.round(100*c/max)+'%"></i></div>'+(i+1)+': '+c+'</div>';}).join('')+'</div></div>';
+          TXT+=(ix+1)+'. '+p.t+': media '+media+' (1 a 5: '+cuenta.join(', ')+')\n';
+        } else {
+          var t=vals.map(function(v){return String(v||'').trim();}).filter(Boolean);
+          h+='<div class="ec-item"><div class="ec-item-cab"><span>'+(ix+1)+'. '+esc(p.t)+'</span><b>'+t.length+'</b></div>'+
+            (t.length?'<ul class="ec-abiertas">'+t.map(function(v){return '<li>'+esc(v)+'</li>';}).join('')+'</ul>':'<p>Sin respuestas.</p>')+'</div>';
+          TXT+=(ix+1)+'. '+p.t+'\n'+t.map(function(v){return '- '+v.replace(/\s+/g,' ');}).join('\n')+'\n';
+        }
+      });
+      $('ec-res-cuerpo').innerHTML=h;
+    }).catch(function(){$('ec-res-cuerpo').innerHTML='<p class="ec-estado error">Sin conexión con el servidor.</p>';});
+  }
+  $('ec-copiar').onclick=function(){
+    var ta=document.createElement('textarea'); ta.value=TXT; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.focus(); ta.select(); var ok=false;
+    try{ok=document.execCommand('copy');}catch(e){}
+    document.body.removeChild(ta);
+    if(ok){$('ec-copiar').textContent='Copiado';return;}
+    if(navigator.clipboard) navigator.clipboard.writeText(TXT).then(function(){$('ec-copiar').textContent='Copiado';});
+  };
+  $('ec-entrar').onsubmit=function(ev){ev.preventDefault(); var k=$('ec-clave').value.trim(); if(!k) return;
+    try{sessionStorage.setItem(CK,k);}catch(e){} $('ec-clave').value=''; resumen();};
+  $('ec-salir').onclick=function(){try{sessionStorage.removeItem(CK);}catch(e){} $('ec-res').hidden=true; $('ec-salir').hidden=true; $('ec-entrar').hidden=false;};
+  resumen();
+})();</script>
+</body></html>

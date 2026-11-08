@@ -204,29 +204,208 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 .nivel-opciones small{font-family:"IBM Plex Mono",monospace;color:var(--atenuado)}
 </style>
 </head><body>
-<header><div class="envoltura">
-<a class="volver" href="../../">Volver al aula</a>
-<div class="antetitulo">Economía y Finanzas de los Servicios de Salud, modo docente</div>
-<h1>Calificar el foro 1</h1>
-<p class="aviso"><strong>¿Es posible una salud universal en Panamá?</strong> Marque un nivel en cada criterio y escriba la realimentación. El puntaje se calcula solo con la escala del curso (Excelente 100 %, Bueno 85 %, Suficiente 72 %, Insuficiente 50 %, No presentado 0 %) y queda en la hoja Calificación del foro.</p>
-<p class="nota"><a href="../foro-2/">Ir al calificador del foro 2</a></p>
-</div></header>
-<main class="envoltura">
-<section class="bloque" id="d-entrar"><div class="formulario"><label class="campo"><span>Clave docente</span><input id="d-clave" type="password" autocomplete="off"></label></div>
-<p class="error-txt" id="d-aviso" role="alert"></p><button class="boton" id="d-boton">Entrar</button></section>
-<section class="bloque" id="d-zona" hidden>
-<div class="foro-barra"><span id="d-resumen"></span><span><button class="boton sec chico" id="d-csv">Descargar notas</button> <button class="boton sec chico" id="d-copiar">Copiar notas</button> <button class="boton sec chico" id="d-recargar">Actualizar</button></span></div>
-<p class="nota" id="d-copiado"></p>
-<div class="foro-barra" id="d-publicar"><span id="d-pub-estado"></span><button class="boton chico" id="d-pub-boton">Publicar las notas del foro</button></div>
-<details class="bloque" id="d-aviso-foro"><summary>Aviso del docente arriba del foro</summary>
-<p class="nota">Lo ve todo el que entra al foro, haya publicado o no. Para responder en un hilo, abra el participante y use Responder como docente bajo su aporte.</p>
-<div id="d-avisos"></div>
-<textarea id="d-aviso-texto" rows="6" style="width:100%" aria-label="Texto del aviso"></textarea>
-<p class="error-txt" id="d-aviso-estado" role="status"></p><button class="boton chico" id="d-aviso-boton">Publicar el aviso</button></details>
-<div id="d-lista"></div>
-</section>
-</main>
-<textarea id="d-portapapeles" aria-hidden="true" style="position:fixed;left:-9999px;top:0"></textarea>
+<!-- Calificador de foros con rúbrica, un estudiante a la vez (8-nov-2026, maqueta aprobada D1 a D11).
+     Lo arma paginas_actividad.pagina_foro_docente(): llena los marcadores (palabras en mayúsculas entre dobles guiones bajos) y lo pone dentro de <body>.
+     Usa foro_docente, foro_calificar, foro_ocultar, foro_docente_publicar y docente_publicar tal como están en el servidor. -->
+<style>
+/* El aula no trae [hidden]{display:none}: sin esto la ayuda, el menú y el aviso de cambios quedan visibles. */
+#d-zona[hidden],#d-zona [hidden],#d-entrar[hidden],.sg-ayuda[hidden]{display:none!important}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
+.sg-gutter{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sg-entrada{max-width:40rem;margin:0 auto;padding-block:40px}
+.sg-entrada h1{margin:8px 0 12px}
+.sg-barra{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:1px solid var(--filete)}
+.sg-barra-in{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:10px}
+.sg-titulo{flex:1 1 16rem;min-width:0}
+.sg-titulo small{display:block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--acc2)}
+.sg-titulo small a{color:var(--acc2)}
+.sg-titulo b{font:600 19px/1.2 "Source Serif 4",Georgia,serif;text-wrap:balance}
+.sg-selector{display:flex;align-items:center;gap:6px;flex:1 1 22rem;min-width:0}
+.sg-selector select{flex:1;min-width:0;height:40px;padding:0 10px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto);font:inherit}
+.sg-flecha{width:40px;height:40px;flex:none;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto);cursor:pointer;font-size:18px;line-height:1}
+.sg-flecha:hover{border-color:var(--acc)}
+.sg-avance{display:flex;flex-direction:column;gap:4px;min-width:9rem}
+.sg-avance span{font:600 13px "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.sg-avance i{display:block;height:5px;border-radius:3px;background:var(--filete);overflow:hidden}
+.sg-avance i b{display:block;height:100%;width:0;background:var(--pos);transition:width .3s}
+.sg-filtro{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--atenuado);cursor:pointer}
+.sg-herr{position:relative}
+.sg-btn{min-height:40px;padding:8px 14px;border-radius:8px;border:1px solid var(--acc);background:var(--acc);color:#0e1218;font:600 15px "IBM Plex Sans",sans-serif;cursor:pointer}
+.sg-btn.sg-sec{background:transparent;color:var(--texto);border-color:var(--filete)}
+.sg-btn.sg-sec:hover{border-color:var(--acc)}
+.sg-btn:disabled{opacity:.55;cursor:wait}
+.sg-menu{position:absolute;right:0;top:46px;z-index:6;min-width:17rem;background:var(--panel);border:1px solid var(--filete);border-radius:10px;padding:6px;display:grid;gap:2px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.sg-menu button{text-align:left;padding:9px 10px;border:0;border-radius:6px;background:transparent;color:var(--texto);font:inherit;cursor:pointer}
+.sg-menu button:hover{background:var(--suave)}
+.sg-menu small{display:block;color:var(--atenuado);font-size:12px}
+.sg-mensaje{font-size:13px;color:var(--atenuado);padding-block:6px;border-bottom:1px solid var(--filete);background:var(--bg)}
+.sg-mensaje:empty{display:none}
+.sg-cuerpo{display:grid;grid-template-columns:minmax(0,1fr) minmax(22rem,36rem);gap:20px;padding-block:20px 40px;align-items:start}
+.sg-ficha{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:0 0 14px}
+.sg-ficha h1{font:600 26px/1.15 "Source Serif 4",Georgia,serif;margin:0;text-wrap:balance}
+.sg-chips{display:flex;flex-wrap:wrap;gap:6px}
+.sg-chip{font:600 12px "IBM Plex Mono",monospace;padding:3px 9px;border-radius:999px;border:1px solid var(--filete);color:var(--atenuado)}
+.sg-chip.sg-ok{color:var(--pos);border-color:color-mix(in srgb,var(--pos) 45%,transparent)}
+.sg-chip.sg-av{color:var(--alerta);border-color:color-mix(in srgb,var(--alerta) 45%,transparent)}
+.sg-chip.sg-no{color:var(--crit);border-color:color-mix(in srgb,var(--crit) 45%,transparent)}
+.sg-msj{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:14px 16px;margin:0 0 14px;max-width:72ch}
+.sg-msj.sg-oculto{opacity:.5}
+.sg-msj.sg-doc{border-left:4px solid var(--acc)}
+.sg-msj-cab{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin:0 0 8px;font-size:13px;color:var(--atenuado)}
+.sg-msj-cab b{font:600 16px "Source Serif 4",Georgia,serif;color:var(--texto)}
+.sg-med{font:600 12px "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.sg-med.sg-ok{color:var(--pos)}.sg-med.sg-av{color:var(--alerta)}
+.sg-msj-cab .sg-acc{margin-left:auto;display:flex;gap:6px}
+.sg-chico{min-height:30px;padding:4px 10px;font-size:13px;border-radius:6px;border:1px solid var(--filete);background:transparent;color:var(--texto);cursor:pointer}
+.sg-chico:hover{border-color:var(--acc)}
+.sg-chico:disabled{opacity:.55;cursor:wait}
+.sg-texto{white-space:pre-wrap;margin:0;line-height:1.62}
+.sg-cita{margin:0 0 10px;padding:8px 12px;border-left:3px solid var(--acc2);background:var(--bg);border-radius:0 8px 8px 0;font-size:14px;color:var(--atenuado)}
+.sg-cita summary{cursor:pointer;color:var(--acc2);font-weight:600;font-size:13px}
+.sg-cita p{white-space:pre-wrap;margin:6px 0 0}
+.sg-cita .sg-corto{margin:4px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sg-cita[open] .sg-corto{display:none}
+.sg-vacio{padding:28px;border:1px dashed var(--filete);border-radius:12px;color:var(--atenuado);text-align:center;max-width:72ch}
+.sg-seccion{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--acc2);margin:20px 0 10px}
+.sg-acciones{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px}
+.sg-responder{max-width:72ch;margin:0 0 14px}
+.sg-responder textarea,.sg-avisos textarea{width:100%;min-height:110px;margin:0 0 8px;padding:10px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto);box-sizing:border-box;font:15px/1.5 "IBM Plex Sans",sans-serif}
+.sg-avisos{max-width:72ch;margin:0 0 18px;padding:14px 16px;border:1px solid var(--acc);border-radius:12px;background:var(--panel)}
+.sg-avisos h2{font:600 18px "Source Serif 4",Georgia,serif;margin:0 0 6px}
+.sg-avisos p{margin:0 0 10px;font-size:14px;color:var(--atenuado)}
+.sg-panel{position:sticky;top:calc(env(safe-area-inset-top,0px) + 78px);max-height:calc(100vh - 100px);overflow:auto;background:var(--panel);border:1px solid var(--filete);border-radius:12px}
+.sg-panel-cab{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:14px 16px 10px;border-bottom:1px solid var(--filete)}
+.sg-panel-cab h2{font:600 18px "Source Serif 4",Georgia,serif;margin:0}
+.sg-total{font:600 22px "IBM Plex Mono",monospace;color:var(--acc);font-variant-numeric:tabular-nums;text-align:right}
+.sg-total small{display:block;font:500 12px "IBM Plex Mono",monospace;color:var(--atenuado)}
+.sg-rub-envol{overflow-x:auto}
+.sg-rub{width:100%;border-collapse:collapse;font-size:12.5px;table-layout:fixed;hyphens:auto;-webkit-hyphens:auto}
+.sg-rub col.sg-col-crit{width:7.2rem}
+.sg-rub th,.sg-rub td{border-bottom:1px solid var(--filete);vertical-align:top}
+.sg-rub thead th{padding:8px 4px;text-align:left;font-size:12px;font-weight:600;color:var(--atenuado)}
+.sg-rub th.sg-crit{padding:10px 6px 10px 14px;text-align:left;font-weight:600;font-size:13px;overflow-wrap:anywhere}
+.sg-rub th.sg-crit small{display:block;font:500 12px "IBM Plex Mono",monospace;color:var(--atenuado);margin-top:2px}
+.sg-rub th.sg-crit .sg-pts{display:block;font:600 14px "IBM Plex Mono",monospace;color:var(--acc);margin-top:6px}
+.sg-rub tr:focus-visible{outline:2px solid var(--acc2);outline-offset:-2px}
+.sg-rub tr.sg-activo th.sg-crit{box-shadow:inset 3px 0 0 var(--acc2)}
+.sg-celda{padding:6px 4px}
+.sg-celda button{width:100%;min-height:88px;display:flex;flex-direction:column;gap:3px;align-items:flex-start;padding:7px;border:1px solid var(--filete);border-radius:8px;background:transparent;color:var(--texto);cursor:pointer;text-align:left;font:12px/1.35 "IBM Plex Sans",sans-serif}
+.sg-celda button:hover{border-color:var(--acc)}
+.sg-celda button b{font-size:12px;overflow-wrap:anywhere}
+.sg-celda button small{font:600 11.5px "IBM Plex Mono",monospace;color:var(--atenuado)}
+.sg-celda button span{color:var(--atenuado)}
+.sg-celda button[aria-pressed="true"]{border-color:var(--acc);background:var(--suave)}
+.sg-celda button[aria-pressed="true"] small{color:var(--acc)}
+.sg-pie{padding:14px 16px;display:grid;gap:10px}
+.sg-pie label{font-size:13px;font-weight:600}
+.sg-pie textarea{width:100%;min-height:120px;padding:10px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto);box-sizing:border-box;font:15px/1.5 "IBM Plex Sans",sans-serif}
+.sg-pie .sg-acciones{margin:0}
+.sg-estado{font-size:13px;color:var(--atenuado);margin:0}
+.sg-estado.sg-sucio{color:var(--alerta)}.sg-estado.sg-ok{color:var(--pos)}.sg-estado.sg-err{color:var(--crit)}
+.sg-pendiente{display:grid;gap:8px;padding:10px 12px;border:1px solid var(--alerta);border-radius:8px;background:color-mix(in srgb,var(--alerta) 10%,transparent);font-size:13px}
+.sg-ayuda{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:16px}
+.sg-ayuda>div{background:var(--panel);border:1px solid var(--filete);border-radius:12px;padding:20px 22px;max-width:30rem;width:100%;box-sizing:border-box}
+.sg-ayuda h2{font:600 20px "Source Serif 4",Georgia,serif;margin:0 0 10px}
+.sg-ayuda dl{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;margin:0 0 14px}
+.sg-ayuda dd{margin:0}
+.sg-ayuda kbd{font:600 12px "IBM Plex Mono",monospace;padding:2px 7px;border:1px solid var(--filete);border-bottom-width:2px;border-radius:5px;background:var(--bg);white-space:nowrap}
+.sg-ayuda p{font-size:13px;color:var(--atenuado);margin:0 0 12px}
+@media (max-width:980px){.sg-cuerpo{grid-template-columns:minmax(0,1fr)}.sg-panel{position:static;max-height:none}}
+@media (max-width:640px){
+  .sg-selector{flex-basis:100%}.sg-avance{min-width:0;flex:1 1 8rem}
+  /* En el celular cada criterio es un bloque: su nombre arriba y los niveles en rejilla debajo. */
+  .sg-rub,.sg-rub tbody{display:block}.sg-rub thead,.sg-rub colgroup{display:none}
+  .sg-rub tr{display:grid;grid-template-columns:repeat(auto-fill,minmax(6.5rem,1fr));gap:6px;padding:10px 12px;border-bottom:1px solid var(--filete)}
+  .sg-rub th.sg-crit{grid-column:1/-1;padding:0;border:0}
+  .sg-rub th.sg-crit small,.sg-rub th.sg-crit .sg-pts{display:inline;margin:0 0 0 8px}
+  .sg-rub td.sg-celda{display:block;padding:0;border:0}
+  .sg-celda button{min-height:0;height:100%}
+}
+@media (prefers-reduced-motion:reduce){.sg-avance i b{transition:none}}
+</style>
+
+<div class="sg-entrada sg-gutter" id="d-entrar">
+  <a class="volver" href="../../">Volver al aula</a>
+  <div class="antetitulo">Economía y Finanzas de los Servicios de Salud, modo docente</div>
+  <h1>Calificar el foro 1</h1>
+  <p class="nota">¿Es posible una salud universal en Panamá?</p>
+  <div class="formulario"><label class="campo"><span>Clave docente</span><input id="d-clave" type="password" autocomplete="off"></label></div>
+  <p class="error-txt" id="d-aviso" role="alert"></p><button class="boton" id="d-boton">Entrar</button>
+</div>
+
+<div id="d-zona" hidden>
+<div class="sg-barra"><div class="sg-barra-in sg-gutter">
+  <div class="sg-titulo"><small><a href="../../">Volver al aula</a>&emsp;<a href="../foro-2/">Ir al calificador del foro 2</a></small><b>Foro 1: ¿Es posible una salud universal en Panamá?</b></div>
+  <div class="sg-selector">
+    <button class="sg-flecha" id="sg-ant" title="Anterior (K)" aria-label="Estudiante anterior">‹</button>
+    <select id="sg-sel" aria-label="Estudiante"></select>
+    <button class="sg-flecha" id="sg-sig" title="Siguiente (J)" aria-label="Estudiante siguiente">›</button>
+  </div>
+  <div class="sg-avance"><span id="sg-cuenta"></span><i><b id="sg-barra-av"></b></i></div>
+  <label class="sg-filtro"><input type="checkbox" id="sg-solo"> Solo sin calificar</label>
+  <div class="sg-herr">
+    <button class="sg-btn sg-sec" id="sg-herr-b" aria-expanded="false">Herramientas</button>
+    <div class="sg-menu" id="sg-menu" hidden>
+      <button data-h="pub"><span id="sg-pub-t">Publicar las notas del foro</span><small id="sg-pub-s"></small></button>
+      <button data-h="csv">Descargar notas<small>Archivo notas_foro_salud_universal.csv</small></button>
+      <button data-h="cop">Copiar notas<small>Para pegar en la hoja de calificaciones</small></button>
+      <button data-h="avi">Aviso arriba del foro<small>Lo ve todo el que entra al foro</small></button>
+      <button data-h="act">Actualizar<small>Vuelve a leer el foro del servidor</small></button>
+    </div>
+  </div>
+  <button class="sg-flecha" id="sg-ayuda-b" title="Atajos de teclado (?)" aria-label="Atajos de teclado">?</button>
+</div>
+<p class="sg-mensaje sg-gutter" id="sg-msg" role="status"></p>
+</div>
+
+<div class="sg-cuerpo sg-gutter">
+  <section aria-label="Mensajes del estudiante">
+    <div class="sg-avisos" id="sg-avisos" hidden>
+      <h2>Aviso arriba del foro</h2>
+      <p>Lo ve todo el que entra al foro, haya publicado o no. Para responder en un hilo use Responder como docente bajo el aporte.</p>
+      <div id="d-avisos"></div>
+      <textarea id="d-aviso-texto" aria-label="Texto del aviso"></textarea>
+      <div class="sg-acciones"><button class="sg-btn" id="d-aviso-boton">Publicar el aviso</button><button class="sg-btn sg-sec" id="sg-avisos-c">Cerrar</button><span class="sg-estado" id="d-aviso-estado" role="status"></span></div>
+    </div>
+    <div id="sg-centro"></div>
+  </section>
+  <aside class="sg-panel" aria-label="Calificación con la rúbrica">
+    <div class="sg-panel-cab"><h2>Rúbrica</h2><div class="sg-total" id="sg-total"></div></div>
+    <div class="sg-rub-envol"><table class="sg-rub" id="sg-rub"></table></div>
+    <div class="sg-pie">
+      <label for="sg-com">Realimentación para el estudiante, en su voz</label>
+      <textarea id="sg-com" placeholder="Lo que el estudiante leerá en Mis resultados cuando publique las notas"></textarea>
+      <div id="sg-pend" class="sg-pendiente" hidden>
+        <span>Tiene cambios sin guardar en este estudiante.</span>
+        <div class="sg-acciones"><button class="sg-btn" id="sg-p-guardar">Guardar y seguir</button><button class="sg-btn sg-sec" id="sg-p-desc">Descartar y seguir</button><button class="sg-btn sg-sec" id="sg-p-quedar">Quedarme</button></div>
+      </div>
+      <div class="sg-acciones">
+        <button class="sg-btn" id="sg-guardar-sig" title="Ctrl + Enter">Guardar y siguiente</button>
+        <button class="sg-btn sg-sec" id="sg-guardar" title="Ctrl + S">Guardar</button>
+      </div>
+      <p class="sg-estado" id="sg-estado" role="status"></p>
+    </div>
+  </aside>
+</div>
+</div>
+
+<div class="sg-ayuda" id="sg-ayuda" hidden><div role="dialog" aria-labelledby="sg-ayuda-t">
+  <h2 id="sg-ayuda-t">Atajos de teclado</h2>
+  <dl>
+    <dt><kbd>J</kbd> o <kbd>Alt</kbd>+<kbd>→</kbd></dt><dd>Estudiante siguiente</dd>
+    <dt><kbd>K</kbd> o <kbd>Alt</kbd>+<kbd>←</kbd></dt><dd>Estudiante anterior</dd>
+    <dt><kbd>1</kbd> a <kbd>5</kbd></dt><dd>Nivel del criterio activo (Excelente a No presentado) y pasa al siguiente criterio</dd>
+    <dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Cambia de criterio activo dentro de la rúbrica</dd>
+    <dt><kbd>C</kbd></dt><dd>Va a la realimentación</dd>
+    <dt><kbd>Ctrl</kbd>+<kbd>S</kbd></dt><dd>Guardar</dd>
+    <dt><kbd>Ctrl</kbd>+<kbd>Enter</kbd></dt><dd>Guardar y pasar al siguiente</dd>
+    <dt><kbd>?</kbd></dt><dd>Muestra u oculta esta ayuda</dd>
+  </dl>
+  <p>Los atajos de letras no actúan mientras escribe en un campo de texto. El puntaje se calcula con la escala del curso (Excelente 100 %, Bueno 85 %, Suficiente 72 %, Insuficiente 50 %, No presentado 0 %) y queda en la hoja Calificación del foro.</p>
+  <button class="sg-btn" id="sg-ayuda-c">Cerrar</button>
+</div></div>
+<textarea id="d-portapapeles" aria-hidden="true" tabindex="-1" style="position:fixed;left:-9999px;top:0"></textarea>
+
 <script>
 
 /* Controles de lectura en ventana emergente, aparte del aula (17-oct-2026). */
@@ -405,9 +584,6 @@ function idGuardada(){try{var o=JSON.parse(localStorage.getItem('econ-id')||'nul
 function guardarId(o){if(modoDocente()) return; try{localStorage.setItem('econ-id',JSON.stringify(o));}catch(e){}}
 function respuestas(n){var r=[],f=[];for(var i=0;i<n;i++){var s=document.querySelector('input[name=p'+i+']:checked');if(!s)f.push(i+1);r.push(s?+s.value:-1);}return {r:r,falta:f};}
 
-(function(){
-var CFG={"rubrica": [{"nombre": "Respuesta con evidencia", "puntos": 35, "niveles": ["Toma postura y la sostiene con evidencia pertinente y actual de los tres ejes.", "Toma postura con evidencia de los tres ejes, pero una es débil o poco actual.", "Cubre solo dos ejes, o la evidencia no sostiene la postura.", "Opina sin evidencia o no responde la pregunta.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Análisis propio", "puntos": 20, "niveles": ["Relaciona los ejes entre sí y saca una conclusión que no está en las fuentes.", "Analiza cada eje, pero los relaciona poco.", "Describe lo que dicen las fuentes, sin analizarlo.", "Copia o parafrasea sin aporte propio.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Réplicas", "puntos": 25, "niveles": ["Dos réplicas o más, cada una con un dato, una fuente o una objeción nueva y fundamentada.", "Dos réplicas, una de ellas con aporte nuevo.", "Una réplica con aporte, o dos réplicas que solo coinciden.", "Sin réplicas o réplicas de cortesía.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Fuentes y APA 7", "puntos": 10, "niveles": ["Fuentes primarias o institucionales, citadas y referenciadas sin errores.", "Fuentes adecuadas con errores menores de formato.", "Fuentes de calidad desigual o citas incompletas.", "Sin fuentes o sin referencias.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Redacción", "puntos": 10, "niveles": ["Clara, concisa y sin errores, dentro de la extensión pedida.", "Clara, con pocos errores.", "Se entiende, con errores frecuentes o fuera de la extensión.", "Difícil de seguir.", "No lo entregó, o no hay evidencia de este criterio."]}], "niveles": [["Excelente", 1.0], ["Bueno", 0.85], ["Suficiente", 0.72], ["Insuficiente", 0.5], ["No presentado", 0.0]], "peso": 8, "foro": 1, "archivo": "notas_foro_salud_universal.csv"}, $=function(x){return document.getElementById(x);}, D=null, clave='';
-function el(tag,cls,txt){var e=document.createElement(tag); if(cls) e.className=cls; if(txt!==undefined) e.textContent=txt; return e;}
 /* Regla del foro (foro_curso.py, 18-oct-2026): la lista de referencias no cuenta en la extensión. */
 function foroContar(t) {
   // Caracteres invisibles (6-nov-2026): un U+200B pegado antes de Referencias hacia contar toda la lista.
@@ -425,31 +601,117 @@ function foroContar(t) {
   return {palabras: contar(cuerpo.join('\n')), referencias: contar(refs), encabezado: corte >= 0,
           sospecha: corte < 0 && cuerpo.some(pareceRef)};
 }
-// Publicar las notas del foro (decisión D3 del 18-oct-2026): libera a la vez, para todo el curso, la nota,
-// los niveles por criterio y la realimentación en Mis resultados. Retirarla las vuelve a ocultar.
-function pintarPublicacion(){
-  var t=D.publicada;
-  $('d-pub-estado').textContent=t?'Notas publicadas el '+new Date(t).toLocaleString('es-PA',{day:'numeric',month:'long',hour:'numeric',minute:'2-digit'})+': cada estudiante ve la suya en Mis resultados. Lo que cambie desde ahora también lo ve.':'Notas sin publicar: los estudiantes todavía no ven su calificación.';
-  $('d-pub-boton').textContent=t?'Retirar la publicación':'Publicar las notas del foro';
-  $('d-pub-boton').className=t?'boton sec chico':'boton chico';
-}
-$('d-pub-boton').onclick=async function(){
-  var b=this; b.disabled=true;
-  var x=await servidor({accion:'docente_publicar',claveDocente:clave,pieza:'foro'+CFG.foro,publicar:!D.publicada});
-  b.disabled=false;
-  if(!x.ok){$('d-pub-estado').textContent=x.error||'No se pudo cambiar la publicación.';return;}
-  D.publicada=(x.publicadas||{})['foro'+CFG.foro]||0; pintarPublicacion();
-};
+(function(){
+var CFG={"rubrica": [{"nombre": "Respuesta con evidencia", "puntos": 35, "niveles": ["Toma postura y la sostiene con evidencia pertinente y actual de los tres ejes.", "Toma postura con evidencia de los tres ejes, pero una es débil o poco actual.", "Cubre solo dos ejes, o la evidencia no sostiene la postura.", "Opina sin evidencia o no responde la pregunta.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Análisis propio", "puntos": 20, "niveles": ["Relaciona los ejes entre sí y saca una conclusión que no está en las fuentes.", "Analiza cada eje, pero los relaciona poco.", "Describe lo que dicen las fuentes, sin analizarlo.", "Copia o parafrasea sin aporte propio.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Réplicas", "puntos": 25, "niveles": ["Dos réplicas o más, cada una con un dato, una fuente o una objeción nueva y fundamentada.", "Dos réplicas, una de ellas con aporte nuevo.", "Una réplica con aporte, o dos réplicas que solo coinciden.", "Sin réplicas o réplicas de cortesía.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Fuentes y APA 7", "puntos": 10, "niveles": ["Fuentes primarias o institucionales, citadas y referenciadas sin errores.", "Fuentes adecuadas con errores menores de formato.", "Fuentes de calidad desigual o citas incompletas.", "Sin fuentes o sin referencias.", "No lo entregó, o no hay evidencia de este criterio."]}, {"nombre": "Redacción", "puntos": 10, "niveles": ["Clara, concisa y sin errores, dentro de la extensión pedida.", "Clara, con pocos errores.", "Se entiende, con errores frecuentes o fuera de la extensión.", "Difícil de seguir.", "No lo entregó, o no hay evidencia de este criterio."]}], "niveles": [["Excelente", 1.0], ["Bueno", 0.85], ["Suficiente", 0.72], ["Insuficiente", 0.5], ["No presentado", 0.0]], "peso": 8, "foro": 1, "archivo": "notas_foro_salud_universal.csv", "aporte": [250, 400], "replica": [100, 200], "replicasPedidas": 2};
+var $=function(x){return document.getElementById(x);};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e;}
+var D=null, clave='', idx=0, niv=[], sucio=false, activo=0, pendiente=null, CLAVE_POS='econ-calif-foro'+CFG.foro;
+
+/* ===== Entrada con la clave docente (la misma sesión que el foro y el avance) ===== */
 try{clave=sessionStorage.getItem('econ-clave-docente-foro')||'';}catch(e){}
 if(!clave&&typeof modoDocente==='function') clave=(modoDocente()||{}).clave||'';
 async function cargar(){
   var x=await servidor({accion:'foro_docente',foro:CFG.foro,claveDocente:clave});
-  if(!x.ok){$('d-aviso').textContent=x.error||'No se pudo entrar.'; $('d-entrar').hidden=false; $('d-zona').hidden=true; return;}
+  if(!x.ok){ if(D){aviso(x.error||'No se pudo actualizar.');return;} $('d-aviso').textContent=x.error||'No se pudo entrar.'; $('d-entrar').hidden=false; $('d-zona').hidden=true; return; }
   try{sessionStorage.setItem('econ-clave-docente-foro',clave);}catch(e){}
-  D=x; $('d-entrar').hidden=true; $('d-zona').hidden=false; pintar();
+  var antes=D&&D.participantes[idx]?D.participantes[idx].cedula:'';
+  if(!antes){try{antes=sessionStorage.getItem(CLAVE_POS)||'';}catch(e){}}
+  D=x; $('d-entrar').hidden=true; $('d-zona').hidden=false;
+  var i=D.participantes.findIndex(function(p){return p.cedula===antes;});
+  if(i<0) i=D.participantes.findIndex(function(p){return !p.calificacion&&p.mensajes.length;});
+  if(i<0) i=0;
+  pintarPublicacion(); pintarAvisos();
+  if(!D.participantes.length){$('sg-centro').innerHTML='';$('sg-centro').append(el('div','sg-vacio','No hay inscritos todavía.'));return;}
+  cargarEstudiante(i);
+  aviso(D.participantes.length+' inscritos, '+D.participantes.filter(function(p){return p.mensajes.length;}).length+' participaron.'+(D.cerrado?' El foro está cerrado.':D.sinAbrir?' El foro todavía no abre.':' El foro sigue abierto.'));
 }
-function autorDe(id){var a=(D.aportes||[]).find(function(x){return x.id===id;}); return a?a.autor:'un aporte';}
-// Mensajes del docente en el foro (22-oct-2026): aviso arriba del foro o respuesta dentro de un hilo.
+$('d-boton').onclick=function(){clave=$('d-clave').value;$('d-aviso').textContent='';cargar();};
+$('d-clave').addEventListener('keydown',function(e){if(e.key==='Enter')$('d-boton').click();});
+
+/* ===== Utilidades ===== */
+function aviso(t){$('sg-msg').textContent=t||'';}
+function actual(){return D.participantes[idx];}
+function fechaTxt(t){return new Date(t).toLocaleString('es-PA',{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});}
+function aporteDe(id){return (D.aportes||[]).find(function(a){return a.id===id;})||null;}
+function fmt(x){return String(Math.round(Number(x)*100)/100).replace('.',',');}
+function totalDe(n){if(n.some(function(k){return k<0;}))return null;var ex=CFG.rubrica.map(function(c,i){return c.puntos*CFG.niveles[n[i]][1];});return Math.round(ex.reduce(function(s,x){return s+x;},0)*10)/10;}
+
+/* ===== Barra superior (D1, D2) ===== */
+function pintarSelector(){
+  var s=$('sg-sel'); s.innerHTML='';
+  D.participantes.forEach(function(p,i){
+    var c=p.calificacion;
+    var o=el('option','',(c?'✓ ':'○ ')+p.nombre+(c?'  ('+fmt(c.total)+')':p.mensajes.length?'':'  (sin participación)'));
+    o.value=i; if($('sg-solo').checked&&c&&i!==idx){o.hidden=true;o.disabled=true;} s.append(o);
+  });
+  s.value=idx;
+  var n=D.participantes.length, k=D.participantes.filter(function(p){return p.calificacion;}).length;
+  $('sg-cuenta').textContent=k+' de '+n+' calificados';
+  $('sg-barra-av').style.width=(n?100*k/n:0)+'%';
+}
+function pintarPublicacion(){
+  var t=D.publicada;
+  $('sg-pub-t').textContent=t?'Retirar la publicación':'Publicar las notas del foro';
+  $('sg-pub-s').textContent=t?'Publicadas el '+new Date(t).toLocaleString('es-PA',{day:'numeric',month:'long',hour:'numeric',minute:'2-digit'})+'; lo que cambie también lo ven':'Sin publicar: los estudiantes todavía no ven su nota';
+}
+
+/* ===== Mensajes al centro (D3, D4) ===== */
+function medida(q,tipo){
+  var r=tipo==='aporte'?CFG.aporte:tipo==='replica'?CFG.replica:null;
+  var txt=q.palabras+' palabras sin referencias'+(q.referencias?', '+q.referencias+' en referencias':'');
+  if(!r) return el('span','sg-med',txt);
+  var ok=q.palabras>=r[0]&&q.palabras<=r[1];
+  return el('span','sg-med '+(ok?'sg-ok':'sg-av'),txt+(ok?'':' (pide '+r[0]+' a '+r[1]+')'));
+}
+function pintarCentro(){
+  var p=actual(), c=$('sg-centro'); c.innerHTML='';
+  var ap=p.mensajes.filter(function(m){return m.tipo==='aporte';}), re=p.mensajes.filter(function(m){return m.tipo==='replica';}), rs=p.mensajes.filter(function(m){return m.tipo==='respuesta';});
+  var vis=function(l){return l.filter(function(m){return !m.oculto;}).length;};
+  var f=el('div','sg-ficha'), ch=el('div','sg-chips'); f.append(el('h1','',p.nombre));
+  ch.append(el('span','sg-chip '+(vis(ap)?'sg-ok':'sg-no'),vis(ap)?'Con aporte':'Sin aporte'));
+  ch.append(el('span','sg-chip '+(vis(re)>=CFG.replicasPedidas?'sg-ok':vis(re)?'sg-av':'sg-no'),vis(re)+' de '+CFG.replicasPedidas+' réplicas'));
+  ch.append(el('span','sg-chip',p.mensajes.reduce(function(s,m){return s+foroContar(m.texto).palabras;},0)+' palabras en total'));
+  if(p.calificacion) ch.append(el('span','sg-chip sg-ok','Calificado: '+fmt(p.calificacion.total)+' de 100'));
+  f.append(ch); c.append(f);
+  if(!p.mensajes.length){c.append(el('div','sg-vacio','No publicó nada en el foro. Si corresponde, marque No presentado en cada criterio (tecla 5) y guarde.'));return;}
+  var secAnt='';
+  ap.concat(re,rs).forEach(function(m){
+    var sec=m.tipo==='aporte'?'Aporte':m.tipo==='replica'?'Réplicas':'Respuestas al docente en su hilo';
+    if(sec!==secAnt){c.append(el('h2','sg-seccion',sec));secAnt=sec;}
+    var t=el('article','sg-msj'+(m.oculto?' sg-oculto':'')), cab=el('div','sg-msj-cab'), q=foroContar(m.texto), padre=m.padre?aporteDe(m.padre):null;
+    cab.append(el('b','',m.tipo==='aporte'?'Aporte':m.tipo==='replica'?'Réplica a '+(padre?padre.autor:'un aporte'):'Respuesta al docente'), medida(q,m.tipo), el('span','',fechaTxt(m.fecha)+(m.editado?', editado el '+fechaTxt(m.editado):'')));
+    if(q.sospecha) cab.append(el('span','sg-med sg-av','Referencias sin encabezado: cuentan'));
+    if(m.oculto) cab.append(el('span','sg-med sg-av','Oculto'));
+    var acc=el('span','sg-acc'), oc=el('button','sg-chico',m.oculto?'Mostrar':'Ocultar');
+    oc.onclick=async function(){oc.disabled=true;var x=await servidor({accion:'foro_ocultar',foro:CFG.foro,claveDocente:clave,id:m.id,ocultar:!m.oculto});oc.disabled=false;
+      if(!x.ok){aviso(x.error||'No se pudo cambiar.');return;} m.oculto=!m.oculto; pintarCentro();};
+    acc.append(oc); cab.append(acc); t.append(cab);
+    if(m.tipo==='replica'&&padre){
+      var ci=el('details','sg-cita');
+      ci.append(el('summary','','Responde al aporte de '+padre.autor+' ('+fechaTxt(padre.fecha)+')'), el('p','sg-corto',padre.texto), el('p','',padre.texto));
+      t.append(ci);
+    }
+    t.append(el('p','sg-texto',m.texto)); c.append(t);
+    if(m.tipo==='aporte'){
+      var a=aporteDe(m.id), hilo=a?(a.replicas||[]):[];
+      hilo.filter(function(r){return r.tipo==='docente';}).forEach(function(r){
+        var d=el('article','sg-msj sg-doc'), dc=el('div','sg-msj-cab'); dc.append(el('b','','Su respuesta en el hilo'), el('span','',fechaTxt(r.fecha))); d.append(dc, el('p','sg-texto',r.texto)); c.append(d);
+      });
+      var otros=hilo.filter(function(r){return r.tipo==='replica';}).length;
+      var linea=el('div','sg-acciones'), rb=el('button','sg-chico','Responder como docente');
+      linea.append(rb, el('span','sg-estado',otros?'Su hilo recibió '+otros+(otros===1?' réplica de compañeros.':' réplicas de compañeros.'):'Su hilo no recibió réplicas.'));
+      var caja=el('div','sg-responder'); caja.hidden=true;
+      var ta=el('textarea'); ta.id='sg-resp-'+m.id; ta.setAttribute('aria-label','Respuesta del docente');
+      var pb=el('button','sg-btn','Publicar en el hilo'), es=el('span','sg-estado');
+      var fila=el('div','sg-acciones'); fila.append(pb,es); caja.append(ta,fila);
+      rb.onclick=function(){caja.hidden=!caja.hidden;if(!caja.hidden)ta.focus();};
+      pb.onclick=async function(){if(await publicarDocente('docente',m.id,ta.value,es,pb)){ta.value='';cargar();}};
+      c.append(linea,caja);
+    }
+  });
+}
+
+/* ===== Mensajes del docente: aviso arriba del foro y respuesta en un hilo ===== */
 async function publicarDocente(tipo,padre,texto,estado,boton){
   if(!texto.trim()){estado.textContent='Escriba el mensaje.';return false;}
   boton.disabled=true; estado.textContent='Publicando...';
@@ -458,89 +720,150 @@ async function publicarDocente(tipo,padre,texto,estado,boton){
   if(!x.ok){estado.textContent=x.error||'No se pudo publicar.';return false;}
   estado.textContent='Publicado.'; return true;
 }
-function respuestasDocente(id){var a=(D.aportes||[]).find(function(x){return x.id===id;}); return a?(a.replicas||[]).filter(function(r){return r.tipo==='docente';}):[];}
-$('d-aviso-boton').onclick=async function(){
-  if(await publicarDocente('aviso','',$('d-aviso-texto').value,$('d-aviso-estado'),this)){$('d-aviso-texto').value=''; cargar();}
-};
-function pintar(){
-  pintarPublicacion();
+function pintarAvisos(){
   var av=$('d-avisos'); av.innerHTML='';
-  (D.avisos||[]).forEach(function(m){var t=el('article','foro-tarjeta docente'); t.append(el('p','foro-meta',new Date(m.fecha).toLocaleString('es-PA')), el('p','foro-texto',m.texto)); av.append(t);});
-  var lista=$('d-lista'); lista.innerHTML='';
-  var con=D.participantes.filter(function(p){return p.mensajes.length;}).length, calif=D.participantes.filter(function(p){return p.calificacion;}).length;
-  $('d-resumen').textContent=D.participantes.length+' inscritos, '+con+' participaron, '+calif+' calificados'+(D.cerrado?'. El foro está cerrado.':'. El foro sigue abierto.');
-  D.participantes.forEach(function(p){
-    var ap=p.mensajes.filter(function(m){return m.tipo==='aporte';}), re=p.mensajes.filter(function(m){return m.tipo==='replica';});
-    var fila=el('div','calif-fila'), info=el('div'); info.append(el('b','',p.nombre), el('small','',(ap.length?'Con aporte':'Sin aporte')+', '+re.length+(re.length===1?' réplica, ':' réplicas, ')+p.mensajes.reduce(function(s,m){return s+foroContar(m.texto).palabras;},0)+' palabras sin referencias'));
-    fila.append(info, el('span','calif-total',p.calificacion?(p.calificacion.total+' de 100'):'Sin calificar'));
-    var det=el('div','calif-detalle'); det.hidden=true;
-    fila.onclick=function(){ if(!det.firstChild) detalle(p,det); det.hidden=!det.hidden; };
-    lista.append(fila,det);
-  });
+  (D.avisos||[]).forEach(function(m){var t=el('article','sg-msj sg-doc'); t.append(el('p','sg-msj-cab',fechaTxt(m.fecha)), el('p','sg-texto',m.texto)); av.append(t);});
 }
-function detalle(p,det){
-  if(!p.mensajes.length) det.append(el('p','pendiente','No ha publicado nada en el foro.'));
-  p.mensajes.forEach(function(m){
-    var t=el('article','foro-tarjeta'+(m.oculto?' foro-oculto':'')), meta=el('p','foro-meta');
-    var q=foroContar(m.texto);
-    meta.append(el('b','',(m.tipo==='aporte'?'Aporte':m.tipo==='respuesta'?'Respuesta al docente en su hilo':'Réplica a '+autorDe(m.padre))+(m.editado?', editado el '+new Date(m.editado).toLocaleString('es-PA'):'')), el('span','',q.palabras+' palabras sin referencias'+(q.referencias?', '+q.referencias+' en referencias':'')+(q.sospecha?'. Ojo: referencias sin encabezado, cuentan':'')), el('span','',new Date(m.fecha).toLocaleString('es-PA')));
-    var oc=el('button','boton sec chico',m.oculto?'Mostrar':'Ocultar'); oc.onclick=async function(){oc.disabled=true; var x=await servidor({accion:'foro_ocultar',foro:CFG.foro,claveDocente:clave,id:m.id,ocultar:!m.oculto}); if(x.ok){m.oculto=!m.oculto; oc.textContent=m.oculto?'Mostrar':'Ocultar'; t.classList.toggle('foro-oculto',m.oculto);} oc.disabled=false;};
-    meta.append(oc); t.append(meta, el('p','foro-texto',m.texto)); det.append(t);
-    if(m.tipo==='aporte'){
-      respuestasDocente(m.id).forEach(function(r){var q=el('article','foro-tarjeta docente'); q.append(el('p','foro-meta','Su respuesta, '+new Date(r.fecha).toLocaleString('es-PA')), el('p','foro-texto',r.texto)); det.append(q);});
-      var rb=el('button','boton sec chico','Responder como docente'), caja=el('div'); caja.hidden=true;
-      rb.onclick=function(ev){ev.stopPropagation(); caja.hidden=!caja.hidden;};
-      var ta=el('textarea'); ta.rows=6; ta.style.width='100%'; ta.setAttribute('aria-label','Respuesta del docente');
-      var es=el('p','error-txt'), pb=el('button','boton chico','Publicar en el hilo');
-      pb.onclick=async function(){ if(await publicarDocente('docente',m.id,ta.value,es,pb)){ta.value=''; cargar();} };
-      caja.append(ta,es,pb); det.append(rb,caja);
-    }
-  });
-  var previos=(p.calificacion&&p.calificacion.niveles)||'';
+$('d-aviso-boton').onclick=async function(){if(await publicarDocente('aviso','',$('d-aviso-texto').value,$('d-aviso-estado'),this)){$('d-aviso-texto').value='';cargar();}};
+$('sg-avisos-c').onclick=function(){$('sg-avisos').hidden=true;};
+
+/* ===== Rúbrica y total (D5, D6) ===== */
+function pintarRubrica(){
+  var tb=$('sg-rub'); tb.innerHTML='';
+  var cg=el('colgroup'); cg.append(el('col','sg-col-crit')); CFG.niveles.forEach(function(){cg.append(el('col'));}); tb.append(cg);
+  var th=el('thead'), tr=el('tr'); tr.append(el('th','sg-crit','Criterio'));
+  CFG.niveles.forEach(function(n){tr.append(el('th','',n[0]));});
+  th.append(tr); tb.append(th);
+  var b=el('tbody');
   CFG.rubrica.forEach(function(c,i){
-    var h=el('p'); h.append(el('b','',c.nombre+' ('+c.puntos+' pts)')); det.append(h);
-    var g=el('div','nivel-opciones');
+    var r=el('tr'); r.tabIndex=0; r.dataset.i=i; if(i===activo) r.classList.add('sg-activo');
+    r.addEventListener('focus',function(){activo=i;marcarActivo();});
+    var h=el('th','sg-crit'); h.append(c.nombre, el('small','',c.puntos+' pts'), el('span','sg-pts',niv[i]>=0?fmt(c.puntos*CFG.niveles[niv[i]][1])+' pts':'–'));
+    r.append(h);
     CFG.niveles.forEach(function(n,k){
-      var l=el('label'), r=el('input'); r.type='radio'; r.name='n-'+p.cedula+'-'+i; r.value=k; if(previos.charAt(i)===String(k)) r.checked=true;
-      var pts=Math.round(c.puntos*n[1]*100)/100; l.append(r, el('b','',n[0]), el('small','',pts+' pts'));
-      if(c.niveles[k]) l.title=c.niveles[k];
-      g.append(l);
+      var td=el('td','sg-celda'), bt=el('button');
+      bt.type='button'; bt.setAttribute('aria-pressed',niv[i]===k?'true':'false'); bt.setAttribute('aria-label',c.nombre+': '+n[0]);
+      bt.append(el('b','',n[0]), el('small','',fmt(c.puntos*n[1])+' pts'));
+      if(n[1]>0) bt.append(el('span','',c.niveles[k]||'')); else bt.title=c.niveles[k]||'';
+      bt.onclick=function(){activo=i;poner(i,k);};
+      td.append(bt); r.append(td);
     });
-    det.append(g);
+    b.append(r);
   });
-  var com=el('textarea'); com.placeholder='Realimentación para el estudiante, en su voz'; com.value=(p.calificacion&&p.calificacion.comentario)||'';
-  com.style.cssText='width:100%;min-height:110px;font:15px/1.5 "IBM Plex Sans",sans-serif;padding:10px;border-radius:8px;border:1px solid var(--filete);background:var(--bg);color:var(--texto)';
-  var g=el('button','boton','Guardar calificación'), msg=el('p','nota');
-  g.onclick=async function(){
-    var niv=CFG.rubrica.map(function(_,i){var r=det.querySelector('input[name="n-'+p.cedula+'-'+i+'"]:checked'); return r?+r.value:-1;});
-    if(niv.some(function(x){return x<0;})){msg.textContent='Marque un nivel en cada criterio.';return;}
-    g.disabled=true; var x=await servidor({accion:'foro_calificar',foro:CFG.foro,claveDocente:clave,cedula:p.cedula,niveles:niv,comentario:com.value}); g.disabled=false;
-    if(!x.ok){msg.textContent=x.error||'No se pudo guardar.';return;}
-    p.calificacion={total:x.total,nota:x.nota,comentario:com.value,niveles:niv.join('')};
-    msg.textContent='Guardado: '+x.total+' de 100, nota del foro '+x.nota+' de '+CFG.peso+'.'; pintar();
-  };
-  det.append(com, g, msg);
+  tb.append(b); pintarTotal();
 }
+function marcarActivo(){[].forEach.call(document.querySelectorAll('#sg-rub tbody tr'),function(r){r.classList.toggle('sg-activo',+r.dataset.i===activo);});}
+function poner(i,k){niv[i]=k;ensuciar();pintarRubrica();}
+function pintarTotal(){
+  var t=totalDe(niv), parcial=CFG.rubrica.reduce(function(s,c,i){return s+(niv[i]>=0?c.puntos*CFG.niveles[niv[i]][1]:0);},0), falta=niv.filter(function(k){return k<0;}).length;
+  var z=$('sg-total'); z.innerHTML='';
+  z.append(fmt(t===null?Math.round(parcial*10)/10:t)+' de 100', el('small','',t===null?'Faltan '+falta+(falta===1?' criterio':' criterios'):'Nota del foro '+fmt(Math.round(t*CFG.peso)/100)+' de '+CFG.peso));
+}
+function ensuciar(){sucio=true;$('sg-estado').className='sg-estado sg-sucio';$('sg-estado').textContent='Cambios sin guardar.';}
+
+/* ===== Navegación y guardado (D7) ===== */
+function cargarEstudiante(i){
+  idx=i; var p=actual(); sucio=false; activo=0; pendiente=null; $('sg-pend').hidden=true;
+  try{sessionStorage.setItem(CLAVE_POS,p.cedula);}catch(e){}
+  var prev=(p.calificacion&&p.calificacion.niveles)||'';
+  niv=CFG.rubrica.map(function(_,k){var v=prev.charAt(k);return /^[0-9]$/.test(v)&&+v<CFG.niveles.length?+v:-1;});
+  $('sg-com').value=(p.calificacion&&p.calificacion.comentario)||'';
+  var c=p.calificacion;
+  $('sg-estado').className='sg-estado'+(c?' sg-ok':'');
+  $('sg-estado').textContent=c?'Guardado: '+fmt(c.total)+' de 100, nota '+fmt(c.nota)+' de '+CFG.peso+'.':'Sin calificar.';
+  pintarSelector(); pintarCentro(); pintarRubrica(); window.scrollTo(0,0);
+}
+function vecino(paso){
+  // Recorre la lista completa desde el estudiante actual: con el filtro, salta a los ya calificados.
+  for(var j=idx+paso;j>=0&&j<D.participantes.length;j+=paso){ if(!$('sg-solo').checked||!D.participantes[j].calificacion) return j; }
+  return -1;
+}
+function ir(i){
+  if(i<0){$('sg-estado').className='sg-estado';$('sg-estado').textContent='No hay más estudiantes en esa dirección.';return;}
+  if(i===idx) return;
+  if(sucio){pendiente=i;$('sg-pend').hidden=false;$('sg-sel').value=idx;$('sg-p-guardar').focus();return;}
+  cargarEstudiante(i);
+}
+async function guardar(){
+  var p=actual();
+  if(niv.some(function(k){return k<0;})){$('sg-estado').className='sg-estado sg-err';$('sg-estado').textContent='Marque un nivel en cada criterio antes de guardar.';return false;}
+  $('sg-guardar').disabled=$('sg-guardar-sig').disabled=true; $('sg-estado').className='sg-estado'; $('sg-estado').textContent='Guardando...';
+  var x=await servidor({accion:'foro_calificar',foro:CFG.foro,claveDocente:clave,cedula:p.cedula,niveles:niv.slice(),comentario:$('sg-com').value});
+  $('sg-guardar').disabled=$('sg-guardar-sig').disabled=false;
+  if(!x.ok){$('sg-estado').className='sg-estado sg-err';$('sg-estado').textContent=(x.error||'No se pudo guardar.')+' Sus marcas siguen en pantalla: intente de nuevo.';return false;}
+  p.calificacion={total:x.total,nota:x.nota,comentario:$('sg-com').value,niveles:niv.join('')};
+  sucio=false; $('sg-estado').className='sg-estado sg-ok';
+  $('sg-estado').textContent='Guardado a las '+new Date().toLocaleTimeString('es-PA',{hour:'numeric',minute:'2-digit'})+': '+fmt(x.total)+' de 100, nota '+fmt(x.nota)+' de '+CFG.peso+'.';
+  pintarSelector(); pintarCentro(); return true;
+}
+$('sg-guardar').onclick=guardar;
+$('sg-guardar-sig').onclick=async function(){if(await guardar()){var j=vecino(1);if(j>=0)cargarEstudiante(j);else $('sg-estado').textContent+=' Era el último de la lista.';}};
+$('sg-p-guardar').onclick=async function(){var j=pendiente;if(await guardar())cargarEstudiante(j);};
+$('sg-p-desc').onclick=function(){sucio=false;cargarEstudiante(pendiente);};
+$('sg-p-quedar').onclick=function(){pendiente=null;$('sg-pend').hidden=true;};
+$('sg-com').addEventListener('input',ensuciar);
+$('sg-ant').onclick=function(){ir(vecino(-1));};
+$('sg-sig').onclick=function(){ir(vecino(1));};
+$('sg-sel').onchange=function(){ir(+this.value);};
+$('sg-solo').onchange=pintarSelector;
+window.addEventListener('beforeunload',function(e){if(sucio){e.preventDefault();e.returnValue='';}});
+
+/* ===== Herramientas (D9): las mismas de antes, en un menú ===== */
 function filas(){
   var f=[['Cédula','Nombre','Correo','Puntaje de 100','Nota del foro '+CFG.foro+' (de '+CFG.peso+')','Realimentación']];
-  D.participantes.forEach(function(p){var c=p.calificacion; f.push([p.cedula,p.nombre,p.correo,c?c.total:'',c?c.nota:'',c?c.comentario:'']);});
+  D.participantes.forEach(function(p){var c=p.calificacion;f.push([p.cedula,p.nombre,p.correo,c?c.total:'',c?c.nota:'',c?c.comentario:'']);});
   return f;
 }
-function csv(f){return f.map(function(r){return r.map(function(v){v=String(v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',');}).join('\r\n');}
-$('d-csv').onclick=function(){
-  var b=new Blob(['\ufeff'+csv(filas())],{type:'text/csv;charset=utf-8'}), a=document.createElement('a');
-  a.href=URL.createObjectURL(b); a.download=CFG.archivo; document.body.append(a); a.click(); a.remove();
+function csv(f){return f.map(function(r){return r.map(function(v){v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',');}).join('\r\n');}
+var HERR={
+  pub:async function(){
+    aviso('Cambiando la publicación...');
+    var x=await servidor({accion:'docente_publicar',claveDocente:clave,pieza:'foro'+CFG.foro,publicar:!D.publicada});
+    if(!x.ok){aviso(x.error||'No se pudo cambiar la publicación.');return;}
+    D.publicada=(x.publicadas||{})['foro'+CFG.foro]||0; pintarPublicacion();
+    aviso(D.publicada?'Notas publicadas: cada estudiante ve la suya en Mis resultados.':'Publicación retirada: los estudiantes ya no ven su nota.');
+  },
+  csv:function(){
+    var b=new Blob(['﻿'+csv(filas())],{type:'text/csv;charset=utf-8'}), a=document.createElement('a');
+    a.href=URL.createObjectURL(b); a.download=CFG.archivo; document.body.append(a); a.click(); a.remove(); aviso('Descargado '+CFG.archivo+'.');
+  },
+  cop:function(){
+    var t=$('d-portapapeles'); t.value=filas().map(function(r){return r.join('\t');}).join('\n'); t.focus(); t.select(); var ok=false;
+    try{ok=document.execCommand('copy');}catch(e){}
+    if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t.value).then(function(){aviso('Notas copiadas: péguelas en la hoja de calificaciones.');},function(){aviso('No se pudo copiar; use Descargar notas.');});return;}
+    aviso(ok?'Notas copiadas: péguelas en la hoja de calificaciones.':'No se pudo copiar; use Descargar notas.');
+  },
+  avi:function(){$('sg-avisos').hidden=false;$('d-aviso-texto').focus();window.scrollTo(0,0);},
+  act:function(){if(sucio){aviso('Guarde o descarte los cambios de este estudiante antes de actualizar.');return;} aviso('Actualizando...'); cargar();}
 };
-$('d-copiar').onclick=function(){
-  var t=$('d-portapapeles'); t.value=filas().map(function(r){return r.join('\t');}).join('\n'); t.focus(); t.select(); var ok=false;
-  try{ok=document.execCommand('copy');}catch(e){}
-  if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t.value).then(function(){$('d-copiado').textContent='Notas copiadas: péguelas en la hoja de calificaciones.';},function(){$('d-copiado').textContent='No se pudo copiar; use Descargar notas.';});return;}
-  $('d-copiado').textContent=ok?'Notas copiadas: péguelas en la hoja de calificaciones.':'No se pudo copiar; use Descargar notas.';
-};
-$('d-recargar').onclick=cargar;
-$('d-boton').onclick=function(){clave=$('d-clave').value; $('d-aviso').textContent=''; cargar();};
+$('sg-herr-b').onclick=function(){var m=$('sg-menu');m.hidden=!m.hidden;this.setAttribute('aria-expanded',String(!m.hidden));};
+[].forEach.call(document.querySelectorAll('#sg-menu button'),function(b){b.onclick=function(){$('sg-menu').hidden=true;$('sg-herr-b').setAttribute('aria-expanded','false');HERR[b.dataset.h]();};});
+document.addEventListener('click',function(e){if(!e.target.closest('.sg-herr'))$('sg-menu').hidden=true;});
+
+/* ===== Atajos (D8) ===== */
+function ayuda(v){$('sg-ayuda').hidden=!v;if(v)$('sg-ayuda-c').focus();}
+$('sg-ayuda-b').onclick=function(){ayuda(true);}; $('sg-ayuda-c').onclick=function(){ayuda(false);};
+$('sg-ayuda').onclick=function(e){if(e.target===this)ayuda(false);};
+document.addEventListener('keydown',function(e){
+  if(!D||$('d-zona').hidden) return;
+  var t=e.target, escribe=/^(TEXTAREA|INPUT|SELECT)$/.test(t.tagName)&&t.type!=='checkbox';
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();$('sg-guardar-sig').click();return;}
+  if((e.ctrlKey||e.metaKey)&&(e.key==='s'||e.key==='S')){e.preventDefault();guardar();return;}
+  if(e.altKey&&e.key==='ArrowRight'){e.preventDefault();ir(vecino(1));return;}
+  if(e.altKey&&e.key==='ArrowLeft'){e.preventDefault();ir(vecino(-1));return;}
+  if(e.key==='Escape'){ayuda(false);$('sg-menu').hidden=true;return;}
+  if(escribe||e.ctrlKey||e.metaKey||e.altKey) return;
+  var k=e.key.toLowerCase(), enRub=t.closest&&t.closest('#sg-rub');
+  if(k==='j') ir(vecino(1));
+  else if(k==='k') ir(vecino(-1));
+  else if(k==='c'){e.preventDefault();$('sg-com').focus();}
+  else if(e.key==='?') ayuda($('sg-ayuda').hidden);
+  else if(/^[1-5]$/.test(e.key)&&+e.key<=CFG.niveles.length){poner(activo,+e.key-1);activo=Math.min(activo+1,CFG.rubrica.length-1);marcarActivo();}
+  else if((e.key==='ArrowDown'||e.key==='ArrowUp')&&enRub){e.preventDefault();activo=Math.max(0,Math.min(CFG.rubrica.length-1,activo+(e.key==='ArrowDown'?1:-1)));document.querySelector('#sg-rub tbody tr[data-i="'+activo+'"]').focus();}
+});
+
 if(clave) cargar();
 })();
 </script>
-<footer><div class="envoltura">Economía y Finanzas de los Servicios de Salud, UDELAS. Dr. Manuel S. Nazas R., docente del curso.</div></footer>
+
 </body></html>

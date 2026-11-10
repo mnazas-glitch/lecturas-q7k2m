@@ -211,6 +211,10 @@ section#resultado:not([hidden]){display:block} /* el resultado del control; sin 
 main.envoltura{max-width:110rem}
 .av-tabla-caja{overflow-x:auto;border:1px solid var(--filete);border-radius:12px}
 .av-tabla{width:100%;border-collapse:collapse;min-width:1500px;background:var(--panel)}
+.av-tabla th{cursor:pointer;user-select:none}
+.av-tabla th:hover{color:var(--acc)}
+.av-tabla th:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
+.av-tabla th .av-flecha{margin-left:4px;color:var(--acc)}
 .av-tabla th small{display:block;font-size:12px;letter-spacing:0;text-transform:none;color:var(--acc2);white-space:nowrap}
 @media(min-width:700px){.av-tabla th:first-child,.av-tabla td:first-child{position:sticky;left:0;background:var(--panel);z-index:1;min-width:13rem}}
 .av-tabla th,.av-tabla td{padding:10px 12px;border-bottom:1px solid var(--filete);text-align:left;font-size:14px;vertical-align:top}
@@ -496,7 +500,7 @@ async function cargar(){
   if(!x.ok){$('d-aviso').textContent=x.error||'No se pudo entrar.'; $('d-entrar').hidden=false; $('d-zona').hidden=true; return;}
   try{sessionStorage.setItem('econ-clave-docente-foro',clave);}catch(e){}
   D=x; D.participantes.sort(function(a,b){return a.nombre.localeCompare(b.nombre,'es');});
-  $('d-entrar').hidden=true; $('d-zona').hidden=false; pintar();
+  $('d-entrar').hidden=true; $('d-zona').hidden=false; prepararOrden(); pintar();
 }
 function resumen(){
   var g=D.participantes, n=g.length;
@@ -528,10 +532,38 @@ function publicacion(){
     c.append(fila);
   });
 }
+// Orden por columna (10-nov-2026, pedido del docente): pulse un encabezado para ordenar; otra vez invierte.
+var ORD={i:-1,asc:true};
+function claveOrden(p,i){
+  if(i===0) return p.nombre;
+  if(i===1) return p.diagnostica;
+  if(i>=2&&i<=4){var c=p.controles[String(i-1)]; return c&&c.intentos?c.mejor/(c.total||1):-1;}
+  var nf=CFG.foros.length;
+  if(i>=5&&i<5+nf){var v=notaForo(p,CFG.foros[i-5][0]); return v===null?-1:v;}
+  var k=i-5-nf;
+  if(k<CFG.vista.length){var w=p.notas.valores[CFG.vista[k]]; return w===null||w===undefined?-1:Number(w);}
+  return total(p).t;
+}
+function prepararOrden(){
+  var ths=document.querySelectorAll('.av-tabla thead th');
+  ths.forEach(function(th,i){
+    if(th.dataset.orden) return; th.dataset.orden='1'; th.tabIndex=0; th.title='Ordenar por esta columna';
+    var f=el('span','av-flecha','↕'); var sm=th.querySelector('small'); if(sm) th.insertBefore(f,sm); else th.append(f);
+    var ir=function(){ORD.asc=ORD.i===i?!ORD.asc:(i===0); ORD.i=i; pintar();};
+    th.onclick=ir; th.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault(); ir();}};
+  });
+}
+function marcarOrden(){
+  document.querySelectorAll('.av-tabla thead th').forEach(function(th,i){
+    var f=th.querySelector('.av-flecha'); if(f) f.textContent=ORD.i===i?(ORD.asc?'▲':'▼'):'↕';
+    th.setAttribute('aria-sort',ORD.i===i?(ORD.asc?'ascending':'descending'):'none');
+  });
+}
 function pintar(){
-  resumen(); publicacion();
+  resumen(); publicacion(); marcarOrden();
   var q=$('av-buscar').value.trim().toLowerCase(), cuerpo=$('av-cuerpo'); cuerpo.innerHTML='';
   var lista=D.participantes.filter(function(p){return !q||[p.nombre,p.cedula,p.institucion,p.provincia].join(' ').toLowerCase().indexOf(q)>=0;});
+  if(ORD.i>=0){lista=lista.slice().sort(function(a,b){var x=claveOrden(a,ORD.i), y=claveOrden(b,ORD.i), r=typeof x==='string'?x.localeCompare(y,'es'):x-y; if(!r) r=a.nombre.localeCompare(b.nombre,'es'); return ORD.asc?r:-r;});}
   $('av-estado').textContent=lista.length+' de '+D.participantes.length+' participantes';
   lista.forEach(function(p){
     var tr=el('tr','av-fila'), td=el('td'); td.append(el('b','',p.nombre), el('small','',p.institucion+', '+p.provincia+(p.cargo?', '+p.cargo:'')));
